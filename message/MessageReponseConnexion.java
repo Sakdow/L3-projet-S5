@@ -1,9 +1,11 @@
 package message;
 
+import modele.Utilisateur;
+
 public class MessageReponseConnexion extends Message {
 	private static final long serialVersionUID = 1L;
 	private boolean accepte;
-	private Utilisateur utilisateur
+	private Utilisateur utilisateur;
 	
 	public MessageReponseConnexion(String adresseIp, boolean accepte, Utilisateur utilisateur){
 		super(adresseIp);
