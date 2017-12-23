@@ -1,11 +1,13 @@
 package message;
 
+import java.net.InetAddress;
+
 public class MessageDemConnexion extends Message {
 	private static final long serialVersionUID = 1L;
 	private String idUtilisateur;
 	private String motDePasse;
 	
-	public MessageDemConnexion(String adresseIp, String idUtilisateur ,String motDePasse){
+	public MessageDemConnexion(InetAddress adresseIp, String idUtilisateur ,String motDePasse){
 		super(adresseIp);
 		this.idUtilisateur=idUtilisateur;
 		this.motDePasse=motDePasse;
