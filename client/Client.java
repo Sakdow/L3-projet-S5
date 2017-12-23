@@ -46,13 +46,29 @@ public class Client {
 		}
 	}
 	
-	
-	public void creerTicket(Groupe groupe, String nomTicket , MessageConversation Message){
-		/* todo */
+	public void creerTicket(Groupe groupe, String nomTicket , MessageConversation message){
+		Ticket nouveauTicket = new Ticket(-1, nomTicket, utilisateurClient, groupe, message);
+		/*envoyerMessage(String adresseIp, Ticket ticket, MessageConversation nouveauMessage)*/
 	}
 	
 	public void envoyerMessage(MessageConversation message){
 		/*todo*/
 	}
+	public Map<Groupe, List<Ticket>> getTicketsCree() {
+		return ticketsCree;
+	}
+
+
+	public Map<Groupe, List<Ticket>> getTicketsRecu() {
+		return ticketsRecu;
+	}
+
+
+	public Utilisateur getUtilisateurClient() {
+		return utilisateurClient;
+	}
+
+
+
 	
 }
