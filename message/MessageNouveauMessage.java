@@ -1,5 +1,7 @@
 package message;
 
+import java.net.InetAddress;
+
 import modele.MessageConversation;
 import modele.Ticket;
 
@@ -8,7 +10,7 @@ public class MessageNouveauMessage extends Message{
 	private Ticket ticket;
 	private MessageConversation nouveauMessage;
 	
-	public MessageNouveauMessage(String adresseIp, Ticket ticket, MessageConversation nouveauMessage){
+	public MessageNouveauMessage(InetAddress adresseIp, Ticket ticket, MessageConversation nouveauMessage){
 		super(adresseIp);
 		this.ticket=ticket;
 		this.nouveauMessage=nouveauMessage;

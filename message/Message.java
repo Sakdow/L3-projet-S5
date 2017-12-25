@@ -1,17 +1,18 @@
 package message;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String adresseIp;
+	private InetAddress adresseIp;
 
-	public Message(String adresseIp) {
+	public Message(InetAddress adresseIp) {
 		super();
 		this.adresseIp = adresseIp;
 	}
 
-	public String getAdresseIp() {
+	public InetAddress getAdresseIp() {
 		return this.adresseIp;
 	}
 

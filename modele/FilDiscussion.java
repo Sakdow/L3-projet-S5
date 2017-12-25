@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 public class FilDiscussion {
 	private NavigableSet<MessageConversation> ensembleMessage;
+	private int nombreMessage=0;
 	
 	public FilDiscussion(MessageConversation premierMessage){
 		super();
@@ -14,8 +15,13 @@ public class FilDiscussion {
 	
 	public void ajouterMessage(MessageConversation message){
 		ensembleMessage.add(message);
+		nombreMessage++;
 	}
-
+	
+	public int getNombreMessage(){
+		return nombreMessage;
+	}
+	
 	public NavigableSet<MessageConversation> getEnsembleMessage() {
 		return ensembleMessage;
 	}

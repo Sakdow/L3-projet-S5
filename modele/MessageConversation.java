@@ -5,17 +5,27 @@ import java.sql.Date;
 public class MessageConversation implements Comparable<MessageConversation> {
 	private String auteur;
 	private String texte;
+	private EtatMessage etat;
 	private Date date;
 
-	public MessageConversation(String auteur, String texte, Date date) {
+	public MessageConversation(String auteur, String texte, Date date, EtatMessage etat) {
 		super();
 		this.auteur = auteur;
 		this.texte = texte;
 		this.date = date;
+		this.etat = etat;
 	}
 
 	public int compareTo(MessageConversation conversationToCompare) {
 		return date.compareTo(conversationToCompare.getDate());
+	}
+
+	public EtatMessage getEtat() {
+		return etat;
+	}
+
+	public void setEtat(EtatMessage etat) {
+		this.etat = etat;
 	}
 
 	public String getAuteur() {
