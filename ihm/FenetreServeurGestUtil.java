@@ -9,12 +9,12 @@ package projets5;
  *
  * @author Lucas
  */
-public class FenetreServeurGestGroupe extends javax.swing.JFrame {
+public class FenetreServeurGestUtil extends javax.swing.JFrame {
 
     /**
      * Creates new form FenetreServeurGestGroupe
      */
-    public FenetreServeurGestGroupe() {
+    public FenetreServeurGestUtil() {
         initComponents();
     }
 
@@ -29,107 +29,113 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
         paramGrLabel = new javax.swing.JLabel();
         listeGrList = new javax.swing.JScrollPane();
-        listeGroupeList = new javax.swing.JList<>();
+        listeUtilList = new javax.swing.JList<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listeUtilGrList = new javax.swing.JList<>();
-        searchGrField = new javax.swing.JTextField();
-        supprGrButton = new javax.swing.JButton();
+        listeGrUtilList = new javax.swing.JList<>();
+        searchUtilField = new javax.swing.JTextField();
+        supprUtilButton = new javax.swing.JButton();
         modifNomLabel = new javax.swing.JLabel();
         modifNomField = new javax.swing.JTextField();
         accepterButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        ajoutUtilGrLabel = new javax.swing.JLabel();
         ajoutGrUtilLabel = new javax.swing.JLabel();
         supprDuGroupeLabel = new javax.swing.JLabel();
-        searchRetirerDuGrField = new javax.swing.JTextField();
-        ajoutUtilGrField = new javax.swing.JTextField();
-        ajoutGrUtilField = new javax.swing.JTextField();
+        searchSupprGrField = new javax.swing.JTextField();
+        ajoutGrField = new javax.swing.JTextField();
         retirerDuGrButton = new javax.swing.JButton();
-        ajoutUtilGrButton = new javax.swing.JButton();
         ajoutGrUtilButton = new javax.swing.JButton();
+        modifPrenomLabel = new javax.swing.JLabel();
+        modifPrenomField = new javax.swing.JTextField();
+        modifMdpLabel = new javax.swing.JLabel();
+        modifMdpField = new javax.swing.JTextField();
+        confirmMdpLabel = new javax.swing.JLabel();
+        confirmMdpField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        paramGrLabel.setText("Liste des groupes");
+        paramGrLabel.setText("Liste des utilisateurs");
         getContentPane().add(paramGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(49, 34, -1, -1));
 
-        listeGroupeList.setModel(new javax.swing.AbstractListModel<String>() {
+        listeUtilList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        listeGrList.setViewportView(listeGroupeList);
+        listeGrList.setViewportView(listeUtilList);
 
         getContentPane().add(listeGrList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 120, 140));
 
-        listeUtilGrList.setModel(new javax.swing.AbstractListModel<String>() {
+        listeGrUtilList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(listeUtilGrList);
+        jScrollPane1.setViewportView(listeGrUtilList);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 60, 130, 140));
 
-        searchGrField.setText("search");
-        searchGrField.addActionListener(new java.awt.event.ActionListener() {
+        searchUtilField.setText("search");
+        searchUtilField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchGrFieldActionPerformed(evt);
+                searchUtilFieldActionPerformed(evt);
             }
         });
-        getContentPane().add(searchGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 80, -1));
+        getContentPane().add(searchUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 80, -1));
 
-        supprGrButton.setText("Supprimer");
-        getContentPane().add(supprGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 270, -1, -1));
+        supprUtilButton.setText("Supprimer");
+        getContentPane().add(supprUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 220, -1, -1));
 
-        modifNomLabel.setText("Modifier le nom :");
-        getContentPane().add(modifNomLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, -1, -1));
-        getContentPane().add(modifNomField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, 80, -1));
+        modifNomLabel.setText("Nom :");
+        getContentPane().add(modifNomLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, -1));
+        getContentPane().add(modifNomField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 120, -1));
 
         accepterButton.setText("Accepter");
-        getContentPane().add(accepterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
+        getContentPane().add(accepterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 380, -1, -1));
 
         jButton1.setText("Annuler");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 390, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 380, -1, -1));
 
-        jLabel1.setText("Liste des utilisateurs du groupe");
+        jLabel1.setText("Liste des groupes de l'utilisateur");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, -1, -1));
 
-        ajoutUtilGrLabel.setText("Ajouter un utilisateur au groupe :");
-        getContentPane().add(ajoutUtilGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 270, -1, -1));
-
         ajoutGrUtilLabel.setText("Ajouter un groupe pour l'utilisateur :");
-        getContentPane().add(ajoutGrUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 320, -1, -1));
+        getContentPane().add(ajoutGrUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 290, -1, -1));
 
         supprDuGroupeLabel.setText("Supprimer du groupe :");
         getContentPane().add(supprDuGroupeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 210, -1, -1));
 
-        searchRetirerDuGrField.setText("search");
-        getContentPane().add(searchRetirerDuGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 240, 80, -1));
+        searchSupprGrField.setText("search");
+        getContentPane().add(searchSupprGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 240, 80, -1));
 
-        ajoutUtilGrField.setText("search");
-        getContentPane().add(ajoutUtilGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 290, 80, -1));
-
-        ajoutGrUtilField.setText("search");
-        getContentPane().add(ajoutGrUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 350, 80, -1));
+        ajoutGrField.setText("search");
+        getContentPane().add(ajoutGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 330, 80, -1));
 
         retirerDuGrButton.setText("Supprimer");
         getContentPane().add(retirerDuGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 240, -1, -1));
 
-        ajoutUtilGrButton.setText("Ajouter");
-        getContentPane().add(ajoutUtilGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 290, -1, -1));
-
         ajoutGrUtilButton.setText("Ajouter");
-        getContentPane().add(ajoutGrUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 350, -1, -1));
+        getContentPane().add(ajoutGrUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 330, -1, -1));
+
+        modifPrenomLabel.setText("Prénom :");
+        getContentPane().add(modifPrenomLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, -1, -1));
+        getContentPane().add(modifPrenomField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 120, -1));
+
+        modifMdpLabel.setText("Mot de passe :");
+        getContentPane().add(modifMdpLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, -1, -1));
+        getContentPane().add(modifMdpField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 120, -1));
+
+        confirmMdpLabel.setText("Confirmer mot de passe :");
+        getContentPane().add(confirmMdpLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, -1, 20));
+        getContentPane().add(confirmMdpField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 120, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void searchGrFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGrFieldActionPerformed
+    private void searchUtilFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchUtilFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_searchGrFieldActionPerformed
+    }//GEN-LAST:event_searchUtilFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,45 +154,49 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FenetreServeurGestUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FenetreServeurGestUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FenetreServeurGestUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FenetreServeurGestUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FenetreServeurGestGroupe().setVisible(true);
+                new FenetreServeurGestUtil().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accepterButton;
+    private javax.swing.JTextField ajoutGrField;
     private javax.swing.JButton ajoutGrUtilButton;
-    private javax.swing.JTextField ajoutGrUtilField;
     private javax.swing.JLabel ajoutGrUtilLabel;
-    private javax.swing.JButton ajoutUtilGrButton;
-    private javax.swing.JTextField ajoutUtilGrField;
-    private javax.swing.JLabel ajoutUtilGrLabel;
+    private javax.swing.JTextField confirmMdpField;
+    private javax.swing.JLabel confirmMdpLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane listeGrList;
-    private javax.swing.JList<String> listeGroupeList;
-    private javax.swing.JList<String> listeUtilGrList;
+    private javax.swing.JList<String> listeGrUtilList;
+    private javax.swing.JList<String> listeUtilList;
+    private javax.swing.JTextField modifMdpField;
+    private javax.swing.JLabel modifMdpLabel;
     private javax.swing.JTextField modifNomField;
     private javax.swing.JLabel modifNomLabel;
+    private javax.swing.JTextField modifPrenomField;
+    private javax.swing.JLabel modifPrenomLabel;
     private javax.swing.JLabel paramGrLabel;
     private javax.swing.JButton retirerDuGrButton;
-    private javax.swing.JTextField searchGrField;
-    private javax.swing.JTextField searchRetirerDuGrField;
+    private javax.swing.JTextField searchSupprGrField;
+    private javax.swing.JTextField searchUtilField;
     private javax.swing.JLabel supprDuGroupeLabel;
-    private javax.swing.JButton supprGrButton;
+    private javax.swing.JButton supprUtilButton;
     // End of variables declaration//GEN-END:variables
 }
