@@ -1,7 +1,5 @@
 package message;
 
-import java.net.InetAddress;
-
 import modele.Utilisateur;
 
 public class MessageReponseConnexion extends Message {
@@ -9,8 +7,8 @@ public class MessageReponseConnexion extends Message {
 	private boolean accepte;
 	private Utilisateur utilisateur;
 	
-	public MessageReponseConnexion(InetAddress adresseIp, boolean accepte, Utilisateur utilisateur){
-		super(adresseIp);
+	public MessageReponseConnexion(boolean accepte, Utilisateur utilisateur){
+		super();
 		this.accepte=accepte;
 		this.utilisateur = utilisateur;
 	}
