@@ -43,7 +43,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         creerButton = new javax.swing.JButton();
         annulerButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Création de groupe");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         nomGrLabel.setText("Nom du groupe :");
@@ -86,14 +87,23 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         supprimerUtilButton.setText("Supprimer");
         getContentPane().add(supprimerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 300, -1, -1));
 
-        creerButton.setText("jButton1");
+        creerButton.setText("Créer");
         getContentPane().add(creerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 370, -1, -1));
 
         annulerButton.setText("Annuler");
+        annulerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                annulerButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(annulerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 370, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_annulerButtonActionPerformed
 
     /**
      * @param args the command line arguments

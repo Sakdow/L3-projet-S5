@@ -49,7 +49,9 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         creerButton = new javax.swing.JButton();
         annulerButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Création d'utilisateur");
+        setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Paramètres de l'utilisateur");
@@ -109,6 +111,11 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         getContentPane().add(creerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 390, -1, -1));
 
         annulerButton.setText("Annuler");
+        annulerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                annulerButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(annulerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 390, -1, -1));
 
         pack();
@@ -117,6 +124,10 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_creerButtonActionPerformed
+
+    private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_annulerButtonActionPerformed
 
     /**
      * @param args the command line arguments

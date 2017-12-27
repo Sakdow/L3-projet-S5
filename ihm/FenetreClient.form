@@ -29,6 +29,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Cr&#xe9;er nouveau ticket"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="creerTicketButtonActionPerformed"/>
+      </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="10" y="11" width="-1" height="-1"/>
@@ -74,6 +77,12 @@
                   <TreeModel code="JTree&#xa; administration&#xa;  blue&#xa;  violet&#xa;  red&#xa;  yellow&#xa; groupe 3.1&#xa;  basketball&#xa;  soccer&#xa;  football&#xa;  hockey&#xa; food&#xa;  hot dogs&#xa;  pizza&#xa;  ravioli&#xa;  bananas"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="ticketsCreesTreeValueChanged"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="//A modifier en recuperant depuis la base les discussions"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

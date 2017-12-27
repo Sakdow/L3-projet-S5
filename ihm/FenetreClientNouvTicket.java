@@ -36,7 +36,8 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         creerButton = new javax.swing.JButton();
         annulerButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Création de ficket");
 
         groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Groupe 1", "Groupe 2" }));
 
