@@ -1,65 +1,23 @@
 package client;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import message.MessageTicket;
 
-import message.MessageDeconnexion;
-import message.MessageDemConnexion;
+public class ThreadEcoute implements Runnable {
 
-public class ThreadEcoute {
-	Socket socket;
-	static final String serverName = "localhost";
-	static final int serverPort = 9999;
+	private Reseaux reseaux;
+	private Client client;
 
-	public void connexionServeur(String idUtilisateur, String motDePasse) {
-		try {
-			socket = new Socket(serverName, serverPort);
+	public ThreadEcoute(Reseaux reseaux, Client client) {
+		super();
+		this.reseaux = reseaux;
+		this.client = client;
+	}
 
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.flush();
-
-			MessageDemConnexion messageDemConnexion = new MessageDemConnexion(idUtilisateur, motDePasse);
-
-			out.writeObject(messageDemConnexion);
-			out.flush();
-
-			out.close();
-		} catch (UnknownHostException e) {
-
-			e.printStackTrace();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
+	public void run() {
+		while (true) {
+			MessageTicket messageTicket = reseaux.ecoute();
+			client.ajouterTicket(messageTicket.getTicket());
 		}
 	}
 
-	public void ecoute() {
-
-	}
-
-	public void deconnexionServeur(String idUtilisateur) {
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			out.flush();
-
-			MessageDeconnexion messageDeconnexion = new MessageDeconnexion(idUtilisateur);
-
-			out.writeObject(messageDeconnexion);
-			out.flush();
-
-			out.close();
-			socket.close();
-		} catch (UnknownHostException e) {
-
-			e.printStackTrace();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-	}
 }

@@ -4,11 +4,11 @@ public class MessageDemConnexion extends Message {
 	private static final long serialVersionUID = 1L;
 	private String idUtilisateur;
 	private String motDePasse;
-	
-	public MessageDemConnexion(String idUtilisateur ,String motDePasse){
+
+	public MessageDemConnexion(String idUtilisateur, String motDePasse) {
 		super();
-		this.idUtilisateur=idUtilisateur;
-		this.motDePasse=motDePasse;
+		this.idUtilisateur = idUtilisateur;
+		this.motDePasse = motDePasse;
 	}
 
 	public String getIdUtilisateur() {
@@ -18,6 +18,5 @@ public class MessageDemConnexion extends Message {
 	public String getMotDePasse() {
 		return this.motDePasse;
 	}
-	
-	
+
 }

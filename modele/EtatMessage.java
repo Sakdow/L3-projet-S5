@@ -1,8 +1,5 @@
 package modele;
 
 public enum EtatMessage {
-	nonLuParTous,
-	nonRecuParServeur,
-	nonRecuParTous,
-	luParTous,
+	nonLuParTous, nonLuParUtilisateur, nonRecuParServeur, nonRecuParTous, luParTous,
 }

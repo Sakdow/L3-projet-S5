@@ -7,19 +7,19 @@ public class Ticket {
 	private Utilisateur createur;
 	private FilDiscussion filDiscussion;
 
-	public Ticket (int idTicket, String nom, Utilisateur createur, Groupe groupe, MessageConversation premierMessage){
+	public Ticket(int idTicket, String nom, Utilisateur createur, Groupe groupe, MessageConversation premierMessage) {
 		super();
-		this.nom=nom;
-		this.idTicket=idTicket;
-		this.createur=createur;
-		this.groupe=groupe;
-		this.filDiscussion= new FilDiscussion(premierMessage);
+		this.idTicket = idTicket;
+		this.nom = nom;
+		this.createur = createur;
+		this.groupe = groupe;
+		this.filDiscussion = new FilDiscussion(premierMessage);
 	}
-	
-	public void ajouterMessage(MessageConversation message){
+
+	public void ajouterMessage(MessageConversation message) {
 		filDiscussion.ajouterMessage(message);
 	}
-	
+
 	public int getIdTicket() {
 		return idTicket;
 	}
@@ -39,5 +39,5 @@ public class Ticket {
 	public FilDiscussion getFilDiscussion() {
 		return filDiscussion;
 	}
-	
+
 }
