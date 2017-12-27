@@ -79,10 +79,4 @@ public class Client {
 		return reseaux;
 	}
 
-<<<<<<< HEAD
-
-	
 }
-=======
-}
->>>>>>> bda6cd70c59a43adc19a00f9854a8b4537293d36
