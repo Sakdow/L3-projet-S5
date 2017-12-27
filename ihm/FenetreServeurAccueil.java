@@ -36,31 +36,72 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menu serveur");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         creerGroupeButton.setText("Créer un groupe");
+        creerGroupeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creerGroupeButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(creerGroupeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, -1));
 
         supprModGroupeButton.setText("Supprimer / Modifier");
+        supprModGroupeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprModGroupeButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(supprModGroupeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, -1, -1));
 
         groupeLabel.setText("Gestion des groupes");
         getContentPane().add(groupeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, -1, -1));
 
         utilLabel.setText("Gestion des utilisateurs");
-        getContentPane().add(utilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 90, -1, -1));
+        getContentPane().add(utilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 90, -1, -1));
 
         creerUtilButton.setText("Créer un utilisateur");
-        getContentPane().add(creerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, -1, -1));
+        creerUtilButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creerUtilButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(creerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 150, -1, -1));
 
         supprModUtilButton.setText("Supprimer / Modifier");
-        getContentPane().add(supprModUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 200, -1, -1));
+        supprModUtilButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprModUtilButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(supprModUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 200, -1, -1));
 
         jButton3.setText("Déconnexion");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 30, -1, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void creerGroupeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerGroupeButtonActionPerformed
+        FenetreServeurCreerGr fenetre = new FenetreServeurCreerGr();
+        fenetre.setVisible(true);
+    }//GEN-LAST:event_creerGroupeButtonActionPerformed
+
+    private void supprModGroupeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprModGroupeButtonActionPerformed
+        FenetreServeurGestGroupe fenetre = new FenetreServeurGestGroupe();
+        fenetre.setVisible(true);
+    }//GEN-LAST:event_supprModGroupeButtonActionPerformed
+
+    private void creerUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerUtilButtonActionPerformed
+        FenetreServeurCreerUtil fenetre = new FenetreServeurCreerUtil();
+        fenetre.setVisible(true);
+    }//GEN-LAST:event_creerUtilButtonActionPerformed
+
+    private void supprModUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprModUtilButtonActionPerformed
+        FenetreServeurGestUtil fenetre = new FenetreServeurGestUtil();
+        fenetre.setVisible(true);
+    }//GEN-LAST:event_supprModUtilButtonActionPerformed
 
     /**
      * @param args the command line arguments
