@@ -37,7 +37,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         modifNomLabel = new javax.swing.JLabel();
         modifNomField = new javax.swing.JTextField();
         accepterButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        annulerButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         ajoutUtilGrLabel = new javax.swing.JLabel();
         ajoutGrUtilLabel = new javax.swing.JLabel();
@@ -49,7 +49,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         ajoutUtilGrButton = new javax.swing.JButton();
         ajoutGrUtilButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gestion de groupes");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         paramGrLabel.setText("Liste des groupes");
@@ -91,8 +92,13 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         accepterButton.setText("Accepter");
         getContentPane().add(accepterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
 
-        jButton1.setText("Annuler");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 390, -1, -1));
+        annulerButton.setText("Annuler");
+        annulerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                annulerButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(annulerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 390, -1, -1));
 
         jLabel1.setText("Liste des utilisateurs du groupe");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, -1, -1));
@@ -130,6 +136,10 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private void searchGrFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGrFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchGrFieldActionPerformed
+
+    private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_annulerButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,7 +184,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private javax.swing.JButton ajoutUtilGrButton;
     private javax.swing.JTextField ajoutUtilGrField;
     private javax.swing.JLabel ajoutUtilGrLabel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton annulerButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane listeGrList;

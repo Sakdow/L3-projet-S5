@@ -46,11 +46,17 @@ public class FenetreClient extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         creerTicketButton.setText("Créer nouveau ticket");
+        creerTicketButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creerTicketButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(creerTicketButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
 
         decoButton.setText("Déconnexion");
         getContentPane().add(decoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, -1, -1));
 
+        //A modifier en recuperant depuis la base les discussions
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("administration");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("blue");
@@ -83,6 +89,11 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                ticketsCreesTreeValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(ticketsCreesTree);
 
         ongletsDiscu.addTab("Créés", jScrollPane1);
@@ -157,8 +168,24 @@ public class FenetreClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
-        // TODO add your handling code here:
+        //Envoyer le message
+        //On efface le texte de la saisie
+        saisieDiscuArea.setText("");
     }//GEN-LAST:event_envoyerButtonActionPerformed
+    //Gestion de l'item (disussion) selectionné dans l'arbre
+    private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
+         String node = evt.getNewLeadSelectionPath().getLastPathComponent().toString();
+         //Debug : on affiche dans la fenetres des messages le nom de la discussion
+         discussionArea.setText(node);
+         //TODO : afficher la discussion correspondante
+         //afficherMessages(node)
+    }//GEN-LAST:event_ticketsCreesTreeValueChanged
+
+    private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
+        //Affichage d'une fenetre de creation de ticket
+        FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket();
+        fenNewTicket.setVisible(true);
+    }//GEN-LAST:event_creerTicketButtonActionPerformed
 
     /**
      * @param args the command line arguments
