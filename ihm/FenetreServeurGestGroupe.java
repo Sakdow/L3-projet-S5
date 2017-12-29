@@ -5,6 +5,13 @@
  */
 package projets5;
 
+import java.awt.event.ActionListener;
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListModel;
+
 /**
  *
  * @author Lucas
@@ -43,11 +50,15 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         ajoutGrUtilLabel = new javax.swing.JLabel();
         supprDuGroupeLabel = new javax.swing.JLabel();
         searchRetirerDuGrField = new javax.swing.JTextField();
-        ajoutUtilGrField = new javax.swing.JTextField();
-        ajoutGrUtilField = new javax.swing.JTextField();
+        searchAjoutUtilGrField = new javax.swing.JTextField();
+        searchAjoutGrUtilField = new javax.swing.JTextField();
         retirerDuGrButton = new javax.swing.JButton();
         ajoutUtilGrButton = new javax.swing.JButton();
         ajoutGrUtilButton = new javax.swing.JButton();
+        searchGrLabel = new javax.swing.JLabel();
+        searchUtilLabel = new javax.swing.JLabel();
+        searchUtilAjoutCombo = new javax.swing.JComboBox<>();
+        searchGrAjoutCombo = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de groupes");
@@ -75,9 +86,9 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 60, 130, 140));
 
         searchGrField.setText("search");
-        searchGrField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchGrFieldActionPerformed(evt);
+        searchGrField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchGrFieldKeyReleased(evt);
             }
         });
         getContentPane().add(searchGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 80, -1));
@@ -104,43 +115,129 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, -1, -1));
 
         ajoutUtilGrLabel.setText("Ajouter un utilisateur au groupe :");
-        getContentPane().add(ajoutUtilGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 270, -1, -1));
+        getContentPane().add(ajoutUtilGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 290, -1, -1));
 
         ajoutGrUtilLabel.setText("Ajouter un groupe pour l'utilisateur :");
-        getContentPane().add(ajoutGrUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 320, -1, -1));
+        getContentPane().add(ajoutGrUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 360, -1, -1));
 
         supprDuGroupeLabel.setText("Supprimer du groupe :");
         getContentPane().add(supprDuGroupeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 210, -1, -1));
 
         searchRetirerDuGrField.setText("search");
-        getContentPane().add(searchRetirerDuGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 240, 80, -1));
+        searchRetirerDuGrField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchRetirerDuGrFieldKeyReleased(evt);
+            }
+        });
+        getContentPane().add(searchRetirerDuGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 260, 80, -1));
 
-        ajoutUtilGrField.setText("search");
-        getContentPane().add(ajoutUtilGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 290, 80, -1));
+        searchAjoutUtilGrField.setText("search");
+        searchAjoutUtilGrField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchAjoutUtilGrFieldKeyReleased(evt);
+            }
+        });
+        getContentPane().add(searchAjoutUtilGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 310, 80, -1));
 
-        ajoutGrUtilField.setText("search");
-        getContentPane().add(ajoutGrUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 350, 80, -1));
+        searchAjoutGrUtilField.setText("search");
+        searchAjoutGrUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchAjoutGrUtilFieldKeyReleased(evt);
+            }
+        });
+        getContentPane().add(searchAjoutGrUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 380, 80, -1));
 
         retirerDuGrButton.setText("Supprimer");
-        getContentPane().add(retirerDuGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 240, -1, -1));
+        getContentPane().add(retirerDuGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, -1, -1));
 
         ajoutUtilGrButton.setText("Ajouter");
-        getContentPane().add(ajoutUtilGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 290, -1, -1));
+        getContentPane().add(ajoutUtilGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 310, -1, -1));
 
         ajoutGrUtilButton.setText("Ajouter");
-        getContentPane().add(ajoutGrUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 350, -1, -1));
+        getContentPane().add(ajoutGrUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 380, -1, -1));
+
+        searchGrLabel.setText("Recherche");
+        getContentPane().add(searchGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 170, 20));
+
+        searchUtilLabel.setText("Recherche");
+        getContentPane().add(searchUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 230, 150, 20));
+
+        searchUtilAjoutCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(searchUtilAjoutCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 340, 170, -1));
+
+        searchGrAjoutCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(searchGrAjoutCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 410, 170, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void searchGrFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGrFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchGrFieldActionPerformed
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_annulerButtonActionPerformed
 
+    private void searchGrFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchGrFieldKeyReleased
+        String text = searchGrField.getText();        
+        searchJList(text, listeGroupeList, searchGrLabel);
+    }//GEN-LAST:event_searchGrFieldKeyReleased
+
+    private void searchRetirerDuGrFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchRetirerDuGrFieldKeyReleased
+        String text = searchRetirerDuGrField.getText();        
+        searchJList(text, listeUtilGrList, searchUtilLabel);
+    }//GEN-LAST:event_searchRetirerDuGrFieldKeyReleased
+
+    private void searchAjoutUtilGrFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchAjoutUtilGrFieldKeyReleased
+        String text = searchAjoutUtilGrField.getText();
+        searchCombo(text, searchUtilAjoutCombo);
+        
+    }//GEN-LAST:event_searchAjoutUtilGrFieldKeyReleased
+
+    private void searchAjoutGrUtilFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchAjoutGrUtilFieldKeyReleased
+        String text = searchAjoutGrUtilField.getText();
+        searchCombo(text, searchGrAjoutCombo);
+    }//GEN-LAST:event_searchAjoutGrUtilFieldKeyReleased
+    public void searchJList(String text, JList liste, JLabel label) {
+        
+        // Get number of items in the list
+        int size = liste.getModel().getSize();
+        // Get all item objects
+        for (int i = 0; i < size; i++) {
+            String item = (String) liste.getModel().getElementAt(i);
+            if(item.contains(text)) {
+            int index = i;
+            liste.setSelectedIndex(index);
+            label.setText(text + " trouvé à l'index " + index);
+            //Une fois trouvé, on arrête la boucle
+            i = size +1;
+            } else {
+                liste.clearSelection();
+                label.setText(text + " non trouvé");
+            }
+        }
+        
+    }
+    
+    public void searchCombo(String text, JComboBox box) {
+        
+        // Get number of items in the list
+        int size = box.getModel().getSize();
+        
+        // Get all item objects
+        for (int i = 0; i < size; i++) {
+            String item = (String) box.getModel().getElementAt(i);
+            if(item.contains(text)) {
+            int index = i;
+            box.setSelectedIndex(index);
+            //label.setText(text + " trouvé à l'index " + index);
+            //Une fois trouvé, on arrête la boucle
+            i = size +1;
+            } else {
+                //label.setText(text + " non trouvé");
+            }
+        }
+        
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -179,10 +276,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accepterButton;
     private javax.swing.JButton ajoutGrUtilButton;
-    private javax.swing.JTextField ajoutGrUtilField;
     private javax.swing.JLabel ajoutGrUtilLabel;
     private javax.swing.JButton ajoutUtilGrButton;
-    private javax.swing.JTextField ajoutUtilGrField;
     private javax.swing.JLabel ajoutUtilGrLabel;
     private javax.swing.JButton annulerButton;
     private javax.swing.JLabel jLabel1;
@@ -194,8 +289,14 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private javax.swing.JLabel modifNomLabel;
     private javax.swing.JLabel paramGrLabel;
     private javax.swing.JButton retirerDuGrButton;
+    private javax.swing.JTextField searchAjoutGrUtilField;
+    private javax.swing.JTextField searchAjoutUtilGrField;
+    private javax.swing.JComboBox<String> searchGrAjoutCombo;
     private javax.swing.JTextField searchGrField;
+    private javax.swing.JLabel searchGrLabel;
     private javax.swing.JTextField searchRetirerDuGrField;
+    private javax.swing.JComboBox<String> searchUtilAjoutCombo;
+    private javax.swing.JLabel searchUtilLabel;
     private javax.swing.JLabel supprDuGroupeLabel;
     private javax.swing.JButton supprGrButton;
     // End of variables declaration//GEN-END:variables
