@@ -89,11 +89,12 @@ public class Traitement implements Runnable {
 			boolean tousRecus = true;
 
 			for (; res.next();) {
+				String idU = res.getString(1);
 				Socket sock = serveur.getMapUtilisateurConnexion()
-						.get((new Utilisateur(res.getString("nom"), res.getString("prenom"), res.getString("idU"))));
+						.get((new Utilisateur("", "", idU)));
 				if (sock != null){
 					aEnvoyer.add(sock);
-					serveur.requeteBDD("INSERT INTO recevoir (idM, idU)
+					serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage +"," + idU + ")");
 				}
 				else
 					tousRecus = false;
@@ -106,6 +107,8 @@ public class Traitement implements Runnable {
 			
 			if( aEnvoyer.contains(s) )
 				aEnvoyer.remove(s);
+			else
+				serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage +"," + idCreateur + ")");
 			
 			for (Socket soc : aEnvoyer) {
 				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
@@ -119,6 +122,7 @@ public class Traitement implements Runnable {
 			out.writeObject(ticket);
 			out.flush();
 			out.close();
+			serveur.requeteBDD("INSERT INTO lire (idM, idU) VALUES (" + idMessage +"," + idCreateur + ")");
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
