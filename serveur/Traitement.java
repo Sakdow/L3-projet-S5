@@ -1,7 +1,6 @@
 package serveur;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,21 +66,24 @@ public class Traitement implements Runnable {
 		String idCreateur = createur.getIdUtilisateur();
 		String idGroupe = ticket.getGroupe().getIdGroupe();
 		try {
-			serveur.requeteBDD("INSERT INTO Ticket (titre) VALUES ('" + ticket.getNom() + "')");
+			ResultSet res = serveur.requeteBDD("INSERT INTO Ticket (titre) VALUES ('" + ticket.getNom() + "')");
+			res.first();
+			int idTicket = res.getInt(1);
 
 			MessageConversation messageConv = ticket.getFilDiscussion().getEnsembleMessage().first();
 
-			ResultSet res = serveur.requeteBDD("SELECT idT FROM Ticket WHERE titre = " + ticket.getNom());
-			res.next();
-			String idTicket = res.getString("idT");
-
-			serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('" + messageConv.getTexte() + "',"
-					+ new java.sql.Date(new java.util.Date().getTime()) + ", '" + idTicket + "', '" + idCreateur
+			res = serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('" + messageConv.getTexte()
+					+ "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '" + idTicket + "', '" + idCreateur
 					+ "')");
-			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + ticket.getGroupe().getIdGroupe());
+			
+			res.first();
+			int idMessage = res.getInt(1);
+			
 
-			// messageConversation.setID
-			// ticket.setID
+			messageConv.setIdMessage(idMessage);
+			ticket.setIdTicket(idTicket);
+
+			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + ticket.getGroupe().getIdGroupe());
 
 			List<Socket> aEnvoyer = new ArrayList<>();
 			boolean tousRecus = true;
@@ -94,7 +96,6 @@ public class Traitement implements Runnable {
 				else
 					tousRecus = false;
 			}
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

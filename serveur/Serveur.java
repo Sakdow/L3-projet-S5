@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import message.MessageDemConnexion;
 import message.MessageReponseConnexion;
@@ -104,9 +106,13 @@ public class Serveur {
 	}
 
 	public ResultSet requeteBDD(String requete) throws SQLException {
+		Pattern insert = Pattern.compile("^INSERT INTO *");
+		Matcher insertM = insert.matcher(requete);
+		if( insertM.find() )
+			return bdd.requeteInsert(requete);
 		return bdd.requete(requete);
 	}
-
+	
 	Utilisateur getUtilisateur(String idUtilisateur) {
 		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = " + idUtilisateur;
 		try {

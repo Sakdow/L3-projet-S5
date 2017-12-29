@@ -19,5 +19,11 @@ class BaseDeDonnees {
 		Statement state = bdd.createStatement();
 		return state.executeQuery(requete);
 	}
+	
+	public ResultSet requeteInsert(String requete) throws SQLException {
+		Statement state = bdd.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+		state.execute(requete);
+		return state.getGeneratedKeys();
+	}
 
 }

@@ -3,14 +3,14 @@ package modele;
 import java.sql.Date;
 
 public class MessageConversation implements Comparable<MessageConversation> {
-	private String idMessage;
+	private int idMessage;
 	private Utilisateur createur;
 	private String texte;
 	private EtatMessage etatGroupe;
 	private Date date;
 	private boolean luParUtilisateur;
 
-	public MessageConversation(String idMessage,Utilisateur createur, String texte, Date date, EtatMessage etatGroupe, boolean luParUtilisateur ) {
+	public MessageConversation(int idMessage,Utilisateur createur, String texte, Date date, EtatMessage etatGroupe, boolean luParUtilisateur ) {
 		super();
 		this.idMessage = idMessage;
 		this.createur = createur;
@@ -20,11 +20,11 @@ public class MessageConversation implements Comparable<MessageConversation> {
 		this.luParUtilisateur=luParUtilisateur;
 	}
 	
-	public String getIdMessage() {
+	public int getIdMessage() {
 		return idMessage;
 	}
 
-	public void setIdMessage(String idMessage) {
+	public void setIdMessage(int idMessage) {
 		this.idMessage = idMessage;
 	}
 
