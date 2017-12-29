@@ -1,17 +1,19 @@
 package serveur;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import message.Message;
 import message.MessageDeconnexion;
 import message.MessageTicket;
+import modele.EtatMessage;
 import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
@@ -69,33 +71,54 @@ public class Traitement implements Runnable {
 			ResultSet res = serveur.requeteBDD("INSERT INTO Ticket (titre) VALUES ('" + ticket.getNom() + "')");
 			res.first();
 			int idTicket = res.getInt(1);
+			ticket.setIdTicket(idTicket);
 
 			MessageConversation messageConv = ticket.getFilDiscussion().getEnsembleMessage().first();
-
 			res = serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('" + messageConv.getTexte()
 					+ "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '" + idTicket + "', '" + idCreateur
 					+ "')");
-			
 			res.first();
 			int idMessage = res.getInt(1);
-			
 
 			messageConv.setIdMessage(idMessage);
-			ticket.setIdTicket(idTicket);
+			messageConv.setLuParUtilisateur(false);
 
 			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + ticket.getGroupe().getIdGroupe());
 
-			List<Socket> aEnvoyer = new ArrayList<>();
+			Set<Socket> aEnvoyer = new HashSet<>();
 			boolean tousRecus = true;
 
 			for (; res.next();) {
 				Socket sock = serveur.getMapUtilisateurConnexion()
 						.get((new Utilisateur(res.getString("nom"), res.getString("prenom"), res.getString("idU"))));
-				if (sock != null)
+				if (sock != null){
 					aEnvoyer.add(sock);
+					serveur.requeteBDD("INSERT INTO recevoir (idM, idU)
+				}
 				else
 					tousRecus = false;
 			}
+
+			if (tousRecus)
+				messageConv.setEtatGroupe(EtatMessage.RECU_PAR_TOUS);
+			else
+				messageConv.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
+			
+			if( aEnvoyer.contains(s) )
+				aEnvoyer.remove(s);
+			
+			for (Socket soc : aEnvoyer) {
+				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
+				out.writeObject(ticket);
+				out.flush();
+				out.close();
+			}
+
+			messageConv.setLuParUtilisateur(true);
+			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+			out.writeObject(ticket);
+			out.flush();
+			out.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

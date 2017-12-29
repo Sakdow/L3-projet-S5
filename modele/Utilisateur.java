@@ -10,7 +10,13 @@ public class Utilisateur {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
-		this.idUtilisateur = idUtilisateur;
+	}
+	
+	public boolean equals(Object o){
+		if( !(o instanceof Utilisateur) )
+			return false;
+		Utilisateur uAComparer = (Utilisateur) o;
+		return this.idUtilisateur.equals(uAComparer.idUtilisateur);
 	}
 
 	public String getNom() {
