@@ -12,6 +12,7 @@ import java.util.Set;
 
 import message.Message;
 import message.MessageDeconnexion;
+import message.MessageNouveauMessageConversation;
 import message.MessageTicket;
 import modele.EtatMessage;
 import modele.MessageConversation;
@@ -47,7 +48,8 @@ public class Traitement implements Runnable {
 			MessageTicket m = (MessageTicket) message;
 			if (!m.getDemande())
 				nouveauTicket(m, socket);
-		}
+		} else if (message instanceof MessageNouveauMessageConversation)
+			nouveauMessageConversation((MessageNouveauMessageConversation) message);
 	}
 
 	private void deconnexionUtilisateur(MessageDeconnexion message, Socket s) {
@@ -67,6 +69,7 @@ public class Traitement implements Runnable {
 		Utilisateur createur = ticket.getCreateur();
 		String idCreateur = createur.getIdUtilisateur();
 		String idGroupe = ticket.getGroupe().getIdGroupe();
+
 		try {
 			ResultSet res = serveur.requeteBDD("INSERT INTO Ticket (titre) VALUES ('" + ticket.getNom() + "')");
 			res.first();
@@ -90,13 +93,13 @@ public class Traitement implements Runnable {
 
 			for (; res.next();) {
 				String idU = res.getString(1);
-				Socket sock = serveur.getMapUtilisateurConnexion()
-						.get((new Utilisateur("", "", idU)));
-				if (sock != null){
+				serveur.requeteBDD("INSERT INTO participer (idU,idT,nomG,createur) VALUES ('" + idU + "', " + idTicket
+						+ ", '" + idGroupe + "', '" + idCreateur + "')");
+				Socket sock = serveur.getMapUtilisateurConnexion().get((new Utilisateur("", "", idU)));
+				if (sock != null) {
 					aEnvoyer.add(sock);
-					serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage +"," + idU + ")");
-				}
-				else
+					serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + "," + idU + ")");
+				} else
 					tousRecus = false;
 			}
 
@@ -104,12 +107,12 @@ public class Traitement implements Runnable {
 				messageConv.setEtatGroupe(EtatMessage.NON_LU_PAR_TOUS);
 			else
 				messageConv.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
-			
-			if( aEnvoyer.contains(s) )
+
+			if (aEnvoyer.contains(s))
 				aEnvoyer.remove(s);
 			else
-				serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage +"," + idCreateur + ")");
-			
+				serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + "," + idCreateur + ")");
+
 			for (Socket soc : aEnvoyer) {
 				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
 				out.writeObject(ticket);
@@ -122,7 +125,7 @@ public class Traitement implements Runnable {
 			out.writeObject(ticket);
 			out.flush();
 			out.close();
-			serveur.requeteBDD("INSERT INTO lire (idM, idU) VALUES (" + idMessage +"," + idCreateur + ")");
+			serveur.requeteBDD("INSERT INTO lire (idM, idU) VALUES (" + idMessage + "," + idCreateur + ")");
 
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
@@ -130,4 +133,39 @@ public class Traitement implements Runnable {
 		}
 	}
 
+	private void nouveauMessageConversation(MessageNouveauMessageConversation message) {
+		MessageConversation messageConv = message.getMessageConv();
+		Utilisateur createur = messageConv.getCreateur();
+
+		try {
+			ResultSet res = serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('"
+					+ messageConv.getTexte() + "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '"
+					+ message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')");
+			res.first();
+			int idMessage = res.getInt(1);
+			
+			
+			
+			Ticket ticket = new Ticket(message.getIdTicket(),createur, idGroupeFromIdTicket(idTicket), null );
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private String idGroupeFromIdTicket(int idTicket) {
+		String idGroupe = "";
+		try {
+			ResultSet res = serveur.requeteBDD("SELECT nomG FROM participer WHERE idT = " + idTicket);
+			if( res != null && res.first() )
+				idGroupe = res.getString(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return idGroupe;
+	}
 }

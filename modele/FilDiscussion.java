@@ -5,21 +5,20 @@ import java.util.TreeSet;
 
 public class FilDiscussion {
 	private NavigableSet<MessageConversation> ensembleMessage;
-	private int nombreMessage = 0;
 
 	public FilDiscussion(MessageConversation premierMessage) {
 		super();
 		this.ensembleMessage = new TreeSet<>();
-		this.ajouterMessage(premierMessage);
+		if(premierMessage != null)
+			this.ajouterMessage(premierMessage);
 	}
 
 	public void ajouterMessage(MessageConversation message) {
 		ensembleMessage.add(message);
-		nombreMessage++;
 	}
 
 	public int getNombreMessage() {
-		return nombreMessage;
+		return ensembleMessage.size();
 	}
 
 	public NavigableSet<MessageConversation> getEnsembleMessage() {
