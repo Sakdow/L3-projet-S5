@@ -83,7 +83,7 @@ public class Traitement implements Runnable {
 			messageConv.setIdMessage(idMessage);
 			messageConv.setLuParUtilisateur(false);
 
-			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + ticket.getGroupe().getIdGroupe());
+			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + idGroupe);
 
 			Set<Socket> aEnvoyer = new HashSet<>();
 			boolean tousRecus = true;
@@ -101,7 +101,7 @@ public class Traitement implements Runnable {
 			}
 
 			if (tousRecus)
-				messageConv.setEtatGroupe(EtatMessage.RECU_PAR_TOUS);
+				messageConv.setEtatGroupe(EtatMessage.NON_LU_PAR_TOUS);
 			else
 				messageConv.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
 			
@@ -124,7 +124,7 @@ public class Traitement implements Runnable {
 			out.close();
 			serveur.requeteBDD("INSERT INTO lire (idM, idU) VALUES (" + idMessage +"," + idCreateur + ")");
 
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
