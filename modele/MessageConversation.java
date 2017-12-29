@@ -3,33 +3,53 @@ package modele;
 import java.sql.Date;
 
 public class MessageConversation implements Comparable<MessageConversation> {
-	private String auteur;
+	private String idMessage;
+	private Utilisateur createur;
 	private String texte;
-	private EtatMessage etat;
+	private EtatMessage etatGroupe;
 	private Date date;
+	private boolean luParUtilisateur;
 
-	public MessageConversation(String auteur, String texte, Date date, EtatMessage etat) {
+	public MessageConversation(String idMessage,Utilisateur createur, String texte, Date date, EtatMessage etatGroupe, boolean luParUtilisateur ) {
 		super();
-		this.auteur = auteur;
+		this.idMessage = idMessage;
+		this.createur = createur;
 		this.texte = texte;
 		this.date = date;
-		this.etat = etat;
+		this.etatGroupe = etatGroupe;
+		this.luParUtilisateur=luParUtilisateur;
+	}
+	
+	public String getIdMessage() {
+		return idMessage;
+	}
+
+	public void setIdMessage(String idMessage) {
+		this.idMessage = idMessage;
 	}
 
 	public int compareTo(MessageConversation conversationToCompare) {
 		return date.compareTo(conversationToCompare.getDate());
 	}
 
-	public EtatMessage getEtat() {
-		return etat;
+	public EtatMessage getEtatGroupe() {
+		return etatGroupe;
 	}
 
-	public void setEtat(EtatMessage etat) {
-		this.etat = etat;
+	public void setEtatGroupe(EtatMessage etatGroupe) {
+		this.etatGroupe = etatGroupe;
 	}
 
-	public String getAuteur() {
-		return auteur;
+	public boolean isLuParUtilisateur() {
+		return luParUtilisateur;
+	}
+
+	public void setLuParUtilisateur(boolean luParUtilisateur) {
+		this.luParUtilisateur = luParUtilisateur;
+	}
+
+	public Utilisateur getCreateur() {
+		return createur;
 	}
 
 	public String getTexte() {
@@ -39,4 +59,6 @@ public class MessageConversation implements Comparable<MessageConversation> {
 	public Date getDate() {
 		return date;
 	}
+	
+	
 }
