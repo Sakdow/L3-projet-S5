@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import message.Message;
 import message.MessageDeconnexion;
 import message.MessageDemConnexion;
+import message.MessageGroupe;
 import message.MessageReponseConnexion;
 import message.MessageTicket;
 
@@ -22,7 +24,7 @@ public class Reseaux {
 		this.serverPort = serverPort;
 	}
 
-	public boolean connexionServeur(String idUtilisateur, String motDePasse) {
+	public MessageReponseConnexion connexionServeur(String idUtilisateur, String motDePasse) {
 		try {
 			socket = new Socket(serverName, serverPort);
 
@@ -43,7 +45,7 @@ public class Reseaux {
 			in.close();
 			out.close();
 
-			return messageReponse.getAccepte();
+			return messageReponse;
 		} catch (UnknownHostException e) {
 
 			e.printStackTrace();
@@ -55,11 +57,11 @@ public class Reseaux {
 
 			e.printStackTrace();
 		}
-
-		return false;
+		
+		return null;
 	}
 
-	public void envoyerMessage(MessageTicket nouveauMessage) {
+	public void envoyerMessage(Message nouveauMessage) {
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.flush();
@@ -78,17 +80,23 @@ public class Reseaux {
 		}
 	}
 
-	public MessageTicket ecoute() {
+	public Message ecoute() {
 		try {
+			
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-			Object objetRecu = in.readObject();
-			MessageTicket messRecu = (MessageTicket) objetRecu;
-
-			in.close();
-
-			return messRecu;
-
+			if(in.available() > 0){
+				Object objetRecu = in.readObject();
+				Message messRecu;
+				if(objetRecu instanceof MessageTicket){
+					messRecu = (MessageTicket) objetRecu;
+				} else {
+					messRecu = (MessageGroupe) objetRecu;
+				}
+	
+				in.close();
+				
+				return messRecu;
+			}
 		} catch (UnknownHostException e) {
 
 			e.printStackTrace();

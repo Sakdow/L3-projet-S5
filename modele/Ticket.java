@@ -23,7 +23,7 @@ public class Ticket {
 	public int getIdTicket() {
 		return idTicket;
 	}
-
+	
 	public void setIdTicket(int idTicket) {
 		this.idTicket = idTicket;
 	}

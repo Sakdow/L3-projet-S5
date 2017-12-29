@@ -1,8 +1,10 @@
 package client;
 
+import message.Message;
+import message.MessageGroupe;
 import message.MessageTicket;
 
-public class ThreadEcoute implements Runnable {
+public class ThreadEcoute extends Thread {
 
 	private Reseaux reseaux;
 	private Client client;
@@ -14,10 +16,22 @@ public class ThreadEcoute implements Runnable {
 	}
 
 	public void run() {
-		while (true) {
-			MessageTicket messageTicket = reseaux.ecoute();
-			client.ajouterTicket(messageTicket.getTicket());
+		while (!Thread.interrupted()) {
+			Message messageRecu = reseaux.ecoute();
+			if(messageRecu != null){
+				if(messageRecu instanceof MessageTicket){
+					MessageTicket messageTicket = (MessageTicket) messageRecu;
+					client.ajouterTicket(  messageTicket.getTicket() );
+				} else {
+					MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
+					client.ajouterGroupe( messageGroupe.getGroupe() );
+				}
+			}
 		}
+	}
+	
+	public static void stopper( ThreadEcoute t ) {
+		t.interrupt();
 	}
 
 }

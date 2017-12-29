@@ -14,6 +14,7 @@ import modele.Utilisateur;
 public class Client {
 	private Map<Groupe, List<Ticket>> ticketsCree;
 	private Map<Groupe, List<Ticket>> ticketsRecu;
+	private List<Groupe> listeGroupe;
 	private Utilisateur utilisateurClient;
 	private Reseaux reseaux;
 
@@ -23,8 +24,17 @@ public class Client {
 		this.reseaux = reseaux;
 		ticketsCree = new TreeMap<>();
 		ticketsRecu = new TreeMap<>();
+		listeGroupe = new LinkedList<>();
 	}
 
+	public void ajouterGroupe(Groupe... groupes){
+		for(Groupe groupe : groupes){
+			if(listeGroupe.contains(groupe)){
+				listeGroupe.add(groupe);
+			}
+		}
+	}
+	
 	private void ajouterTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
 		if (tickets.containsKey(groupe)) {
 			boolean ajout = false;
@@ -77,6 +87,10 @@ public class Client {
 
 	public Reseaux getReseaux() {
 		return reseaux;
+	}
+
+	public List<Groupe> getListeGroupe() {
+		return listeGroupe;
 	}
 
 }
