@@ -24,6 +24,10 @@ public class Ticket {
 		return idTicket;
 	}
 
+	public void setIdTicket(int idTicket) {
+		this.idTicket = idTicket;
+	}
+
 	public String getNom() {
 		return nom;
 	}

@@ -16,8 +16,8 @@ import message.MessageReponseConnexion;
 import modele.Utilisateur;
 
 public class Serveur {
-	int port = 1705;
-	int nbThreadsTraitement = 3;
+	private int port = 1705;
+	private int nbThreadsTraitement = 3;
 	private Map<Utilisateur, Socket> mapUtilisateurConnexion = new HashMap<>();
 	private Queue<AssocMessageSocket> messagessATraiter = new LinkedList<AssocMessageSocket>();
 	private BaseDeDonnees bdd;
@@ -45,10 +45,10 @@ public class Serveur {
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		Thread ecoute = new Thread(new EcouteMessagesClients(mapUtilisateurConnexion, messagessATraiter));
+		Thread ecoute = new Thread(new EcouteMessagesClients(this));
 		ecoute.start();
 		for (int i = 0; i < nbThreadsTraitement; i++) {
-			Thread traitement = new Thread(new Traitement(messagessATraiter));
+			Thread traitement = new Thread(new Traitement(this));
 			traitement.start();
 		}
 
@@ -74,7 +74,7 @@ public class Serveur {
 				MessageReponseConnexion reponseConnexion;
 
 				if (connexionAcceptee) {
-					Utilisateur utilisateur = this.getUtilisateurConnexion(messRecu.getIdUtilisateur());
+					Utilisateur utilisateur = this.getUtilisateur(messRecu.getIdUtilisateur());
 					mapUtilisateurConnexion.put(utilisateur, soc);
 					reponseConnexion = new MessageReponseConnexion(true, utilisateur);
 				} else {
@@ -107,7 +107,7 @@ public class Serveur {
 		return bdd.requete(requete);
 	}
 
-	private Utilisateur getUtilisateurConnexion(String idUtilisateur) {
+	Utilisateur getUtilisateur(String idUtilisateur) {
 		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = " + idUtilisateur;
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
@@ -122,5 +122,17 @@ public class Serveur {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	Map<Utilisateur, Socket> getMapUtilisateurConnexion() {
+		return mapUtilisateurConnexion;
+	}
+
+	Queue<AssocMessageSocket> getMessagessATraiter() {
+		return messagessATraiter;
+	}
+
+	BaseDeDonnees getBdd() {
+		return bdd;
 	}
 }

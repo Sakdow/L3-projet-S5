@@ -10,17 +10,16 @@ import message.Message;
 import modele.Utilisateur;
 
 public class EcouteMessagesClients implements Runnable {
-	Map<Utilisateur, Socket> mapUtilisateurConnexion;
-	Queue<AssocMessageSocket> messagessATraiter;
-
-	public EcouteMessagesClients(Map<Utilisateur, Socket> mapUtilisateurConnexion,
-			Queue<AssocMessageSocket> messagessATraiter) {
-		this.mapUtilisateurConnexion = mapUtilisateurConnexion;
-		this.messagessATraiter = messagessATraiter;
+	Serveur serveur;
+	
+	public EcouteMessagesClients(Serveur serveur) {
+		this.serveur = serveur;
 	}
 
 	public void run() {
 		for (;;) {
+			Map<Utilisateur,Socket>mapUtilisateurConnexion = serveur.getMapUtilisateurConnexion();
+			Queue<AssocMessageSocket> messagessATraiter = serveur.getMessagessATraiter();
 			for (Socket s : mapUtilisateurConnexion.values()) {
 				// TODO: Gestion de la fermeture prématurée du socket
 				ObjectInputStream in;

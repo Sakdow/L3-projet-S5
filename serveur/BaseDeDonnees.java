@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 class BaseDeDonnees {
 
-	Connection bdd;
+	private Connection bdd;
 
 	public BaseDeDonnees(String url, String usr, String pswrd) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");

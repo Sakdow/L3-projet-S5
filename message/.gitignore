@@ -4,3 +4,6 @@
 /MessageDemTicket.class
 /MessageNouveauMessage.class
 /MessageReponseConnexion.class
+/MessageTicket.class
+/MessageGroupe.class
+/MessageMiseAJourEtat.class
