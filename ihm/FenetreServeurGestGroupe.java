@@ -10,6 +10,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 
 /**
@@ -222,7 +223,22 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }//GEN-LAST:event_supprGrButtonActionPerformed
 
     private void modifierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifierButtonActionPerformed
-        // TODO add your handling code here:
+        String nouvNom = modifNomField.getText();
+        //Verification des doublons
+        boolean trouve = false;
+        for(int i = 0; i < listeModeleGr.size(); i++){
+            if(nouvNom.equals(listeModeleGr.get(i))){
+                trouve = true;
+                i = listeModeleGr.size() + 1;
+                JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
+            }
+        }
+        if(!trouve){
+           int index = listeGroupeList.getSelectedIndex();
+           listeModeleGr.set(index, nouvNom);
+           listeGroupeList.setModel(listeModeleGr);
+        }
+        
     }//GEN-LAST:event_modifierButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
@@ -281,9 +297,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }
     
     private void setListeModelUtil(){
-        //Requete pour recuperer tous les utilisateurs du groupe
-        String req = "SELECT....";
-        //ResultSet res = Serveur.requeteBDD(req);
+        int index = listeUtilGrList.getSelectedIndex();
+        
         /*        
         while(res.next()){
             modele.addElement(res.getString("prenom") + " " + res.getString("nom"));            

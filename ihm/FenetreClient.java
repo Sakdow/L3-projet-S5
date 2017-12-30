@@ -11,6 +11,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
+import java.util.Set;
 import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -73,8 +75,6 @@ public class FenetreClient extends javax.swing.JFrame {
         envoyerButton = new javax.swing.JButton();
         titreDiscuLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
-        chatAreaSP = new javax.swing.JScrollPane();
-        chatArea = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         discussionTable = new javax.swing.JTable();
 
@@ -102,7 +102,6 @@ public class FenetreClient extends javax.swing.JFrame {
         });
         getContentPane().add(decoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, -1, -1));
 
-        //A modifier en recuperant depuis la base les discussions
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("JTree");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("administration");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("blue");
@@ -135,6 +134,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        //ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsCreesTreeValueChanged(evt);
@@ -176,7 +176,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        //ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsRecusTreeValueChanged(evt);
@@ -208,13 +208,6 @@ public class FenetreClient extends javax.swing.JFrame {
 
         usernameLabel.setText("Prénom Nom");
         getContentPane().add(usernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 10, -1, 20));
-
-        chatArea.setColumns(20);
-        chatArea.setRows(5);
-        chatArea.setText("Toto : M1\nTATA : M2");
-        chatAreaSP.setViewportView(chatArea);
-
-        getContentPane().add(chatAreaSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 260, 80));
 
         jScrollPane5.setBorder(null);
 
@@ -280,14 +273,22 @@ public class FenetreClient extends javax.swing.JFrame {
     }//GEN-LAST:event_envoyerButtonActionPerformed
     
     private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
-         Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
-         String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
-         ticketCreeSelect = node1;
-         groupeCreeSelect = node2;
-         titreDiscuLabel.setText(ticketCreeSelect.toString());
-         //TODO : afficher la discussion correspondante
+        Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+        ticketCreeSelect = node1;
+        groupeCreeSelect = node2;
+        titreDiscuLabel.setText(ticketCreeSelect.toString());
+        //Afficher la discussion correspondante
+        NavigableSet<MessageConversation> ensembleMessage = ticketCreeSelect.getFilDiscussion().getEnsembleMessage();
+        for(MessageConversation mess : ensembleMessage){
+            String[] ligne = null;
+            ligne[0] = mess.getCreateur().toString();
+            ligne[1] = mess.getTexte();
+            ligne[2] = mess.getDate().toString();            
+            tableModele.addRow(ligne);
+        }
+        discussionTable.setModel(tableModele);
          
-         //afficherMessages(node)
     }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
@@ -320,38 +321,59 @@ public class FenetreClient extends javax.swing.JFrame {
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
     private DefaultMutableTreeNode getArbreModelRecus(){
         //PARTIE TICKETS RECUS
-        //Récupération de l'utilisateur connecté
-        /*Utilisateur util = client.getUtilisateurClient();
-        //Requete pour recuperer les groupes de l'utilisateur
-        String req = "SELECT....";
-        ResultSet res = Serveur.requeteBDD(req);
+        Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
+        //Racine
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets reçus", null, null, null));
+        DefaultMutableTreeNode[] treeNode = null;
         int index = 0;
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tickets");
-        DefaultMutableTreeNode[] treeNode ;
-        while(res.next()){
-            //Création des noeuds de groupe
-            treeNode[index] = new DefaultMutableTreeNode(res.getString("nom"));
+        //Création des noeuds des groupes
+        Set<Groupe> groupes = ticketsRecu.keySet();
+        for(Groupe gr : groupes){
+            treeNode[index] = new DefaultMutableTreeNode(new Ticket(0, gr.getIdGroupe(), null, null, null));
+            List<Ticket> tickets = ticketsRecu.get(gr);
+            //Création des noeuds des tickets pour chaque groupe
+            for(Ticket tk : tickets){
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
+                treeNode[index].add(node);
+            }
             index ++;
         }
-        //Requete pour recuperer les tickets de chaque groupe
-        for(int i = 0; i < treeNode.length ; i++){
-            String req = "SELECT titre FROM ticket...where groupe = " + treeNode[i];
-            ResultSet res = Serveur.requeteBDD(req);
-            while(res.next()){
-                DefaultMutableTreeNode ticket = new DefaultMutableTreeNode(res.getString("nom"));
-                treeNode[i].add(ticket);
+        //On relie chaque noeud de groupe a la racine
+        for(int i = 0; i < index ; i++){
+            root.add(treeNode[i]);
+        }        
+        return root;
+    }
+    
+    private DefaultMutableTreeNode getArbreModelCrees(){
+        //PARTIE TICKETS CREES
+        Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
+        //Racine
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets crées", null, null, null));
+        DefaultMutableTreeNode[] treeNode = null;
+        int index = 0;
+        //Création des noeuds des groupes
+        Set<Groupe> groupes = ticketsCree.keySet();
+        for(Groupe gr : groupes){
+            treeNode[index] = new DefaultMutableTreeNode(new Ticket(0, gr.getIdGroupe(), null, null, null));
+            List<Ticket> tickets = ticketsCree.get(gr);
+            //Création des noeuds des tickets pour chaque groupe
+            for(Ticket tk : tickets){
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
+                treeNode[index].add(node);
             }
+            index ++;
         }
         //On relie chaque noeud de groupe a la racine
-        for(int i = 0; i < treeNode.length ; i++){
+        for(int i = 0; i < index ; i++){
             root.add(treeNode[i]);
-        }*/
-        return null;
+        }        
+        return root;
     }
     
     private void setTableModel(){
         //Création de colonnes
-        tableModele.addColumn("Image");
+        //tableModele.addColumn("Image");
         tableModele.addColumn("Nom utilisateur");
         tableModele.addColumn("Message");
         tableModele.addColumn("Date");
@@ -399,8 +421,6 @@ public class FenetreClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea chatArea;
-    private javax.swing.JScrollPane chatAreaSP;
     private javax.swing.JButton creerTicketButton;
     private javax.swing.JButton decoButton;
     private javax.swing.JTextArea discussionArea;

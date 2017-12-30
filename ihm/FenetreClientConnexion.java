@@ -57,12 +57,6 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
             }
         });
         getContentPane().add(connexionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
-
-        passwordField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordFieldActionPerformed(evt);
-            }
-        });
         getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 190, -1));
 
         passwordLabel.setText("Mot de passe");
@@ -73,10 +67,6 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordFieldActionPerformed
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
         Reseaux reseau = new Reseaux("127.0.0.1", 8090);
