@@ -3,6 +3,7 @@ package serveur;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -53,6 +54,8 @@ public class Traitement implements Runnable {
 
 		} else if (message instanceof MessageMessageConversation)
 			nouveauMessageConversation((MessageMessageConversation) message, socket);
+		else if (message instanceof MessageMiseAJourEtat)
+			lectureMessage((MessageMiseAJourEtat) message, socket);
 	}
 
 	private void deconnexionUtilisateur(MessageDeconnexion message, Socket s) {
@@ -205,32 +208,94 @@ public class Traitement implements Runnable {
 		}
 	}
 
-	private void changementEtatMessage(MessageMiseAJourEtat message, Socket s) {
+	private void lectureMessage(MessageMiseAJourEtat message, Socket s) {
 		try {
 			int idMessage = message.getIdMessage();
-			String idCreateur = message.getIdUtilisateur();
+			int idTicket = message.getIdTicket();
+			String idUtilisateur = message.getIdUtilisateur();
 			serveur.requeteBDD(
-					"INSERT INTO lire (idM,idU) VALUES (" + message.getIdMessage() + ", '" + idCreateur + "')");
+					"INSERT INTO lire (idM,idU) VALUES (" + message.getIdMessage() + ", '" + idUtilisateur + "')");
 
-			Set<String> participants = serveur.getParticipantsTickets(message.getIdTicket());
-
-			ResultSet res = serveur.requeteBDD("SELECT COUNT(*) FROM lire WHERE idM = " + idMessage);
-			res.first();
+			MessageConversation messageConv = messageFromId(idMessage, idUtilisateur);
+			
 			// Lu par tous
-			if (res.getInt(1) == participants.size()) {
+			if (messageConv.getEtatGroupe().equals(EtatMessage.LU_PAR_TOUS)) {
+				Set<String> participants = serveur.getParticipantsTickets(idTicket);
+				
 				for (String idU : participants) {
 					if (serveur.isConnected(new Utilisateur("", "", idU))) {
 						Socket sock = serveur.getMapUtilisateurConnexion().get((new Utilisateur("", "", idU)));
-						
+						ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
+						out.writeObject(new MessageMessageConversation(idTicket, messageConv));
+						out.flush();
+						out.close();
 					}
 				}
 			}
+
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private MessageConversation messageFromId(int idMessage, String idUtilisateur) {
+		ResultSet res;
+		try {
+			res = serveur.requeteBDD("SELECT * FROM Message WHERE idM = " + idMessage);
+			Utilisateur createur = serveur.getUtilisateur(idUtilisateur);
+			res.first();
+			String texte = res.getString("texte");
+			Date date = res.getDate("dateM");
+			int idTicket = res.getInt("idT");
+			EtatMessage etat = etatMessageFromId(idMessage, idTicket);
+			boolean estLu = messageEstLuParUtilisateur(idMessage, idUtilisateur);
+
+			return new MessageConversation(idMessage, createur, texte, date, etat, estLu);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private EtatMessage etatMessageFromId(int idMessage, int idTicket) {
+		Set<String> participants = serveur.getParticipantsTickets(idTicket);
+		EtatMessage etat = EtatMessage.NON_RECU_PAR_TOUS;
+
+		ResultSet res;
+		try {
+			res = serveur.requeteBDD("SELECT COUNT(*) FROM recevoir WHERE idM = " + idMessage);
+			res.first();
+			if (res.getInt(1) == participants.size())
+				etat = EtatMessage.NON_LU_PAR_TOUS;
+
+			res = serveur.requeteBDD("SELECT COUNT(*) FROM lire WHERE idM = " + idMessage);
+			res.first();
+			if (res.getInt(1) == participants.size())
+				etat = EtatMessage.LU_PAR_TOUS;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+		return etat;
+	}
+
+	private boolean messageEstLuParUtilisateur(int idMessage, String idUtilisateur) {
+		try {
+			ResultSet res = serveur.requeteBDD(
+					"SELECT COUNT(*) FROM lire WHERE idM = " + idMessage + " AND idU = '" + idUtilisateur + "'");
+			res.first();
+			return res.getInt(1) != 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }
