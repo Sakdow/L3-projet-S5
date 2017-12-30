@@ -27,25 +27,47 @@ public class Client {
 		listeGroupe = new LinkedList<>();
 	}
 
-	public void ajouterGroupe(Groupe... groupes){
-		for(Groupe groupe : groupes){
-			if(listeGroupe.contains(groupe)){
+	public void ajouterGroupe(Groupe... groupes) {
+		for (Groupe groupe : groupes) {
+			if (listeGroupe.contains(groupe)) {
 				listeGroupe.add(groupe);
 			}
 		}
 	}
-	
+
+	public void ajouterMessageConv(int idTicket, Groupe groupe, MessageConversation messConv) {
+		Ticket ticketAnonyme = new Ticket(idTicket, null, null, null, null);
+		boolean ajoute = false;
+		if (ticketsCree.containsKey(groupe)) {
+			for (Ticket t : ticketsCree.get(groupe)) {
+				if (t.equals(ticketAnonyme)) {
+					t.getFilDiscussion().ajouterMessage(messConv);
+					ajoute = true;
+				}
+			}
+		}
+
+		if (ticketsRecu.containsKey(groupe) && !ajoute) {
+			for (Ticket t : ticketsRecu.get(groupe)) {
+				if (t.equals(ticketAnonyme)) {
+					t.getFilDiscussion().ajouterMessage(messConv);
+				}
+			}
+		}
+
+	}
+
 	private void ajouterTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
 		if (tickets.containsKey(groupe)) {
 			boolean ajout = false;
 			List<Ticket> listeTicket = tickets.get(groupe);
-			for(Ticket t : listeTicket){
-				if(t.getIdTicket()==ticket.getIdTicket()){
-					t=ticket;
-					ajout=true;
+			for (Ticket t : listeTicket) {
+				if (t.getIdTicket() == ticket.getIdTicket()) {
+					t = ticket;
+					ajout = true;
 				}
 			}
-			if(!ajout){
+			if (!ajout) {
 				listeTicket.add(ticket);
 			}
 		} else {

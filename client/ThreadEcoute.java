@@ -2,6 +2,7 @@ package client;
 
 import message.Message;
 import message.MessageGroupe;
+import message.MessageNouveauMessageConversation;
 import message.MessageTicket;
 
 public class ThreadEcoute extends Thread {
@@ -18,19 +19,23 @@ public class ThreadEcoute extends Thread {
 	public void run() {
 		while (!Thread.interrupted()) {
 			Message messageRecu = reseaux.ecoute();
-			if(messageRecu != null){
-				if(messageRecu instanceof MessageTicket){
+			if (messageRecu != null) {
+				if (messageRecu instanceof MessageTicket) {
 					MessageTicket messageTicket = (MessageTicket) messageRecu;
-					client.ajouterTicket(  messageTicket.getTicket() );
-				} else {
+					client.ajouterTicket(messageTicket.getTicket());
+				} else if (messageRecu instanceof MessageGroupe) {
 					MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
-					client.ajouterGroupe( messageGroupe.getGroupe() );
+					client.ajouterGroupe(messageGroupe.getGroupe());
+				} else {
+					MessageNouveauMessageConversation nouveauMessConv = (MessageNouveauMessageConversation) messageRecu;
+					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getGroupe(),
+							nouveauMessConv.getMessageConv());
 				}
 			}
 		}
 	}
-	
-	public static void stopper( ThreadEcoute t ) {
+
+	public static void stopper(ThreadEcoute t) {
 		t.interrupt();
 	}
 

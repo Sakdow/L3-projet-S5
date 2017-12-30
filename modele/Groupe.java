@@ -33,5 +33,13 @@ public class Groupe {
 	public String getIdGroupe() {
 		return idGroupe;
 	}
+	
+	public boolean equals(Object obj) {
+		if(obj instanceof Groupe){
+			Groupe groupe = (Groupe) obj;
+			return (this.getIdGroupe() == groupe.getIdGroupe());
+		}
+		return false;
+	}
 
 }
