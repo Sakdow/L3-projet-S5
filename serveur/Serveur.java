@@ -120,6 +120,20 @@ public class Serveur {
 		}
 	}
 
+	public boolean connexionServeur(String idUtilisateur, String mdp) {
+		ResultSet res;
+		try {
+			res = requeteBDD(
+					"SELECT COUNT(*) FROM Administrateur WHERE idA = '" + idUtilisateur + "' AND mdp = '" + mdp + "'");
+			res.first();
+			return res.getInt(1) > 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	List<Groupe> groupesUtilisateur(String idUtilisateur) {
 		List<Groupe> groupes = new ArrayList<>();
 		ResultSet res;
@@ -282,13 +296,43 @@ public class Serveur {
 		String requete = "SELECT mdp FROM Utilisateur WHERE idU = " + message.getIdUtilisateur();
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
-			return !resultat.next() || resultat.getObject("mdp").toString().equals(message.getMotDePasse());
+			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
 
+	public Set<String> getGroupes() {
+		Set<String> groupes = new HashSet<>();
+		ResultSet res;
+		try {
+			res = requeteBDD("SELECT nomG FROM Groupe");
+			for (; res.next();)
+				groupes.add(res.getString(1));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return groupes;
+	}
+	
+	public Set<Utilisateur> getUtilisateurs(){
+		Set<Utilisateur> utilisateurs = new HashSet<>();
+		try {
+			ResultSet res = requeteBDD("SELECT idU FROM Utilisateur");
+			for( ; res.next() ; )
+				utilisateurs.add(getUtilisateur(res.getString(1)));
+			return utilisateurs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return utilisateurs;
+	}
+	
 	public ResultSet requeteBDD(String requete) throws SQLException {
 		Pattern insert = Pattern.compile("^INSERT INTO *");
 		Matcher insertM = insert.matcher(requete);
