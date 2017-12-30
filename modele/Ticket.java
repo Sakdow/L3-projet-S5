@@ -27,6 +27,10 @@ public class Ticket {
 		}
 		return false;
 	}
+	
+	public String toString() {
+	    return nom;
+	}
 
 	public int getIdTicket() {
 		return idTicket;
