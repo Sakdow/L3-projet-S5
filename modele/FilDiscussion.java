@@ -1,9 +1,11 @@
 package modele;
 
+import java.io.Serializable;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-public class FilDiscussion {
+public class FilDiscussion implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private NavigableSet<MessageConversation> ensembleMessage;
 	private int nombreMessage = 0;
 

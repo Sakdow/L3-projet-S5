@@ -1,8 +1,10 @@
 package modele;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class MessageConversation implements Comparable<MessageConversation> {
+public class MessageConversation implements Serializable, Comparable<MessageConversation> {
+	private static final long serialVersionUID = 1L;
 	private int idMessage;
 	private Utilisateur createur;
 	private String texte;
