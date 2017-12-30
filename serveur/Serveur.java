@@ -37,17 +37,17 @@ public class Serveur {
 	private Queue<AssocMessageSocket> messagessATraiter = new LinkedList<AssocMessageSocket>();
 	private BaseDeDonnees bdd;
 
-	Serveur() {
+	public Serveur() {
 		initServeur();
 	}
 
-	Serveur(int port) {
+	public Serveur(int port) {
 		this.port = port;
 		initServeur();
 	}
 
 	// utiliser port = -1 pour port par défaut
-	Serveur(int port, int nbThreadsTraitement) {
+	public Serveur(int port, int nbThreadsTraitement) {
 		if (port != -1)
 			this.port = port;
 		this.nbThreadsTraitement = nbThreadsTraitement;
@@ -73,50 +73,58 @@ public class Serveur {
 
 	private void connexions() {
 
-		for (;;) {
-			try {
-				ServerSocket s = new ServerSocket(port);
-				Socket soc = s.accept();
+		try {
+			ServerSocket s = new ServerSocket(port);
+			Socket soc;
+			for (;;) { 
+				soc = s.accept();
 
+				System.out.println("Nouvelle connexion");
+				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(soc.getInputStream());
-
+				System.out.println("csdqifjsqfd");
 				Object objetRecu = in.readObject();
+				System.out.println("dhxwvw");
 				MessageDemConnexion messRecu = (MessageDemConnexion) objetRecu;
-				in.close();
+
+				System.out.println("csdqifjsqfd");
 
 				boolean connexionAcceptee = isConnectionAccepted(messRecu);
 
 				MessageReponseConnexion reponseConnexion;
 
 				if (connexionAcceptee) {
+					System.out.println("Connexion acceptée");
 					Utilisateur utilisateur = this.getUtilisateur(messRecu.getIdUtilisateur());
 					mapUtilisateurConnexion.put(utilisateur, soc);
 					reponseConnexion = new MessageReponseConnexion(true, utilisateur);
 				} else {
+					System.out.println("Connexion refusée");
 					reponseConnexion = new MessageReponseConnexion(false, null);
 				}
-
-				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
+				
 				out.writeObject(reponseConnexion);
 				out.flush();
-
-				List<Ticket> tousLesTickets = ticketsUtilisateur(messRecu.getIdUtilisateur(), soc);
-				for (Ticket t : tousLesTickets) {
-					out.writeObject(new MessageTicket(t, false));
-					out.flush();
-				}
-
-				List<Groupe> groupes = groupesUtilisateur(messRecu.getIdUtilisateur());
-				for (Groupe g : groupes) {
-					out.writeObject(new MessageGroupe(g));
-					out.flush();
-				}
-
-				out.close();
-
-			} catch (Exception exception) {
-				exception.printStackTrace();
+				
+				for( ; ; );
+				
+//				if (connexionAcceptee) {
+//					List<Ticket> tousLesTickets = ticketsUtilisateur(messRecu.getIdUtilisateur(), soc);
+//					for (Ticket t : tousLesTickets) {
+//						out.writeObject(new MessageTicket(t, false));
+//						out.flush();
+//					}
+//
+//					List<Groupe> groupes = groupesUtilisateur(messRecu.getIdUtilisateur());
+//					for (Groupe g : groupes) {
+//						out.writeObject(new MessageGroupe(g));
+//						out.flush();
+//					}
+//
+//				}
 			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -293,7 +301,8 @@ public class Serveur {
 	}
 
 	private boolean isConnectionAccepted(MessageDemConnexion message) {
-		String requete = "SELECT mdp FROM Utilisateur WHERE idU = " + message.getIdUtilisateur();
+		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
+		System.out.println(requete);
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
@@ -317,22 +326,22 @@ public class Serveur {
 
 		return groupes;
 	}
-	
-	public Set<Utilisateur> getUtilisateurs(){
+
+	public Set<Utilisateur> getUtilisateurs() {
 		Set<Utilisateur> utilisateurs = new HashSet<>();
 		try {
 			ResultSet res = requeteBDD("SELECT idU FROM Utilisateur");
-			for( ; res.next() ; )
+			for (; res.next();)
 				utilisateurs.add(getUtilisateur(res.getString(1)));
 			return utilisateurs;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return utilisateurs;
 	}
-	
+
 	public ResultSet requeteBDD(String requete) throws SQLException {
 		Pattern insert = Pattern.compile("^INSERT INTO *");
 		Matcher insertM = insert.matcher(requete);
@@ -363,7 +372,7 @@ public class Serveur {
 	}
 
 	Utilisateur getUtilisateur(String idUtilisateur) {
-		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = " + idUtilisateur;
+		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idUtilisateur +"'";
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			if (!resultat.next())

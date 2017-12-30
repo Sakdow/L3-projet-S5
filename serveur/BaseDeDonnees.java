@@ -16,6 +16,7 @@ class BaseDeDonnees {
 	}
 
 	public ResultSet requete(String requete) throws SQLException {
+		System.out.println("Bdd : " + requete);
 		Statement state = bdd.createStatement();
 		return state.executeQuery(requete);
 	}
