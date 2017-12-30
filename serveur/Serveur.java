@@ -132,7 +132,7 @@ public class Serveur {
 		ResultSet res;
 		try {
 			res = requeteBDD(
-					"SELECT COUNT(*) FROM Administrateur WHERE idA = '" + idUtilisateur + "' AND mdp = '" + mdp + "'");
+					"SELECT COUNT(*) FROM administrateur WHERE idA = '" + idUtilisateur + "' AND mdp = '" + mdp + "'");
 			res.first();
 			return res.getInt(1) > 0;
 		} catch (SQLException e) {
@@ -180,7 +180,7 @@ public class Serveur {
 		Ticket ticket = null;
 
 		try {
-			res = requeteBDD("SELECT titre FROM Ticket WHERE idT = " + idTicket);
+			res = requeteBDD("SELECT titre FROM ticket WHERE idT = " + idTicket);
 			res.first();
 			String nom = res.getString(1);
 			String nomGroupe = nomGroupeFromIdTicket(idTicket);
@@ -273,7 +273,7 @@ public class Serveur {
 
 			for (; setIdU.next();) {
 				String idU = setIdU.getString(1);
-				ResultSet res = requeteBDD("SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idU + "'");
+				ResultSet res = requeteBDD("SELECT nom,prenom FROM utilisateur WHERE idU = '" + idU + "'");
 				res.first();
 				groupe.ajouterUtilisateurs(new Utilisateur(res.getString("nom"), res.getString("prenom"), idU));
 			}
@@ -301,8 +301,12 @@ public class Serveur {
 	}
 
 	private boolean isConnectionAccepted(MessageDemConnexion message) {
+<<<<<<< HEAD
 		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
 		System.out.println(requete);
+=======
+		String requete = "SELECT mdp FROM utilisateur WHERE idU = " + message.getIdUtilisateur();
+>>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
@@ -316,7 +320,7 @@ public class Serveur {
 		Set<String> groupes = new HashSet<>();
 		ResultSet res;
 		try {
-			res = requeteBDD("SELECT nomG FROM Groupe");
+			res = requeteBDD("SELECT nomG FROM groupe");
 			for (; res.next();)
 				groupes.add(res.getString(1));
 		} catch (SQLException e) {
@@ -330,8 +334,13 @@ public class Serveur {
 	public Set<Utilisateur> getUtilisateurs() {
 		Set<Utilisateur> utilisateurs = new HashSet<>();
 		try {
+<<<<<<< HEAD
 			ResultSet res = requeteBDD("SELECT idU FROM Utilisateur");
 			for (; res.next();)
+=======
+			ResultSet res = requeteBDD("SELECT idU FROM utilisateur");
+			for( ; res.next() ; )
+>>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
 				utilisateurs.add(getUtilisateur(res.getString(1)));
 			return utilisateurs;
 		} catch (SQLException e) {
@@ -372,7 +381,11 @@ public class Serveur {
 	}
 
 	Utilisateur getUtilisateur(String idUtilisateur) {
+<<<<<<< HEAD
 		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idUtilisateur +"'";
+=======
+		String requete = "SELECT nom,prenom FROM utilisateur WHERE idU = " + idUtilisateur;
+>>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			if (!resultat.next())

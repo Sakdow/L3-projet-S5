@@ -1,9 +1,11 @@
 package modele;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Groupe {
+public class Groupe implements Serializable {
+	private static final long serialVersionUID = 1L;
 	List<Utilisateur> listeUtilisateur = new LinkedList<>();
 	String idGroupe;
 

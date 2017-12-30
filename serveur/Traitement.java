@@ -77,13 +77,13 @@ public class Traitement implements Runnable {
 		String idGroupe = ticket.getGroupe().getIdGroupe();
 
 		try {
-			ResultSet res = serveur.requeteBDD("INSERT INTO Ticket (titre) VALUES ('" + ticket.getNom() + "')");
+			ResultSet res = serveur.requeteBDD("INSERT INTO ticket (titre) VALUES ('" + ticket.getNom() + "')");
 			res.first();
 			int idTicket = res.getInt(1);
 			ticket.setIdTicket(idTicket);
 
 			MessageConversation messageConv = ticket.getFilDiscussion().getEnsembleMessage().first();
-			res = serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('" + messageConv.getTexte()
+			res = serveur.requeteBDD("INSERT INTO message (texte,dateM,idT, idU) VALUES ('" + messageConv.getTexte()
 					+ "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '" + idTicket + "', '" + idCreateur
 					+ "')");
 			res.first();
@@ -146,7 +146,7 @@ public class Traitement implements Runnable {
 
 		try {
 			// Ajout du message dans la bdd
-			ResultSet res = serveur.requeteBDD("INSERT INTO Message (texte,dateM,idT, idU) VALUES ('"
+			ResultSet res = serveur.requeteBDD("INSERT INTO message (texte,dateM,idT, idU) VALUES ('"
 					+ messageConv.getTexte() + "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '"
 					+ message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')");
 			res.first();
@@ -243,7 +243,7 @@ public class Traitement implements Runnable {
 	private MessageConversation messageFromId(int idMessage, String idUtilisateur) {
 		ResultSet res;
 		try {
-			res = serveur.requeteBDD("SELECT * FROM Message WHERE idM = " + idMessage);
+			res = serveur.requeteBDD("SELECT * FROM message WHERE idM = " + idMessage);
 			Utilisateur createur = serveur.getUtilisateur(idUtilisateur);
 			res.first();
 			String texte = res.getString("texte");
