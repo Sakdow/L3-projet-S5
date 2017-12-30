@@ -2,7 +2,7 @@ package message;
 
 import modele.MessageConversation;
 
-public class MessageNouveauMessageConversation {
+public class MessageNouveauMessageConversation extends Message{
 	private static final long serialVersionUID = 1L;
 	private int idTicket;
 	private MessageConversation messageConv;

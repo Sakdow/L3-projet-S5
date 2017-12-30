@@ -15,6 +15,7 @@ import message.MessageDeconnexion;
 import message.MessageNouveauMessageConversation;
 import message.MessageTicket;
 import modele.EtatMessage;
+import modele.Groupe;
 import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
@@ -49,7 +50,7 @@ public class Traitement implements Runnable {
 			if (!m.getDemande())
 				nouveauTicket(m, socket);
 		} else if (message instanceof MessageNouveauMessageConversation)
-			nouveauMessageConversation((MessageNouveauMessageConversation) message);
+			nouveauMessageConversation((MessageNouveauMessageConversation) message, socket);
 	}
 
 	private void deconnexionUtilisateur(MessageDeconnexion message, Socket s) {
@@ -133,7 +134,7 @@ public class Traitement implements Runnable {
 		}
 	}
 
-	private void nouveauMessageConversation(MessageNouveauMessageConversation message) {
+	private void nouveauMessageConversation(MessageNouveauMessageConversation message, Socket s) {
 		MessageConversation messageConv = message.getMessageConv();
 		Utilisateur createur = messageConv.getCreateur();
 
@@ -143,29 +144,88 @@ public class Traitement implements Runnable {
 					+ message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')");
 			res.first();
 			int idMessage = res.getInt(1);
-			
-			
-			
-			Ticket ticket = new Ticket(message.getIdTicket(),createur, idGroupeFromIdTicket(idTicket), null );
-			
-			
+
+			int idTicket = message.getIdTicket();
+
+			res = serveur.requeteBDD("SELECT titre FROM Ticket WHERE idT = " + idTicket);
+			res.first();
+			String titre = res.getString(1);
+
+			String nomGroupe = nomGroupeFromIdTicket(idTicket);
+			Groupe groupe = getGroupeFromNomGroupe(nomGroupe);
+
+			res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG =" + nomGroupe);
+
+			Set<Socket> aEnvoyer = new HashSet<>();
+			boolean tousRecus = true;
+
+			for (; res.next();) {
+				String idU = res.getString(1);
+				Socket sock = serveur.getMapUtilisateurConnexion().get((new Utilisateur("", "", idU)));
+				if (sock != null) {
+					aEnvoyer.add(sock);
+					serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + "," + idU + ")");
+				} else
+					tousRecus = false;
+			}
+
+			if (aEnvoyer.contains(s))
+				aEnvoyer.remove(s);
+			else
+				serveur.requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + "," + idCreateur + ")");
+
+			for (Socket soc : aEnvoyer) {
+				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
+				out.writeObject(ticket);
+				out.flush();
+				out.close();
+			}
+
+			messageConv.setLuParUtilisateur(true);
+			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+			out.writeObject(ticket);
+			out.flush();
+			out.close();
+			serveur.requeteBDD("INSERT INTO lire (idM, idU) VALUES (" + idMessage + "," + idCreateur + ")");
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private String idGroupeFromIdTicket(int idTicket) {
+	private String nomGroupeFromIdTicket(int idTicket) {
 		String idGroupe = "";
 		try {
 			ResultSet res = serveur.requeteBDD("SELECT nomG FROM participer WHERE idT = " + idTicket);
-			if( res != null && res.first() )
+			if (res != null && res.first())
 				idGroupe = res.getString(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return idGroupe;
+	}
+
+	private Groupe getGroupeFromNomGroupe(String nomGroupe) {
+		Groupe groupe = new Groupe(nomGroupe);
+
+		try {
+			ResultSet setIdU = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG = " + nomGroupe);
+
+			for (; setIdU.next();) {
+				String idU = setIdU.getString(1);
+				ResultSet res = serveur.requeteBDD("SELECT nom,prenom FROM Utilisateur WHERE idU = " + idU);
+				res.first();
+				groupe.ajouterUtilisateurs(new Utilisateur(res.getString("nom"), res.getString("prenom"), idU));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return groupe;
 	}
 }
