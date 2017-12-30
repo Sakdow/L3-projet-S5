@@ -3,7 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
+
+import client.Client;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
+import modele.EtatMessage;
+import modele.Groupe;
+import modele.MessageConversation;
 
 /**
  *
@@ -14,10 +22,18 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
     /**
      * Creates new form FenetreClientNouvTicket
      */
+    private Client client;
+    private List<Groupe> listeGroupes;
+    public FenetreClientNouvTicket(Client client) {
+        initComponents();
+        this.client = client;
+        listeGroupes = client.getListeGroupe();
+        
+    }
+    //DEBUG
     public FenetreClientNouvTicket() {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,6 +56,7 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         setTitle("Création de ficket");
 
         groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Groupe 1", "Groupe 2" }));
+        groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModel()));
 
         groupeLabel.setText("Groupe :");
 
@@ -118,13 +135,36 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
-        // TODO add your handling code here:
+        String nomTicket = nomTicketField.getText();
+        String nomGr = (String) groupeComboBox.getSelectedItem();
+        String message = messageArea.getText();        
+        Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());        
+        Groupe groupe = new Groupe(nomGr);
+        for(Groupe gr : listeGroupes){
+            if(groupe.equals(gr)){
+                groupe = gr;
+            }
+        }
+        MessageConversation messageConv = new MessageConversation(-1, client.getUtilisateurClient(), message, date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
+        client.creerTicket(groupe, nomTicket, messageConv);
     }//GEN-LAST:event_creerButtonActionPerformed
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_annulerButtonActionPerformed
-
+    private String[] getComboBoxModel(){
+        //Requete pour recuperer tous les groupes
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*String groupes[];
+        int i = 0;
+        while(res.next()){
+            groupes[i] = res.getString("nom");
+            i ++;
+        }
+        return groupes;*/
+        return new String[] { "Groupe 1", "Groupe 2" };
+    }
     /**
      * @param args the command line arguments
      */

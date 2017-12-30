@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -200,8 +200,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
                 liste.clearSelection();
                 label.setText(text + " non trouvé");
             }
-        }
-        
+        }        
     }
     
     public void searchCombo(String text, JComboBox box) {

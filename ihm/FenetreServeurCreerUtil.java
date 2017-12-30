@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -14,7 +15,7 @@ import javax.swing.JList;
  * @author Lucas
  */
 public class FenetreServeurCreerUtil extends javax.swing.JFrame {
-
+    private DefaultListModel listeModele;
     /**
      * Creates new form FenetreServeurCreerUtil
      */
@@ -57,7 +58,6 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création d'utilisateur");
-        setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Paramètres de l'utilisateur");
@@ -95,6 +95,11 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         getContentPane().add(searchAjoutGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 130, -1));
 
         ajoutGrUtilButton.setText("Ajouter");
+        ajoutGrUtilButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ajoutGrUtilButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(ajoutGrUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 290, -1, -1));
 
         jLabel3.setText("Liste des groupes");
@@ -105,9 +110,11 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModele = new DefaultListModel();
+        setListeModel();
         jScrollPane1.setViewportView(listeGroupesList);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 160, 130));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 160, 190));
 
         searchSupprGrField.setText("search");
         searchSupprGrField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -115,10 +122,15 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
                 searchSupprGrFieldKeyReleased(evt);
             }
         });
-        getContentPane().add(searchSupprGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 100, -1));
+        getContentPane().add(searchSupprGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 320, 100, -1));
 
         supprGrButton.setText("Supprimer");
-        getContentPane().add(supprGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, -1, -1));
+        supprGrButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprGrButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(supprGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 320, -1, -1));
 
         creerButton.setText("Créer");
         creerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -140,7 +152,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         getContentPane().add(ajoutGrCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 220, -1));
 
         searchSupprGrLabel.setText("Recherche");
-        getContentPane().add(searchSupprGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 220, -1, -1));
+        getContentPane().add(searchSupprGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 290, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -162,6 +174,19 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         String text = searchAjoutGrField.getText();        
         searchCombo(text, ajoutGrCombo);
     }//GEN-LAST:event_searchAjoutGrFieldKeyReleased
+
+    private void supprGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprGrButtonActionPerformed
+        int index = listeGroupesList.getSelectedIndex();
+        listeModele.remove(index);
+        listeGroupesList.setModel(listeModele);
+    }//GEN-LAST:event_supprGrButtonActionPerformed
+
+    private void ajoutGrUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajoutGrUtilButtonActionPerformed
+        if(!listeModele.contains(ajoutGrCombo.getSelectedItem())){
+            listeModele.addElement(ajoutGrCombo.getSelectedItem());
+            listeGroupesList.setModel(listeModele);
+        }
+    }//GEN-LAST:event_ajoutGrUtilButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -200,6 +225,22 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
                 //label.setText(text + " non trouvé");
             }
         }        
+    }
+    
+    private void setListeModel(){
+        //Requete pour recuperer tous les groupes de l'utilisateur
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*        
+        while(res.next()){
+            modele.addElement(res.getString("nom"));            
+        }
+        */
+        //A REMPLACER PAR CI DESSUS
+        listeModele.addElement("1");
+        listeModele.addElement("2");
+        //
+        listeGroupesList.setModel(listeModele);
     }
     /**
      * @param args the command line arguments

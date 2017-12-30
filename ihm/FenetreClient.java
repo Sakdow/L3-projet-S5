@@ -3,7 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
+
+import client.Client;
+import client.ThreadEcoute;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JTree;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import message.MessageMessageConversation;
+import message.MessageTicket;
+import modele.EtatMessage;
+import modele.Groupe;
+import modele.MessageConversation;
+import modele.Ticket;
+import serveur.Serveur;
 
 /**
  *
@@ -14,7 +33,20 @@ public class FenetreClient extends javax.swing.JFrame {
     /**
      * Creates new form FenetreClient
      */
-    public FenetreClient() {
+    private Client client;
+    private ThreadEcoute thread;
+    private Ticket ticketRecuSelect;
+    private Ticket ticketCreeSelect;
+    private String groupeRecuSelect;
+    private String groupeCreeSelect;
+    private DefaultTableModel tableModele;
+    public FenetreClient(Client client, ThreadEcoute thread) {
+        this.client = client;
+        this.thread = thread;
+        initComponents();        
+    }
+    //DEBUG
+    public FenetreClient(){
         initComponents();
     }
 
@@ -27,6 +59,8 @@ public class FenetreClient extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane4 = new javax.swing.JScrollPane();
+        discussionArea = new javax.swing.JTextArea();
         creerTicketButton = new javax.swing.JButton();
         decoButton = new javax.swing.JButton();
         ongletsDiscu = new javax.swing.JTabbedPane();
@@ -36,11 +70,18 @@ public class FenetreClient extends javax.swing.JFrame {
         ticketsRecusTree = new javax.swing.JTree();
         jScrollPane3 = new javax.swing.JScrollPane();
         saisieDiscuArea = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        discussionArea = new javax.swing.JTextArea();
         envoyerButton = new javax.swing.JButton();
         titreDiscuLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
+        chatAreaSP = new javax.swing.JScrollPane();
+        chatArea = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        discussionTable = new javax.swing.JTable();
+
+        discussionArea.setColumns(20);
+        discussionArea.setRows(5);
+        discussionArea.setText("Peut etre generer un text area pour chaque message");
+        jScrollPane4.setViewportView(discussionArea);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -54,6 +95,11 @@ public class FenetreClient extends javax.swing.JFrame {
         getContentPane().add(creerTicketButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
 
         decoButton.setText("Déconnexion");
+        decoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decoButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(decoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, -1, -1));
 
         //A modifier en recuperant depuis la base les discussions
@@ -130,11 +176,17 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                ticketsRecusTreeValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(ticketsRecusTree);
 
         ongletsDiscu.addTab("Reçus", jScrollPane2);
 
-        getContentPane().add(ongletsDiscu, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 190, 322));
+        getContentPane().add(ongletsDiscu, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 190, 322));
 
         saisieDiscuArea.setColumns(20);
         saisieDiscuArea.setRows(5);
@@ -142,13 +194,6 @@ public class FenetreClient extends javax.swing.JFrame {
         jScrollPane3.setViewportView(saisieDiscuArea);
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 290, 40));
-
-        discussionArea.setColumns(20);
-        discussionArea.setRows(5);
-        discussionArea.setText("Peut etre generer un text area pour chaque message");
-        jScrollPane4.setViewportView(discussionArea);
-
-        getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 86, 460, 230));
 
         envoyerButton.setText("Envoyer");
         envoyerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -164,29 +209,160 @@ public class FenetreClient extends javax.swing.JFrame {
         usernameLabel.setText("Prénom Nom");
         getContentPane().add(usernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 10, -1, 20));
 
+        chatArea.setColumns(20);
+        chatArea.setRows(5);
+        chatArea.setText("Toto : M1\nTATA : M2");
+        chatAreaSP.setViewportView(chatArea);
+
+        getContentPane().add(chatAreaSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 260, 80));
+
+        jScrollPane5.setBorder(null);
+
+        discussionTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"util1", "message1", null, null},
+                {"util2", "message2", null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        //Gestion selection de ligne
+        discussionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (discussionTable.getSelectedRow() > -1) {
+                    // print first column value from selected row
+                    System.out.println(discussionTable.getValueAt(discussionTable.getSelectedRow(), 0).toString());
+                }
+            }
+        });
+        //Mise en place du modele
+        tableModele = new DefaultTableModel();
+        setTableModel();
+        jScrollPane5.setViewportView(discussionTable);
+
+        getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 480, 230));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
         //Envoyer le message
+        Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+        titreDiscuLabel.setText(date.toString());        
+        MessageConversation messConv = new MessageConversation(-1, client.getUtilisateurClient(), saisieDiscuArea.getText(), date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
+        //Recuperer ticket selectionné dans l'arbre
+        //onglet 0 = crees, onglet 1 = recus
+        int onglet = ongletsDiscu.getSelectedIndex();
+        if(onglet == 0){
+            ticketCreeSelect.ajouterMessage(messConv);
+            MessageMessageConversation messTicket = new MessageMessageConversation(ticketCreeSelect.getIdTicket(), messConv);
+            client.getReseaux().envoyerMessage(messTicket);  
+        }
+        if(onglet == 1){
+            ticketRecuSelect.ajouterMessage(messConv);
+            MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketRecuSelect.getIdTicket(), messConv);
+            client.getReseaux().envoyerMessage(messEnvoye);            
+        }        
         //On efface le texte de la saisie
         saisieDiscuArea.setText("");
     }//GEN-LAST:event_envoyerButtonActionPerformed
-    //Gestion de l'item (disussion) selectionné dans l'arbre
+    
     private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
-         String node = evt.getNewLeadSelectionPath().getLastPathComponent().toString();
-         //Debug : on affiche dans la fenetres des messages le nom de la discussion
-         discussionArea.setText(node);
+         Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+         String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+         ticketCreeSelect = node1;
+         groupeCreeSelect = node2;
+         titreDiscuLabel.setText(ticketCreeSelect.toString());
          //TODO : afficher la discussion correspondante
+         
          //afficherMessages(node)
     }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
         //Affichage d'une fenetre de creation de ticket
-        FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket();
+        FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket(client);
+        //DEBUG
+        //FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket();
         fenNewTicket.setVisible(true);
     }//GEN-LAST:event_creerTicketButtonActionPerformed
 
+    private void decoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoButtonActionPerformed
+        thread.stopper(thread);
+        client.getReseaux().deconnexionServeur(client.getUtilisateurClient().getIdUtilisateur());
+        FenetreClientConnexion fenetre = new FenetreClientConnexion();
+        fenetre.setVisible(true);
+        this.dispose();
+        
+
+    }//GEN-LAST:event_decoButtonActionPerformed
+
+    private void ticketsRecusTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsRecusTreeValueChanged
+        Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+        ticketRecuSelect = node1;
+        groupeRecuSelect = node2;
+        titreDiscuLabel.setText(ticketRecuSelect.toString());
+        //TODO : afficher la discussion correspondante
+        
+        //afficherMessages(node)
+    }//GEN-LAST:event_ticketsRecusTreeValueChanged
+    private DefaultMutableTreeNode getArbreModelRecus(){
+        //PARTIE TICKETS RECUS
+        //Récupération de l'utilisateur connecté
+        /*Utilisateur util = client.getUtilisateurClient();
+        //Requete pour recuperer les groupes de l'utilisateur
+        String req = "SELECT....";
+        ResultSet res = Serveur.requeteBDD(req);
+        int index = 0;
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tickets");
+        DefaultMutableTreeNode[] treeNode ;
+        while(res.next()){
+            //Création des noeuds de groupe
+            treeNode[index] = new DefaultMutableTreeNode(res.getString("nom"));
+            index ++;
+        }
+        //Requete pour recuperer les tickets de chaque groupe
+        for(int i = 0; i < treeNode.length ; i++){
+            String req = "SELECT titre FROM ticket...where groupe = " + treeNode[i];
+            ResultSet res = Serveur.requeteBDD(req);
+            while(res.next()){
+                DefaultMutableTreeNode ticket = new DefaultMutableTreeNode(res.getString("nom"));
+                treeNode[i].add(ticket);
+            }
+        }
+        //On relie chaque noeud de groupe a la racine
+        for(int i = 0; i < treeNode.length ; i++){
+            root.add(treeNode[i]);
+        }*/
+        return null;
+    }
+    
+    private void setTableModel(){
+        //Création de colonnes
+        tableModele.addColumn("Image");
+        tableModele.addColumn("Nom utilisateur");
+        tableModele.addColumn("Message");
+        tableModele.addColumn("Date");
+        //Remplissage des lignes par des messages
+        //if utilisateur alors mettre a droite
+        String[] test = {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            };
+        tableModele.addRow(test);
+        discussionTable.setModel(tableModele);
+    }
     /**
      * @param args the command line arguments
      */
@@ -223,14 +399,18 @@ public class FenetreClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea chatArea;
+    private javax.swing.JScrollPane chatAreaSP;
     private javax.swing.JButton creerTicketButton;
     private javax.swing.JButton decoButton;
     private javax.swing.JTextArea discussionArea;
+    private javax.swing.JTable discussionTable;
     private javax.swing.JButton envoyerButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane ongletsDiscu;
     private javax.swing.JTextArea saisieDiscuArea;
     private javax.swing.JTree ticketsCreesTree;

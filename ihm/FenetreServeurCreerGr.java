@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListModel;
 
 /**
  *
  * @author Lucas
  */
 public class FenetreServeurCreerGr extends javax.swing.JFrame {
-
+    private DefaultListModel listeModele;
     /**
      * Creates new form FenetreServeurCreerGr
      */
@@ -100,6 +102,11 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         getContentPane().add(searchSupprUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 300, 110, -1));
 
         supprimerUtilButton.setText("Supprimer");
+        supprimerUtilButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprimerUtilButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(supprimerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 300, -1, -1));
 
         creerButton.setText("Créer");
@@ -114,6 +121,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         getContentPane().add(annulerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 370, -1, -1));
 
         ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModelUtil()));
         getContentPane().add(ajoutUtilCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 120, -1));
 
         searchSupprUtilLabel.setText("Recherche");
@@ -128,9 +136,15 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         getContentPane().add(ajouterUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, -1, -1));
 
         ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModelGr()));
         getContentPane().add(ajoutGrCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 120, -1));
 
         ajouterGrButton.setText("Ajouter");
+        ajouterGrButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ajouterGrButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(ajouterGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 290, -1, -1));
 
         listeUtilList.setModel(new javax.swing.AbstractListModel<String>() {
@@ -138,6 +152,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModele = new DefaultListModel();
+        setListeModel();
         jScrollPane1.setViewportView(listeUtilList);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 60, 160, 180));
@@ -150,7 +166,12 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     }//GEN-LAST:event_annulerButtonActionPerformed
 
     private void ajouterUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterUtilButtonActionPerformed
-        // TODO add your handling code here:
+        
+        if(!listeModele.contains(ajoutUtilCombo.getSelectedItem())){
+            listeModele.addElement(ajoutUtilCombo.getSelectedItem());
+            listeUtilList.setModel(listeModele);
+        }
+        
     }//GEN-LAST:event_ajouterUtilButtonActionPerformed
 
     private void searchUtilFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchUtilFieldKeyReleased
@@ -167,6 +188,21 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         String text = searchSupprUtilField.getText();        
         searchJList(text, listeUtilList, searchSupprUtilLabel);
     }//GEN-LAST:event_searchSupprUtilFieldKeyReleased
+
+    private void ajouterGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterGrButtonActionPerformed
+        //Faire une requete pour recuperer les utilisateurs du groupe
+        //pour chaque util, faire
+        //if(!listeModel.contains(util)){
+        //listeModele.addElement(util);
+        //}
+        //listeUtilList.setModel(listeModele);
+    }//GEN-LAST:event_ajouterGrButtonActionPerformed
+
+    private void supprimerUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprimerUtilButtonActionPerformed
+        int index = listeUtilList.getSelectedIndex();
+        listeModele.remove(index);
+        listeUtilList.setModel(listeModele);
+    }//GEN-LAST:event_supprimerUtilButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -205,6 +241,50 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 //label.setText(text + " non trouvé");
             }
         }        
+    }
+    
+    private String[] getComboBoxModelGr(){
+        //Requete pour recuperer tous les groupes
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*String groupes[];
+        int i = 0;
+        while(res.next()){
+            groupes[i] = res.getString("nom");
+            i ++;
+        }
+        return groupes;*/
+        return new String[] { "Groupe 1", "Groupe 2" };
+    }
+    
+    private String[] getComboBoxModelUtil(){
+        //Requete pour recuperer tous les utilisateurs
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*String util[];
+        int i = 0;
+        while(res.next()){
+            util[i] = res.getString("prenom") + " " + res.getString("nom");
+            i ++;
+        }
+        return util;*/
+        return new String[] { "Util 1", "Util 2" };
+    }
+    
+    private void setListeModel(){
+        //Requete pour recuperer tous les utilisateurs du groupe
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*        
+        while(res.next()){
+            modele.addElement(res.getString("prenom") + " " + res.getString("nom"));            
+        }
+        */
+        //A REMPLACER PAR CI DESSUS
+        listeModele.addElement("1");
+        listeModele.addElement("2");
+        //
+        listeUtilList.setModel(listeModele);
     }
     /**
      * @param args the command line arguments

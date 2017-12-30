@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projets5;
+package ihm;
 
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
@@ -17,7 +17,8 @@ import javax.swing.ListModel;
  * @author Lucas
  */
 public class FenetreServeurGestGroupe extends javax.swing.JFrame {
-
+    private DefaultListModel listeModeleUtil;
+    private DefaultListModel listeModeleGr;
     /**
      * Creates new form FenetreServeurGestGroupe
      */
@@ -59,6 +60,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         searchUtilLabel = new javax.swing.JLabel();
         searchUtilAjoutCombo = new javax.swing.JComboBox<>();
         searchGrAjoutCombo = new javax.swing.JComboBox<>();
+        modifierButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de groupes");
@@ -72,6 +74,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModeleGr = new DefaultListModel();
+        setListeModelGr();
         listeGrList.setViewportView(listeGroupeList);
 
         getContentPane().add(listeGrList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 120, 140));
@@ -81,6 +85,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModeleUtil = new DefaultListModel();
+        setListeModelUtil();
         jScrollPane1.setViewportView(listeUtilGrList);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 60, 130, 140));
@@ -94,11 +100,16 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         getContentPane().add(searchGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 80, -1));
 
         supprGrButton.setText("Supprimer");
+        supprGrButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprGrButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(supprGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 270, -1, -1));
 
         modifNomLabel.setText("Modifier le nom :");
         getContentPane().add(modifNomLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, -1, -1));
-        getContentPane().add(modifNomField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, 80, -1));
+        getContentPane().add(modifNomField, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 340, 80, -1));
 
         accepterButton.setText("Accepter");
         getContentPane().add(accepterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
@@ -168,6 +179,14 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         searchGrAjoutCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(searchGrAjoutCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 410, 170, -1));
 
+        modifierButton.setText("Modifier");
+        modifierButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifierButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(modifierButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -195,6 +214,16 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         String text = searchAjoutGrUtilField.getText();
         searchCombo(text, searchGrAjoutCombo);
     }//GEN-LAST:event_searchAjoutGrUtilFieldKeyReleased
+
+    private void supprGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprGrButtonActionPerformed
+        int index = listeGroupeList.getSelectedIndex();
+        listeModeleGr.remove(index);
+        listeGroupeList.setModel(listeModeleGr);
+    }//GEN-LAST:event_supprGrButtonActionPerformed
+
+    private void modifierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifierButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_modifierButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -212,8 +241,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
                 liste.clearSelection();
                 label.setText(text + " non trouvé");
             }
-        }
-        
+        }        
     }
     
     public void searchCombo(String text, JComboBox box) {
@@ -233,8 +261,39 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             } else {
                 //label.setText(text + " non trouvé");
             }
+        }        
+    }
+    
+    private void setListeModelGr(){
+        //Requete pour recuperer tous les groupes
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*        
+        while(res.next()){
+            modele.addElement(res.getString("nom"));            
         }
-        
+        */
+        //A REMPLACER PAR CI DESSUS
+        listeModeleGr.addElement("1");
+        listeModeleGr.addElement("2");
+        //
+        listeGroupeList.setModel(listeModeleGr);
+    }
+    
+    private void setListeModelUtil(){
+        //Requete pour recuperer tous les utilisateurs du groupe
+        String req = "SELECT....";
+        //ResultSet res = Serveur.requeteBDD(req);
+        /*        
+        while(res.next()){
+            modele.addElement(res.getString("prenom") + " " + res.getString("nom"));            
+        }
+        */
+        //A REMPLACER PAR CI DESSUS
+        listeModeleUtil.addElement("1");
+        listeModeleUtil.addElement("2");
+        //
+        listeUtilGrList.setModel(listeModeleUtil);
     }
     
     
@@ -287,6 +346,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private javax.swing.JList<String> listeUtilGrList;
     private javax.swing.JTextField modifNomField;
     private javax.swing.JLabel modifNomLabel;
+    private javax.swing.JButton modifierButton;
     private javax.swing.JLabel paramGrLabel;
     private javax.swing.JButton retirerDuGrButton;
     private javax.swing.JTextField searchAjoutGrUtilField;
