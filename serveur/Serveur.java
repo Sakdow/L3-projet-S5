@@ -301,12 +301,10 @@ public class Serveur {
 	}
 
 	private boolean isConnectionAccepted(MessageDemConnexion message) {
-<<<<<<< HEAD
+
 		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
 		System.out.println(requete);
-=======
-		String requete = "SELECT mdp FROM utilisateur WHERE idU = " + message.getIdUtilisateur();
->>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
+
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
@@ -334,13 +332,9 @@ public class Serveur {
 	public Set<Utilisateur> getUtilisateurs() {
 		Set<Utilisateur> utilisateurs = new HashSet<>();
 		try {
-<<<<<<< HEAD
-			ResultSet res = requeteBDD("SELECT idU FROM Utilisateur");
-			for (; res.next();)
-=======
+
 			ResultSet res = requeteBDD("SELECT idU FROM utilisateur");
 			for( ; res.next() ; )
->>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
 				utilisateurs.add(getUtilisateur(res.getString(1)));
 			return utilisateurs;
 		} catch (SQLException e) {
@@ -381,11 +375,8 @@ public class Serveur {
 	}
 
 	Utilisateur getUtilisateur(String idUtilisateur) {
-<<<<<<< HEAD
 		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idUtilisateur +"'";
-=======
-		String requete = "SELECT nom,prenom FROM utilisateur WHERE idU = " + idUtilisateur;
->>>>>>> 4317174717834f7e8aa0b704a54b3786cb0d1eaa
+		
 		try {
 			ResultSet resultat = this.requeteBDD(requete);
 			if (!resultat.next())
