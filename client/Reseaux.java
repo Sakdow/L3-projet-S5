@@ -10,6 +10,7 @@ import message.Message;
 import message.MessageDeconnexion;
 import message.MessageDemConnexion;
 import message.MessageGroupe;
+import message.MessageNouveauMessageConversation;
 import message.MessageReponseConnexion;
 import message.MessageTicket;
 
@@ -89,8 +90,10 @@ public class Reseaux {
 				Message messRecu;
 				if(objetRecu instanceof MessageTicket){
 					messRecu = (MessageTicket) objetRecu;
-				} else {
+				} else if (objetRecu instanceof MessageGroupe) {
 					messRecu = (MessageGroupe) objetRecu;
+				} else {
+					messRecu = (MessageNouveauMessageConversation) objetRecu;
 				}
 	
 				in.close();

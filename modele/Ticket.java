@@ -19,6 +19,14 @@ public class Ticket {
 	public void ajouterMessage(MessageConversation message) {
 		filDiscussion.ajouterMessage(message);
 	}
+	
+	public boolean equals(Object obj) {
+		if(obj instanceof Ticket){
+			Ticket ticket = (Ticket) obj;
+			return (this.getIdTicket() == ticket.getIdTicket());
+		}
+		return false;
+	}
 
 	public int getIdTicket() {
 		return idTicket;
