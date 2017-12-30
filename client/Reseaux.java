@@ -10,7 +10,7 @@ import message.Message;
 import message.MessageDeconnexion;
 import message.MessageDemConnexion;
 import message.MessageGroupe;
-import message.MessageNouveauMessageConversation;
+import message.MessageMessageConversation;
 import message.MessageReponseConnexion;
 import message.MessageTicket;
 
@@ -93,7 +93,7 @@ public class Reseaux {
 				} else if (objetRecu instanceof MessageGroupe) {
 					messRecu = (MessageGroupe) objetRecu;
 				} else {
-					messRecu = (MessageNouveauMessageConversation) objetRecu;
+					messRecu = (MessageMessageConversation) objetRecu;
 				}
 	
 				in.close();

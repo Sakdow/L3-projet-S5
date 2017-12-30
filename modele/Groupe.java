@@ -10,6 +10,7 @@ public class Groupe {
 	public Groupe(String idGroupe) {
 		super();
 		this.idGroupe = idGroupe;
+		listeUtilisateur = new LinkedList<>();
 	}
 
 	public void ajouterUtilisateurs(Utilisateur... utilisateurs) {

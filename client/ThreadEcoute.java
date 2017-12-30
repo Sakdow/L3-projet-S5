@@ -2,7 +2,7 @@ package client;
 
 import message.Message;
 import message.MessageGroupe;
-import message.MessageNouveauMessageConversation;
+import message.MessageMessageConversation;
 import message.MessageTicket;
 
 public class ThreadEcoute extends Thread {
@@ -27,8 +27,8 @@ public class ThreadEcoute extends Thread {
 					MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
 					client.ajouterGroupe(messageGroupe.getGroupe());
 				} else {
-					MessageNouveauMessageConversation nouveauMessConv = (MessageNouveauMessageConversation) messageRecu;
-					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getGroupe(),
+					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
+					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
 				}
 			}

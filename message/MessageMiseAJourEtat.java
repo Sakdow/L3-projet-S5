@@ -8,14 +8,14 @@ public class MessageMiseAJourEtat extends Message {
 	private int idTicket;
 	private int idMessage;
 	private EtatMessage etat;
-	private boolean luParUtilisateur;
+	private String idUtilisateur;
 
-	public MessageMiseAJourEtat(int idTicket, int idMessage, EtatMessage etat, boolean luParUtilisateur) {
+	public MessageMiseAJourEtat(int idTicket, int idMessage, String idUtilisateur ,EtatMessage etat, boolean luParUtilisateur) {
 		super();
 		this.idTicket = idTicket;
 		this.idMessage = idMessage;
+		this.idUtilisateur= idUtilisateur;
 		this.etat = etat;
-		this.luParUtilisateur= luParUtilisateur;
 	}
 
 	public int getIdTicket() {
@@ -30,9 +30,11 @@ public class MessageMiseAJourEtat extends Message {
 		return etat;
 	}
 
-	public boolean isLuParUtilisateur() {
-		return luParUtilisateur;
+	public String getIdUtilisateur() {
+		return idUtilisateur;
 	}
+
+	
 	
 	
 

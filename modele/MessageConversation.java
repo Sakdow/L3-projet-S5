@@ -10,22 +10,31 @@ public class MessageConversation implements Comparable<MessageConversation> {
 	private Date date;
 	private boolean luParUtilisateur;
 
-	public MessageConversation(int idMessage,Utilisateur createur, String texte, Date date, EtatMessage etatGroupe, boolean luParUtilisateur ) {
+	public MessageConversation(int idMessage, Utilisateur createur, String texte, Date date, EtatMessage etatGroupe,
+			boolean luParUtilisateur) {
 		super();
 		this.idMessage = idMessage;
 		this.createur = createur;
 		this.texte = texte;
 		this.date = date;
 		this.etatGroupe = etatGroupe;
-		this.luParUtilisateur=luParUtilisateur;
+		this.luParUtilisateur = luParUtilisateur;
 	}
-	
+
 	public int getIdMessage() {
 		return idMessage;
 	}
 
 	public void setIdMessage(int idMessage) {
 		this.idMessage = idMessage;
+	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof MessageConversation) {
+			MessageConversation messConv = (MessageConversation) obj;
+			return (this.getIdMessage() == messConv.getIdMessage());
+		}
+		return false;
 	}
 
 	public int compareTo(MessageConversation conversationToCompare) {
@@ -59,6 +68,5 @@ public class MessageConversation implements Comparable<MessageConversation> {
 	public Date getDate() {
 		return date;
 	}
-	
-	
+
 }

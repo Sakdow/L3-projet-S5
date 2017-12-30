@@ -35,26 +35,35 @@ public class Client {
 		}
 	}
 
-	public void ajouterMessageConv(int idTicket, Groupe groupe, MessageConversation messConv) {
-		Ticket ticketAnonyme = new Ticket(idTicket, null, null, null, null);
+	private boolean rechercheEtModificationMessageConv(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe, MessageConversation messConv) {
+		for (Ticket t : tickets.get(groupe)) {
+			if (t.equals(ticket)) {
+				if (t.getFilDiscussion().getEnsembleMessage().contains(messConv))
+					for (MessageConversation m : t.getFilDiscussion().getEnsembleMessage()) {
+						if (m.equals(messConv)) {
+							m = messConv;
+						}
+					}
+				else {
+					t.getFilDiscussion().ajouterMessage(messConv);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void ajouterMessageConv(int idTicket, String idGroupe, MessageConversation messConv) {
+		Ticket ticket = new Ticket(idTicket, null, null, null, null);
+		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
 		if (ticketsCree.containsKey(groupe)) {
-			for (Ticket t : ticketsCree.get(groupe)) {
-				if (t.equals(ticketAnonyme)) {
-					t.getFilDiscussion().ajouterMessage(messConv);
-					ajoute = true;
-				}
-			}
+			ajoute =rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
 
 		if (ticketsRecu.containsKey(groupe) && !ajoute) {
-			for (Ticket t : ticketsRecu.get(groupe)) {
-				if (t.equals(ticketAnonyme)) {
-					t.getFilDiscussion().ajouterMessage(messConv);
-				}
-			}
+			rechercheEtModificationMessageConv(ticketsRecu, ticket, groupe, messConv);
 		}
-
 	}
 
 	private void ajouterTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
