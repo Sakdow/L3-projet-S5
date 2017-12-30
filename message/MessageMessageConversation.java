@@ -1,25 +1,28 @@
 package message;
 
-import modele.Groupe;
 import modele.MessageConversation;
 
-public class MessageNouveauMessageConversation extends Message{
+public class MessageMessageConversation extends Message {
 	private static final long serialVersionUID = 1L;
 	private int idTicket;
 	private MessageConversation messageConv;
-	private Groupe groupe;
+	private String idGroupe;
 
-	public MessageNouveauMessageConversation(int idTicket, MessageConversation messageConv) {
+	public MessageMessageConversation(int idTicket, MessageConversation messageConv) {
 		super();
 		this.idTicket = idTicket;
 		this.messageConv = messageConv;
 	}
 	
-	public MessageNouveauMessageConversation(int idTicket, Groupe groupe,MessageConversation messageConv) {
+	public MessageMessageConversation(int idTicket, String idGroupe,MessageConversation messageConv) {
 		super();
 		this.idTicket = idTicket;
 		this.messageConv = messageConv;
-		this.groupe = groupe;
+		this.idGroupe = idGroupe;
+	}
+
+	public String getIdGroupe() {
+		return idGroupe;
 	}
 
 	public int getIdTicket() {
@@ -30,9 +33,7 @@ public class MessageNouveauMessageConversation extends Message{
 		return messageConv;
 	}
 
-	public Groupe getGroupe() {
-		return groupe;
-	}
 	
 	
 }
+
