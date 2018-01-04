@@ -27,15 +27,16 @@ public class Client {
 		listeGroupe = new LinkedList<>();
 	}
 
-	public void ajouterGroupe(Groupe... groupes) {
-		for (Groupe groupe : groupes) {
-			if (listeGroupe.contains(groupe)) {
+	public void ajouterGroupe(Groupe groupe) {
+		synchronized (listeGroupe) {
+			if (!listeGroupe.contains(groupe)) {
 				listeGroupe.add(groupe);
 			}
 		}
 	}
 
-	private boolean rechercheEtModificationMessageConv(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe, MessageConversation messConv) {
+	private boolean rechercheEtModificationMessageConv(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe,
+			MessageConversation messConv) {
 		for (Ticket t : tickets.get(groupe)) {
 			if (t.equals(ticket)) {
 				if (t.getFilDiscussion().getEnsembleMessage().contains(messConv))
@@ -58,7 +59,7 @@ public class Client {
 		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
 		if (ticketsCree.containsKey(groupe)) {
-			ajoute =rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
+			ajoute = rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
 
 		if (ticketsRecu.containsKey(groupe) && !ajoute) {
@@ -121,7 +122,9 @@ public class Client {
 	}
 
 	public List<Groupe> getListeGroupe() {
+
 		return listeGroupe;
+
 	}
 
 }

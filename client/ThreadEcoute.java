@@ -19,6 +19,12 @@ public class ThreadEcoute extends Thread {
 	public void run() {
 		while (!Thread.interrupted()) {
 			Message messageRecu = reseaux.ecoute();
+			try {
+				Thread.sleep(3);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (messageRecu != null) {
 				if (messageRecu instanceof MessageTicket) {
 					MessageTicket messageTicket = (MessageTicket) messageRecu;
