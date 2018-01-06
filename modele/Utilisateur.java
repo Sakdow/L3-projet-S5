@@ -26,5 +26,14 @@ public class Utilisateur implements Serializable {
 	public String getIdUtilisateur() {
 		return idUtilisateur;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( obj instanceof Utilisateur ){
+			Utilisateur u = (Utilisateur) obj;
+			return this.idUtilisateur.equals(u.idUtilisateur);
+		}
+		return false;
+	}
 
 }

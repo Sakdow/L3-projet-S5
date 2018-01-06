@@ -13,7 +13,7 @@ public class TestClient {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Reseaux reseaux = new Reseaux("127.0.0.1", 12000);
+		Reseaux reseaux = new Reseaux("127.0.0.1", 8090);
 		Utilisateur clientUtilisateur = reseaux.connexionServeur("Olzindel", "aqwzsx").getUtilisateur();
 
 		Client client = new Client(clientUtilisateur, reseaux);
@@ -31,22 +31,27 @@ public class TestClient {
 			e.printStackTrace();
 		}
 
-		Map<Groupe, List<Ticket>> ticketsRecus = client.getTicketsRecu();
-
-		for (Iterator<Groupe> ite = l.iterator(); ite.hasNext();) {
-			Groupe g = ite.next();
-			System.out.println(g.getIdGroupe());
-			List<Ticket> tickets = ticketsRecus.get(g);
-			if (tickets != null)
-				for (Ticket ti : tickets) {
-					System.out.println(ti);
-					System.out.println(ti.getFilDiscussion());
-					System.out.println(ti.getFilDiscussion().getNombreMessage());
-					for (MessageConversation m : ti.getFilDiscussion().getEnsembleMessage())
-						System.out.println("Auteur : " + m.getCreateur().getIdUtilisateur() + " " + m.getDate() + "\n\t"
-								+ m.getTexte() + "\n\t"+ m.getEtatGroupe());
+		for (;;){
+			Map<Groupe, List<Ticket>> ticketsRecus = client.getTicketsRecu();
+			for (Iterator<Groupe> ite = l.iterator(); ite.hasNext();) {
+				Groupe g = ite.next();
+				System.out.println(g.getIdGroupe());
+				List<Ticket> tickets = ticketsRecus.get(g);
+				if (tickets != null)
+					for (Ticket ti : tickets) {
+						System.out.println(ti.getNom());
+						for (MessageConversation m : ti.getFilDiscussion().getEnsembleMessage())
+							System.out.println("Auteur : " + m.getCreateur().getIdUtilisateur() + " " + m.getDate()
+									+ "\n\t" + m.getTexte() + "\n\t" + m.getEtatGroupe());
+					}
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+			}
 		}
-
 	}
+
 }

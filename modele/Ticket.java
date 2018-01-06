@@ -23,6 +23,7 @@ public class Ticket implements Serializable {
 		filDiscussion.ajouterMessage(message);
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Ticket){
 			Ticket ticket = (Ticket) obj;

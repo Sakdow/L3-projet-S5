@@ -42,7 +42,8 @@ public class Client {
 				if (t.getFilDiscussion().getEnsembleMessage().contains(messConv))
 					for (MessageConversation m : t.getFilDiscussion().getEnsembleMessage()) {
 						if (m.equals(messConv)) {
-							m = messConv;
+							m.setEtatGroupe(messConv.getEtatGroupe());
+							m.setLuParUtilisateur(messConv.isLuParUtilisateur());
 						}
 					}
 				else {
@@ -58,11 +59,12 @@ public class Client {
 		Ticket ticket = new Ticket(idTicket, null, null, null, null);
 		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
+
 		if (ticketsCree.containsKey(groupe)) {
 			ajoute = rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
 
-		if (ticketsRecu.containsKey(groupe) && !ajoute) {
+		if (!ajoute && ticketsRecu.containsKey(groupe)) {
 			rechercheEtModificationMessageConv(ticketsRecu, ticket, groupe, messConv);
 		}
 	}
@@ -87,21 +89,20 @@ public class Client {
 		}
 	}
 
-	public void ajouterTicket(Ticket... tickets) {
-		for (Ticket ticket : tickets) {
-			Utilisateur createur = ticket.getCreateur();
-			Groupe groupe = ticket.getGroupe();
-			if (createur.getIdUtilisateur() == utilisateurClient.getIdUtilisateur()) {
-				ajouterTicketMap(ticketsCree, ticket, groupe);
-			} else {
-				ajouterTicketMap(ticketsRecu, ticket, groupe);
-			}
+	public void ajouterTicket(Ticket ticket) {
+		Utilisateur createur = ticket.getCreateur();
+		Groupe groupe = ticket.getGroupe();
+		if (createur.getIdUtilisateur() == utilisateurClient.getIdUtilisateur()) {
+			ajouterTicketMap(ticketsCree, ticket, groupe);
+		} else {
+			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
 	}
 
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {
 		Ticket nouveauTicket = new Ticket(-1, nomTicket, utilisateurClient, groupe, message);
-		MessageTicket messageTicket = new MessageTicket(nouveauTicket, false);
+		this.ajouterTicket(nouveauTicket);
+		MessageTicket messageTicket = new MessageTicket(nouveauTicket);
 		reseaux.envoyerMessage(messageTicket);
 	}
 
