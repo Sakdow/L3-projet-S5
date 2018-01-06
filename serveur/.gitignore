@@ -3,3 +3,7 @@
 /Traitement.class
 /AssocMessageSocket.class
 /BaseDeDonnees.class
+/ThreadConnexion.class
+/AssocUtilisateurSocket.class
+/ThreadEcouteTraitementClient.class
+/TestServeur.class

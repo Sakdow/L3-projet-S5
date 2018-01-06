@@ -16,15 +16,19 @@ class BaseDeDonnees {
 	}
 
 	public ResultSet requete(String requete) throws SQLException {
-		System.out.println("Bdd : " + requete);
 		Statement state = bdd.createStatement();
 		return state.executeQuery(requete);
 	}
 	
-	public ResultSet requeteInsert(String requete) throws SQLException {
+	public ResultSet requeteInsertReturnKey(String requete) throws SQLException {
 		Statement state = bdd.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 		state.execute(requete);
 		return state.getGeneratedKeys();
+	}
+	
+	public void requeteInsertWithoutReturn(String requete) throws SQLException {
+		Statement state = bdd.prepareStatement(requete);
+		state.execute(requete);
 	}
 
 }

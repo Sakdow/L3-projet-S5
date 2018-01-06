@@ -1,28 +1,22 @@
 package serveur;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.NavigableSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import message.MessageDemConnexion;
-import message.MessageGroupe;
+import message.Message;
 import message.MessageMessageConversation;
-import message.MessageReponseConnexion;
 import message.MessageTicket;
 import modele.EtatMessage;
 import modele.Groupe;
@@ -31,141 +25,86 @@ import modele.Ticket;
 import modele.Utilisateur;
 
 public class Serveur {
-	private int port = 1705;
-	private int nbThreadsTraitement = 3;
-	private Map<Utilisateur, Socket> mapUtilisateurConnexion = new HashMap<>();
-	private Queue<AssocMessageSocket> messagessATraiter = new LinkedList<AssocMessageSocket>();
-	private BaseDeDonnees bdd;
+
+	private BaseDeDonnees baseDeDonnees;
+	private int port = 12000;
+	private NavigableSet<AssocUtilisateurSocket> utilisateursConnectes = new TreeSet<>();
 
 	public Serveur() {
 		initServeur();
 	}
 
 	public Serveur(int port) {
-		this.port = port;
-		initServeur();
-	}
-
-	// utiliser port = -1 pour port par défaut
-	public Serveur(int port, int nbThreadsTraitement) {
-		if (port != -1)
+		if (port > 0)
 			this.port = port;
-		this.nbThreadsTraitement = nbThreadsTraitement;
+
 		initServeur();
 	}
 
 	private void initServeur() {
 		try {
-			bdd = new BaseDeDonnees("jdbc:mysql://localhost:3306/Projet", "root", "");
+			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://localhost:3306/Projet", "root", "");
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		Thread ecoute = new Thread(new EcouteMessagesClients(this));
-		ecoute.start();
-		for (int i = 0; i < nbThreadsTraitement; i++) {
-			Thread traitement = new Thread(new Traitement(this));
-			traitement.start();
-		}
 
-		connexions();
-
+		Thread t = new Thread(new ThreadConnexion(this));
+		t.start();
 	}
 
-	private void connexions() {
-
-		try {
-			ServerSocket s = new ServerSocket(port);
-			Socket soc;
-			for (;;) { 
-				soc = s.accept();
-
-				System.out.println("Nouvelle connexion");
-				ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
-				ObjectInputStream in = new ObjectInputStream(soc.getInputStream());
-				System.out.println("csdqifjsqfd");
-				Object objetRecu = in.readObject();
-				System.out.println("dhxwvw");
-				MessageDemConnexion messRecu = (MessageDemConnexion) objetRecu;
-
-				System.out.println("csdqifjsqfd");
-
-				boolean connexionAcceptee = isConnectionAccepted(messRecu);
-
-				MessageReponseConnexion reponseConnexion;
-
-				if (connexionAcceptee) {
-					System.out.println("Connexion acceptée");
-					Utilisateur utilisateur = this.getUtilisateur(messRecu.getIdUtilisateur());
-					mapUtilisateurConnexion.put(utilisateur, soc);
-					reponseConnexion = new MessageReponseConnexion(true, utilisateur);
-				} else {
-					System.out.println("Connexion refusée");
-					reponseConnexion = new MessageReponseConnexion(false, null);
-				}
-				
-				out.writeObject(reponseConnexion);
-				out.flush();
-				
-				for( ; ; );
-				
-//				if (connexionAcceptee) {
-//					List<Ticket> tousLesTickets = ticketsUtilisateur(messRecu.getIdUtilisateur(), soc);
-//					for (Ticket t : tousLesTickets) {
-//						out.writeObject(new MessageTicket(t, false));
-//						out.flush();
-//					}
-//
-//					List<Groupe> groupes = groupesUtilisateur(messRecu.getIdUtilisateur());
-//					for (Groupe g : groupes) {
-//						out.writeObject(new MessageGroupe(g));
-//						out.flush();
-//					}
-//
-//				}
-			}
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
+	public int getPort() {
+		return port;
 	}
 
-	public boolean connexionServeur(String idUtilisateur, String mdp) {
-		ResultSet res;
+	Set<AssocUtilisateurSocket> getUtilisateursConnectes() {
+		return utilisateursConnectes;
+	}
+
+	private ResultSet requeteBaseDeDonnees(String requete) throws SQLException {
+		Pattern pattern = Pattern.compile("^INSERT INTO *");
+		Matcher matcher = pattern.matcher(requete);
+		if (matcher.find()) {
+			baseDeDonnees.requeteInsertWithoutReturn(requete);
+			return null;
+		}
+		return baseDeDonnees.requete(requete);
+	}
+
+	private ResultSet requeteBaseDeDonnees(String requete, boolean insertAndReturnKey) throws SQLException {
+		if (insertAndReturnKey)
+			return baseDeDonnees.requeteInsertReturnKey(requete);
+		baseDeDonnees.requeteInsertWithoutReturn(requete);
+		return null;
+	}
+
+	Utilisateur getUtilisateurFromId(String idUtilisateur) {
+		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idUtilisateur + "'";
+
 		try {
-			res = requeteBDD(
-					"SELECT COUNT(*) FROM administrateur WHERE idA = '" + idUtilisateur + "' AND mdp = '" + mdp + "'");
-			res.first();
-			return res.getInt(1) > 0;
+			ResultSet resultat = this.requeteBaseDeDonnees(requete);
+			if (!resultat.next())
+				return null;
+			String nom = resultat.getObject("nom").toString();
+			String prenom = resultat.getObject("prenom").toString();
+
+			return new Utilisateur(nom, prenom, idUtilisateur);
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-		return false;
 	}
 
-	List<Groupe> groupesUtilisateur(String idUtilisateur) {
-		List<Groupe> groupes = new ArrayList<>();
-		ResultSet res;
-		try {
-			res = requeteBDD("SELECT nomG FROM appartenir WHERE idU = '" + idUtilisateur + "'");
-			for (; res.next();) {
-				groupes.add(new Groupe(res.getString(1)));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return groupes;
-	}
-
-	private List<Ticket> ticketsUtilisateur(String idUtilisateur, Socket s) {
+	List<Ticket> ticketsUtilisateur(String idUtilisateur) {
 		List<Ticket> tousLesTickets = new ArrayList<>();
 		try {
-			ResultSet res = requeteBDD("SELECT idT,createur FROM participer WHERE idU = '" + idUtilisateur + "'");
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT idT,createur,nomG FROM participer WHERE idU = '" + idUtilisateur + "'");
 
 			for (; res.next();) {
-				Ticket ticket = buildTicket(res.getInt(1), res.getString(2), s, idUtilisateur);
-				tousLesTickets.add(ticket);
+				Ticket t = buildTicket(res.getInt("idT"), res.getString("createur"), res.getString("nomG"),
+						idUtilisateur);
+				tousLesTickets.add(t);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -175,189 +114,157 @@ public class Serveur {
 		return tousLesTickets;
 	}
 
-	private Ticket buildTicket(int idTicket, String createur, Socket s, String idUtilisateur) {
+	private Ticket buildTicket(int idTicket, String createur, String nomG, String idUtilisateur) {
+		Ticket t = null;
 		ResultSet res;
-		Ticket ticket = null;
-
 		try {
-			res = requeteBDD("SELECT titre FROM ticket WHERE idT = " + idTicket);
+			res = requeteBaseDeDonnees("SELECT titre FROM ticket WHERE idT = " + idTicket);
 			res.first();
-			String nom = res.getString(1);
-			String nomGroupe = nomGroupeFromIdTicket(idTicket);
+			String titre = res.getString(1);
+			t = new Ticket(idTicket, titre, getUtilisateurFromId(createur), new Groupe(nomG), null);
+			res = requeteBaseDeDonnees("SELECT idM, texte, dateM, idU FROM message WHERE idT = " + idTicket);
+			for (; res.next();) {
+				MessageConversation m = new MessageConversation(res.getInt("idM"),
+						getUtilisateurFromId(res.getString("idU")), res.getString("texte"), res.getDate("dateM"),
+						EtatMessage.NON_RECU_PAR_TOUS, false);
+				definirEtatMessageConversation(m, idTicket, idUtilisateur);
+				t.ajouterMessage(m);
+			}
 
-			ticket = new Ticket(idTicket, nom, getUtilisateur(createur), getGroupeFromNomGroupe(nomGroupe), null);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			res = requeteBDD("SELECT idM, texte, dateM, idU WHERE idT = " + idTicket);
+		return t;
 
+	}
+
+	private void definirEtatMessageConversation(MessageConversation m, int idTicket, String idUtilisateur) {
+		Set<String> participants = getParticipantsTickets(idTicket);
+		int nombreParticipants = participants.size();
+		try {
+			ResultSet res;
+			res = requeteBaseDeDonnees("SELECT COUNT(*) FROM recevoir WHERE idM = " + m.getIdMessage());
+			res.first();
+			if (res.getInt(1) >= nombreParticipants) {
+				res = requeteBaseDeDonnees("SELECT COUNT(*) FROM lire WHERE idM = " + m.getIdMessage());
+				res.first();
+				if (res.getInt(1) >= nombreParticipants) {
+					m.setEtatGroupe(EtatMessage.LU_PAR_TOUS);
+				} else
+					m.setEtatGroupe(EtatMessage.NON_LU_PAR_TOUS);
+			} else
+				m.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
+			m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idUtilisateur));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	boolean isMessageLuParUtilisateur(MessageConversation m, String idUtilisateur) {
+		try {
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT * FROM lire WHERE idM = " + m.getIdMessage() + " AND idU = '" + idUtilisateur + "'");
+			return res.next();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	boolean isMessageRecuParUtilisateur(MessageConversation m, String idUtilisateur) {
+		try {
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT * FROM recevoir WHERE idM = " + m.getIdMessage() + " AND idU = '" + idUtilisateur + "'");
+			return res.next();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	boolean isMessageRecuParTous(int idMessage) throws SQLException {
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idMessage);
+			res.first();
+			int idTicket = res.getInt(1);
 			Set<String> participants = getParticipantsTickets(idTicket);
 			int nombreParticipants = participants.size();
 
-			for (; res.next();) {
-				int idM = res.getInt(1);
-				Utilisateur auteur = getUtilisateur(res.getString(4));
-				Date date = res.getDate(3);
-				String texte = res.getString(2);
-				EtatMessage etatMessage;
-				boolean luParUtilisateur;
+			res = requeteBaseDeDonnees("SELECT COUNT(*) FROM recevoir WHERE idM = " + idMessage);
+			res.next();
+			int nb = res.getInt(1);
+			return nb >= nombreParticipants;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
-				boolean changementEtatReceptionU = false;
-				ResultSet receiveU = requeteBDD(
-						"SELECT COUNT(*) FROM recevoir WHERE idM = " + idM + " AND idU = '" + idUtilisateur + "'");
-				receiveU.first();
-				if (receiveU.getInt(1) == 0) {
-					requeteBDD("INSERT INTO recevoir (idM, idU) VALUES (" + idM + ", '" + idUtilisateur + "')");
-					changementEtatReceptionU = true;
-				}
+	void messageRecu(MessageConversation m, String idUtilisateur) {
+		try {
+			int idMessage = m.getIdMessage();
+			requeteBaseDeDonnees("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + ",'" + idUtilisateur + "')");
 
-				ResultSet r = requeteBDD("SELECT COUNT(*) FROM recevoir WHERE idM = " + idM);
+			if (isMessageRecuParTous(idMessage)) {
 
-				r.first();
-				if (r.getInt(1) == nombreParticipants) {
-					if (changementEtatReceptionU) {
-						etatMessage = EtatMessage.NON_LU_PAR_TOUS;
-						for (String idU : participants) {
-							if (isConnected(new Utilisateur("", "", idU)) && idU != idUtilisateur) {
-								r = requeteBDD(
-										"SELECT COUNT(*) FROM lire WHERE idM = " + idM + " AND idU = '" + idU + "'");
-								r.first();
-								boolean luParticipant = false;
-								if (r.getInt(1) != 0)
-									luParticipant = true;
-								Socket socket = mapUtilisateurConnexion.get(new Utilisateur("", "", idU));
-								ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-								out.writeObject(new MessageMessageConversation(idTicket, new MessageConversation(idM,
-										auteur, texte, date, EtatMessage.NON_LU_PAR_TOUS, luParticipant)));
-								out.flush();
-							}
+				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idMessage);
+				res.first();
+				int idTicket = res.getInt(1);
+				Set<String> participants = getParticipantsTickets(idTicket);
+				participants.remove(idUtilisateur);
+
+				m.setEtatGroupe(EtatMessage.NON_LU_PAR_TOUS);
+
+				for (String idU : participants) {
+					Utilisateur u = getUtilisateurFromId(idU);
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().equals(u)) {
+							m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idU));
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject(new MessageMessageConversation(idTicket, m));
+							out.flush();
+							break;
 						}
-					} else {
-						r = requeteBDD("SELECT COUNT(*) FROM lire WHERE idM = " + idM);
-						r.first();
-						if (r.getInt(1) == nombreParticipants)
-							etatMessage = EtatMessage.LU_PAR_TOUS;
-						else
-							etatMessage = EtatMessage.NON_LU_PAR_TOUS;
 					}
-				} else
-					etatMessage = EtatMessage.NON_RECU_PAR_TOUS;
-
-				if (etatMessage == EtatMessage.LU_PAR_TOUS)
-					luParUtilisateur = true;
-				else {
-					r = requeteBDD("SELECT COUNT(*) FROM lire WHERE idM = " + idM + " AND idU = '" + createur + "'");
-					r.first();
-					if (r.getInt(1) == 0)
-						luParUtilisateur = false;
-					else
-						luParUtilisateur = true;
 				}
-
-				MessageConversation m = new MessageConversation(idM, auteur, texte, date, etatMessage,
-						luParUtilisateur);
-				ticket.ajouterMessage(m);
 			}
-
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return ticket;
 	}
 
-	Groupe getGroupeFromNomGroupe(String nomGroupe) {
-		Groupe groupe = new Groupe(nomGroupe);
-
-		try {
-			ResultSet setIdU = requeteBDD("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
-
-			for (; setIdU.next();) {
-				String idU = setIdU.getString(1);
-				ResultSet res = requeteBDD("SELECT nom,prenom FROM utilisateur WHERE idU = '" + idU + "'");
-				res.first();
-				groupe.ajouterUtilisateurs(new Utilisateur(res.getString("nom"), res.getString("prenom"), idU));
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return groupe;
-	}
-
-	String nomGroupeFromIdTicket(int idTicket) {
-		String idGroupe = "";
-		try {
-			ResultSet res = requeteBDD("SELECT nomG FROM participer WHERE idT = " + idTicket);
-			if (res != null && res.first())
-				idGroupe = res.getString(1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return idGroupe;
-	}
-
-	private boolean isConnectionAccepted(MessageDemConnexion message) {
-
-		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
-		System.out.println(requete);
-
-		try {
-			ResultSet resultat = this.requeteBDD(requete);
-			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Set<String> getGroupes() {
-		Set<String> groupes = new HashSet<>();
+	List<Groupe> groupesUtilisateur(String idUtilisateur) {
+		List<Groupe> groupes = new ArrayList<>();
 		ResultSet res;
 		try {
-			res = requeteBDD("SELECT nomG FROM groupe");
-			for (; res.next();)
-				groupes.add(res.getString(1));
+			res = requeteBaseDeDonnees("SELECT nomG FROM appartenir WHERE idU = '" + idUtilisateur + "'");
+			for (; res.next();) {
+				groupes.add(new Groupe(res.getString(1)));
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return groupes;
 	}
 
-	public Set<Utilisateur> getUtilisateurs() {
-		Set<Utilisateur> utilisateurs = new HashSet<>();
-		try {
-
-			ResultSet res = requeteBDD("SELECT idU FROM utilisateur");
-			for( ; res.next() ; )
-				utilisateurs.add(getUtilisateur(res.getString(1)));
-			return utilisateurs;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return utilisateurs;
-	}
-
-	public ResultSet requeteBDD(String requete) throws SQLException {
-		Pattern insert = Pattern.compile("^INSERT INTO *");
-		Matcher insertM = insert.matcher(requete);
-		if (insertM.find())
-			return bdd.requeteInsert(requete);
-		return bdd.requete(requete);
-	}
-
 	Set<String> getParticipantsTickets(int idTicket) {
 
 		Set<String> participants = new HashSet<>();
 		try {
-			ResultSet res = requeteBDD("SELECT idU,createur FROM participer WHERE idT = " + idTicket);
+			ResultSet res = requeteBaseDeDonnees("SELECT idU,createur FROM participer WHERE idT = " + idTicket);
 			if (res.next()) {
 				participants.add(res.getString("idU"));
 				participants.add(res.getString("createur"));
@@ -374,37 +281,185 @@ public class Serveur {
 		return participants;
 	}
 
-	Utilisateur getUtilisateur(String idUtilisateur) {
-		String requete = "SELECT nom,prenom FROM Utilisateur WHERE idU = '" + idUtilisateur +"'";
-		
+	void deconnexionUtilisateur(AssocUtilisateurSocket assoc) {
+		utilisateursConnectes.remove(assoc);
+	}
+
+	void nouveauTicket(Ticket ticket) {
+		ResultSet res;
+		int idTicket;
+		Utilisateur createur = ticket.getCreateur();
+		String idCreateur = createur.getIdUtilisateur();
+		String idGroupe = ticket.getGroupe().getIdGroupe();
 		try {
-			ResultSet resultat = this.requeteBDD(requete);
-			if (!resultat.next())
-				return null;
-			String nom = resultat.getObject("nom").toString();
-			String prenom = resultat.getObject("prenom").toString();
+			res = requeteBaseDeDonnees("INSERT INTO ticket (titre) VALUES ('" + ticket.getNom() + "')", true);
+			res.first();
+			idTicket = res.getInt(1);
 
-			return new Utilisateur(nom, prenom, idUtilisateur);
+			ticket.setIdTicket(idTicket);
+			NavigableSet<MessageConversation> ensembleMessages = ticket.getFilDiscussion().getEnsembleMessage();
 
+			for (MessageConversation m : ensembleMessages) {
+				res = requeteBaseDeDonnees("INSERT INTO message (texte,dateM,idT, idU) VALUES ('" + m.getTexte() + "',"
+						+ new java.sql.Date(new java.util.Date().getTime()) + ", '" + idTicket + "', '" + idCreateur
+						+ "')", true);
+				res.first();
+				int idMessage = res.getInt(1);
+				m.setIdMessage(idMessage);
+				
+				requeteBaseDeDonnees(
+						"INSERT INTO reception (idM, idU) VALUES (" + m.getIdMessage() + ", '" + idCreateur + "')");
+				requeteBaseDeDonnees(
+						"INSERT INTO  lire (idM, idU) VALUES (" + m.getIdMessage() + ", '" + idCreateur + "')");
+			}
+
+			Set<String> participants = utilisateursGroupe(idGroupe);
+			participants.remove(idCreateur);
+			envoyerNouveauTicketConnectes(ticket, participants);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+		}
+
+	}
+
+	private void envoyerNouveauTicketConnectes(Ticket ticket, Collection<String> idParticipants) {
+		for (String idU : idParticipants) {
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				if (assoc.getUtilisateur().equals(idU)) {
+					ObjectOutputStream out = assoc.getOut();
+					try {
+						out.writeObject(new MessageTicket(ticket, false));
+						out.flush();
+						Set<MessageConversation> ensembleMessages = ticket.getFilDiscussion().getEnsembleMessage();
+						for (MessageConversation m : ensembleMessages) {
+							messageRecu(m, idU);
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					break;
+				}
+			}
 		}
 	}
 
-	Map<Utilisateur, Socket> getMapUtilisateurConnexion() {
-		return mapUtilisateurConnexion;
+	Set<String> utilisateursGroupe(String nomGroupe) {
+		Set<String> ensembleUtilisateurs = new HashSet<>();
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
+			for (; res.next();)
+				ensembleUtilisateurs.add(res.getString(1));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ensembleUtilisateurs;
 	}
 
-	Queue<AssocMessageSocket> getMessagessATraiter() {
-		return messagessATraiter;
-	}
+	private void nouveauMessage(MessageMessageConversation message) {
+		MessageConversation messageConv = message.getMessageConv();
+		Utilisateur createur = messageConv.getCreateur();
+		String idCreateur = createur.getIdUtilisateur();
+		// Ajout du message dans la bdd
+		ResultSet res = requeteBaseDeDonnees("INSERT INTO message (texte,dateM,idT, idU) VALUES ('"
+				+ messageConv.getTexte() + "'," + new java.sql.Date(new java.util.Date().getTime()) + ", '"
+				+ message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')", true);
+		res.first();
+		int idMessage = res.getInt(1);
 
-	BaseDeDonnees getBdd() {
-		return bdd;
-	}
+		int idTicket = message.getIdTicket();
 
-	public boolean isConnected(Utilisateur utilisateur) {
-		return mapUtilisateurConnexion.containsKey(utilisateur);
+		res = requeteBaseDeDonnees("SELECT titre FROM Ticket WHERE idT = " + idTicket);
+		res.first();
+
+		String nomGroupe = nomGroupeFromIdTicket(idTicket);
+
+		Set<String> participantsTicket = new HashSet<>();
+
+		res = serveur.requeteBDD("SELECT createur FROM participer WHERE idT = " + idTicket);
+		res.first();
+		participantsTicket.add(res.getString(1));
+
+		res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
 	}
+	// EtatMessage miseAJourEtatTicket(MessageConversation message, Utilisateur
+	// u, int idTicket) {
+	// Set<String> participantsMessages = getParticipantsTickets(idTicket);
+	// try {
+	// boolean nonRecuParUtilisateur = false;
+	// ResultSet res = requeteBaseDeDonnees("SELECT * FROM recevoir WHERE idM =
+	// " + message.getIdMessage()
+	// + " AND idU ='" + u.getIdUtilisateur() + "'");
+	// if (res.next()) {
+	// nonRecuParUtilisateur = true;
+	// requeteBaseDeDonnees("INSERT INTO recevoir (idM, idU) VALUES (" +
+	// message.getIdMessage() + ", '"
+	// + u.getIdUtilisateur() + "'");
+	// }
+	//
+	// if (nonRecuParUtilisateur) {
+	// res = requeteBaseDeDonnees("SELECT COUNT(*) FROM recevoir WHERE idM = " +
+	// message.getIdMessage());
+	// res.first();
+	// if (res.getInt(1) < participantsMessages.size()) {
+	// message.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
+	// } else {
+	// envoyerUtilisateursConnectes(new MessageMessageConversation(idTicket,
+	// messageConv), utilisateur);
+	// }
+	// }
+	// } catch (SQLException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+
+	// private void envoyerMessageConversationConnectes(MessageConversation m,
+	// Utilisateur... utilisateurs) {
+	// for (Utilisateur u : utilisateurs) {
+	// for (Iterator<AssocUtilisateurSocket> ite =
+	// utilisateursConnectes.iterator(); ite.hasNext();) {
+	// AssocUtilisateurSocket assoc = ite.next();
+	// if (assoc.utilisateur.equals(u)) {
+	// ObjectOutputStream out = assoc.getOut();
+	// try {
+	// out.writeObject(message);
+	// out.flush();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// break;
+	// }
+	// }
+	// }
+	// }
+
+	// void envoyerUtilisateursConnectes(Message message, Utilisateur...
+	// utilisateurs) {
+	// for (Utilisateur u : utilisateurs) {
+	// for (Iterator<AssocUtilisateurSocket> ite =
+	// utilisateursConnectes.iterator(); ite.hasNext();) {
+	// AssocUtilisateurSocket assoc = ite.next();
+	// if (assoc.getUtilisateur().equals(u)) {
+	// ObjectOutputStream out = assoc.getOut();
+	// try {
+	// out.writeObject(message);
+	// out.flush();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// break;
+	// }
+	// }
+	// }
+	// }
+
 }

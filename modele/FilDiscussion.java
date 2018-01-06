@@ -6,22 +6,20 @@ import java.util.TreeSet;
 
 public class FilDiscussion implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private NavigableSet<MessageConversation> ensembleMessage;
-	private int nombreMessage = 0;
+	private NavigableSet<MessageConversation> ensembleMessage = new TreeSet<>();
 
 	public FilDiscussion(MessageConversation premierMessage) {
 		super();
-		this.ensembleMessage = new TreeSet<>();
-		this.ajouterMessage(premierMessage);
+		if (premierMessage != null)
+			this.ajouterMessage(premierMessage);
 	}
 
 	public void ajouterMessage(MessageConversation message) {
 		ensembleMessage.add(message);
-		nombreMessage++;
 	}
 
 	public int getNombreMessage() {
-		return nombreMessage;
+		return ensembleMessage.size();
 	}
 
 	public NavigableSet<MessageConversation> getEnsembleMessage() {

@@ -34,13 +34,18 @@ public class MessageConversation implements Serializable, Comparable<MessageConv
 	public boolean equals(Object obj) {
 		if (obj instanceof MessageConversation) {
 			MessageConversation messConv = (MessageConversation) obj;
-			return (this.getIdMessage() == messConv.getIdMessage());
+			return this.getIdMessage() == messConv.getIdMessage();
 		}
 		return false;
 	}
 
 	public int compareTo(MessageConversation conversationToCompare) {
-		return date.compareTo(conversationToCompare.getDate());
+		if (this.equals(conversationToCompare))
+			return 0;
+		int res = date.compareTo(conversationToCompare.getDate());
+		if (res != 0)
+			return res;
+		return this.idMessage - conversationToCompare.idMessage;
 	}
 
 	public EtatMessage getEtatGroupe() {

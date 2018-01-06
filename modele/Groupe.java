@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Groupe implements Serializable {
+public class Groupe implements Serializable, Comparable<Groupe> {
 	private static final long serialVersionUID = 1L;
 	List<Utilisateur> listeUtilisateur = new LinkedList<>();
 	String idGroupe;
@@ -43,6 +43,11 @@ public class Groupe implements Serializable {
 			return (this.getIdGroupe() == groupe.getIdGroupe());
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(Groupe o) {
+		return this.idGroupe.compareTo(o.idGroupe);
 	}
 
 }
