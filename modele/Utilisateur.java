@@ -28,6 +28,16 @@ public class Utilisateur implements Serializable {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idUtilisateur == null) ? 0 : idUtilisateur.hashCode());
+		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
+		result = prime * result + ((prenom == null) ? 0 : prenom.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if( obj instanceof Utilisateur ){
 			Utilisateur u = (Utilisateur) obj;

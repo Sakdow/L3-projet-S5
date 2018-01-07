@@ -653,4 +653,21 @@ public class Serveur {
 		
 		return ensembleGroupes;
 	}
+	
+	public Set<Utilisateur> getUtilisateurs() {
+		Set<Utilisateur> ensembleUtilisateurs = new HashSet<>();
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idU FROM utilisateur");
+
+			for (; res.next();) {
+				ensembleUtilisateurs.add(getUtilisateurFromId(res.getString(1)));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ensembleUtilisateurs;
+	}
 }
