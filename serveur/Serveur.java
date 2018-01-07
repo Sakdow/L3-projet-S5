@@ -650,10 +650,10 @@ public class Serveur {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return ensembleGroupes;
 	}
-	
+
 	public Set<Utilisateur> getUtilisateurs() {
 		Set<Utilisateur> ensembleUtilisateurs = new HashSet<>();
 		ResultSet res;
@@ -667,7 +667,22 @@ public class Serveur {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return ensembleUtilisateurs;
+	}
+
+	public void creerUtilisateur(String idU, String nom, String prenom, String mdp, Collection<String> nomGroupes) {
+		try {
+			requeteBaseDeDonnees("INSERT INTO utilisateur (idU, nom, prenom, mdp) VALUES ('" + idU + "', '" + nom + "','"
+					+ prenom + "', '" + mdp + "')");
+			
+			for( String nomG : nomGroupes ){
+				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '"
+						+ nomG + "')");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
