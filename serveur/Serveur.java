@@ -616,16 +616,16 @@ public class Serveur {
 
 	}
 
-	public Groupe getGroupeFromNomGroupe(String nomGroupe) throws SQLException{
+	public Groupe getGroupeFromNomGroupe(String nomGroupe) throws SQLException {
 		try {
-			ResultSet res = requeteBaseDeDonnees("SELECT * FROM groupe WHERE nomG = '" + nomGroupe +"'");
-			if( res.first() ){
+			ResultSet res = requeteBaseDeDonnees("SELECT * FROM groupe WHERE nomG = '" + nomGroupe + "'");
+			if (res.first()) {
 				Groupe g = new Groupe(nomGroupe);
-				res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe +"'");
-				for( ; res.next() ; ){
+				res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
+				for (; res.next();) {
 					g.ajouterUtilisateurs(getUtilisateurFromId(res.getString(1)));
 				}
-				
+
 				return g;
 			}
 		} catch (SQLException e) {
@@ -633,7 +633,24 @@ public class Serveur {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		return null;
+	}
+
+	public Set<String> getGroupes() {
+		Set<String> ensembleGroupes = new HashSet<>();
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT nomG FROM groupe");
+
+			for (; res.next();) {
+				ensembleGroupes.add(res.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ensembleGroupes;
 	}
 }
