@@ -54,8 +54,8 @@ public class Serveur {
 	public int getPort() {
 		return port;
 	}
-	
-	public void lancer(){
+
+	public void lancer() {
 		Thread t = new Thread(new ThreadConnexion(this));
 		t.start();
 	}
@@ -533,7 +533,7 @@ public class Serveur {
 			throw e;
 		}
 	}
-	
+
 	boolean isConnectionClientAccepted(MessageDemConnexion message) {
 
 		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
@@ -545,5 +545,25 @@ public class Serveur {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException{
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = 'Administrateur'");
+		for (; res.next();) {
+			if (res.getString(idUtilisateur).equals(idUtilisateur)) {
+				ResultSet r = requeteBaseDeDonnees("SELECT mdp FROM Utilisateur WHERE idU = '" + idUtilisateur + "'");
+				return r.first() && r.getString(1).equals(mdp);
+			}
+		}
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+
+		return false;
 	}
 }
