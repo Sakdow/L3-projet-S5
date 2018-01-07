@@ -74,7 +74,7 @@ public class Client {
 			boolean ajout = false;
 			List<Ticket> listeTicket = tickets.get(groupe);
 			for (Ticket t : listeTicket) {
-				if (t.getIdTicket() == ticket.getIdTicket()) {
+				if (t.equals(ticket)) {
 					t = ticket;
 					ajout = true;
 				}
@@ -92,7 +92,7 @@ public class Client {
 	public void ajouterTicket(Ticket ticket) {
 		Utilisateur createur = ticket.getCreateur();
 		Groupe groupe = ticket.getGroupe();
-		if (createur.getIdUtilisateur() == utilisateurClient.getIdUtilisateur()) {
+		if (createur.getIdUtilisateur().equals(utilisateurClient.getIdUtilisateur())) {
 			ajouterTicketMap(ticketsCree, ticket, groupe);
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);

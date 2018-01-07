@@ -42,6 +42,7 @@ class ThreadConnexion implements Runnable {
 
 				String idUtilisateur = messageRecu.getIdUtilisateur();
 				Utilisateur utilisateur = serveur.getUtilisateurFromId(idUtilisateur);
+				System.out.println("Connexion de " + idUtilisateur);
 				Set<AssocUtilisateurSocket> utilisateursConnectes = serveur.getUtilisateursConnectes();
 				boolean dejaConnecte = utilisateursConnectes
 						.contains(new AssocUtilisateurSocket(utilisateur, null, null, null));
@@ -53,6 +54,7 @@ class ThreadConnexion implements Runnable {
 					in.close();
 					s.close();
 				} else {
+					System.out.println("Connexion de " + idUtilisateur +" acceptée");
 					utilisateursConnectes.add(new AssocUtilisateurSocket(utilisateur, s, out, in));
 					out.writeObject(new MessageReponseConnexion(true, utilisateur));
 					out.flush();
