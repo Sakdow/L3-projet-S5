@@ -430,7 +430,35 @@ public class FenetreClient extends javax.swing.JFrame {
     }//GEN-LAST:event_envoyerButtonActionPerformed
     
     private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
-        Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        if (evt.isAddedPath()) {
+            TreePath path = evt.getPath();
+            Object treeNode = path.getLastPathComponent();
+            Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
+            String text = userObject.toString();
+            if (userObject instanceof Ticket) {
+              Ticket node1 = (Ticket) userObject;
+              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                ticketCreeSelect = node1;
+                groupeCreeSelect = node2;
+                titreDiscuLabel.setText(ticketCreeSelect.toString());
+                //Effacer la discussion précedente de l'interface
+                //tableModele = new DefaultTableModel();
+                //Afficher la discussion correspondante
+                NavigableSet<MessageConversation> ensembleMessage = ticketCreeSelect.getFilDiscussion().getEnsembleMessage();
+                for(MessageConversation mess : ensembleMessage){
+                    String[] ligne = new String[5];
+                    ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
+                    ligne[1] = mess.getTexte();
+                    ligne[2] = mess.getDate().toString();
+                    ligne[3] = mess.getEtatGroupe().toString();
+                    tableModele.addRow(ligne);
+                }      
+                discussionTable.setModel(tableModele);
+                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
+            }            
+        }       
+        
+        /*Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
         String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
         ticketCreeSelect = node1;
         groupeCreeSelect = node2;
@@ -447,7 +475,7 @@ public class FenetreClient extends javax.swing.JFrame {
             tableModele.addRow(ligne);
         }
         discussionTable.setModel(tableModele);
-        
+        */
     }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
@@ -472,7 +500,6 @@ public class FenetreClient extends javax.swing.JFrame {
     }//GEN-LAST:event_decoButtonActionPerformed
 
     private void ticketsRecusTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsRecusTreeValueChanged
-        //Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
         if (evt.isAddedPath()) {
             TreePath path = evt.getPath();
             Object treeNode = path.getLastPathComponent();
@@ -490,26 +517,17 @@ public class FenetreClient extends javax.swing.JFrame {
                 NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
                 for(MessageConversation mess : ensembleMessage){
                     String[] ligne = new String[5];
-                    ligne[0] = mess.getCreateur().getNom();
-                    System.out.println("0: " + ligne[0]);
+                    ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
                     ligne[1] = mess.getTexte();
                     ligne[2] = mess.getDate().toString();
                     ligne[3] = mess.getEtatGroupe().toString();
                     tableModele.addRow(ligne);
-                }
-                String[] test = {
-                "Title 1", "Title 2", "Title 3", "LU_PAR_TOUS"
-            };
-        tableModele.addRow(test);
+                }      
                 discussionTable.setModel(tableModele);
                 //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
             }
             
-        }
-        
-        
-        
-        
+        }        
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
