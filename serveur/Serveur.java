@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import message.MessageDemConnexion;
+import message.MessageGroupe;
 import message.MessageMessageConversation;
 import message.MessageMiseAJourEtat;
 import message.MessageTicket;
@@ -57,7 +58,7 @@ public class Serveur {
 
 	public boolean lancer(String idUtilisateur, String mdp) {
 		try {
-			if( isConnecxonServeurAcceptee(idUtilisateur, mdp) ){
+			if (isConnecxonServeurAcceptee(idUtilisateur, mdp)) {
 				Thread t = new Thread(new ThreadConnexion(this));
 				t.start();
 				return true;
@@ -321,6 +322,14 @@ public class Serveur {
 	}
 
 	void deconnexionUtilisateur(AssocUtilisateurSocket assoc) {
+		try {
+			assoc.getOut().close();
+			assoc.getIn().close();
+			assoc.getSocket().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		utilisateursConnectes.remove(assoc);
 	}
 
@@ -556,17 +565,18 @@ public class Serveur {
 		}
 	}
 
-	private boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException{
+	private boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException {
 		ResultSet res;
 		try {
-			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = 'Administrateur'");
-		for (; res.next();) {
-			if (res.getString(idUtilisateur).equals(idUtilisateur)) {
-				ResultSet r = requeteBaseDeDonnees("SELECT mdp FROM Utilisateur WHERE idU = '" + idUtilisateur + "'");
-				return r.first() && r.getString(1).equals(mdp);
+			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = 'Aministrateur'");
+			for (; res.next();) {
+				if (res.getString(idUtilisateur).equals(idUtilisateur)) {
+					ResultSet r = requeteBaseDeDonnees(
+							"SELECT mdp FROM Utilisateur WHERE idU = '" + idUtilisateur + "'");
+					return r.first() && r.getString(1).equals(mdp);
+				}
 			}
-		}
-		
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -574,5 +584,35 @@ public class Serveur {
 		}
 
 		return false;
+	}
+
+	public void creerGroupe(String nomGroupe, Collection<Utilisateur> utilisateurs) {
+		try {
+			requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + nomGroupe + "')");
+			Groupe g = new Groupe(nomGroupe);
+
+			for (Utilisateur u : utilisateurs) {
+				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + u.getIdUtilisateur() + "', '"
+						+ nomGroupe + "')");
+				g.ajouterUtilisateurs(u);
+			}
+
+			for (Utilisateur u : utilisateurs) {
+				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+					AssocUtilisateurSocket assoc = ite.next();
+					if (assoc.getUtilisateur().equals(u)) {
+						ObjectOutputStream out = assoc.getOut();
+						out.writeObject(new MessageGroupe(g));
+						out.flush();
+						break;
+					}
+				}
+			}
+
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

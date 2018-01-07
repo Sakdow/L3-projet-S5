@@ -22,12 +22,6 @@ public class Groupe implements Serializable, Comparable<Groupe> {
 		}
 	}
 
-	public void ajouterGroupes(Groupe... groupes) {
-		for (Groupe g : groupes) {
-			ajouterUtilisateurs(g.getListeUtilisateur().toArray(new Utilisateur[0]));
-		}
-	}
-
 	public List<Utilisateur> getListeUtilisateur() {
 		return listeUtilisateur;
 	}
