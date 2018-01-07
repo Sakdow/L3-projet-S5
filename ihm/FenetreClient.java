@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import message.MessageMessageConversation;
 import message.MessageTicket;
 import modele.EtatMessage;
@@ -471,25 +472,44 @@ public class FenetreClient extends javax.swing.JFrame {
     }//GEN-LAST:event_decoButtonActionPerformed
 
     private void ticketsRecusTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsRecusTreeValueChanged
-        Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
-        //DefaultMutableTreeNode node1 = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
-        String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
-        ticketRecuSelect = node1;
-        groupeRecuSelect = node2;
-        titreDiscuLabel.setText(ticketRecuSelect.toString());
-        //Effacer la discussion précedente de l'interface
-        tableModele = new DefaultTableModel();
-        //Afficher la discussion correspondante
-        NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
-        for(MessageConversation mess : ensembleMessage){
-            String[] ligne = new String[5];
-            ligne[0] = mess.getCreateur().toString();
-            ligne[1] = mess.getTexte();
-            ligne[2] = mess.getDate().toString();
-            ligne[3] = mess.getEtatGroupe().toString();
-            tableModele.addRow(ligne);
+        //Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        if (evt.isAddedPath()) {
+            TreePath path = evt.getPath();
+            Object treeNode = path.getLastPathComponent();
+            Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
+            String text = userObject.toString();
+            if (userObject instanceof Ticket) {
+              Ticket node1 = (Ticket) userObject;
+              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                ticketRecuSelect = node1;
+                groupeRecuSelect = node2;
+                titreDiscuLabel.setText(ticketRecuSelect.toString());
+                //Effacer la discussion précedente de l'interface
+                //tableModele = new DefaultTableModel();
+                //Afficher la discussion correspondante
+                NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
+                for(MessageConversation mess : ensembleMessage){
+                    String[] ligne = new String[5];
+                    ligne[0] = mess.getCreateur().getNom();
+                    System.out.println("0: " + ligne[0]);
+                    ligne[1] = mess.getTexte();
+                    ligne[2] = mess.getDate().toString();
+                    ligne[3] = mess.getEtatGroupe().toString();
+                    tableModele.addRow(ligne);
+                }
+                String[] test = {
+                "Title 1", "Title 2", "Title 3", "LU_PAR_TOUS"
+            };
+        tableModele.addRow(test);
+                discussionTable.setModel(tableModele);
+                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
+            }
+            
         }
-        discussionTable.setModel(tableModele);
+        
+        
+        
+        
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
