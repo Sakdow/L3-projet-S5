@@ -615,4 +615,25 @@ public class Serveur {
 		}
 
 	}
+
+	public Groupe getGroupeFromNomGroupe(String nomGroupe) throws SQLException{
+		try {
+			ResultSet res = requeteBaseDeDonnees("SELECT * FROM groupe WHERE nomG = '" + nomGroupe +"'");
+			if( res.first() ){
+				Groupe g = new Groupe(nomGroupe);
+				res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe +"'");
+				for( ; res.next() ; ){
+					g.ajouterUtilisateurs(getUtilisateurFromId(res.getString(1)));
+				}
+				
+				return g;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return null;
+	}
 }
