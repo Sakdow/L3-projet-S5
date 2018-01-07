@@ -5,16 +5,19 @@
  */
 package ihm;
 
+import serveur.Serveur;
+
 /**
  *
  * @author Lucas
  */
 public class FenetreServeurAccueil extends javax.swing.JFrame {
-
+    private Serveur serveur;
     /**
      * Creates new form FenetreServeurAccueil
      */
-    public FenetreServeurAccueil() {
+    public FenetreServeurAccueil(Serveur serveur) {
+        this.serveur = serveur;
         initComponents();
     }
 
@@ -26,6 +29,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         creerGroupeButton = new javax.swing.JButton();
         supprModGroupeButton = new javax.swing.JButton();
@@ -37,7 +41,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu serveur");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         creerGroupeButton.setText("Créer un groupe");
         creerGroupeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -45,7 +49,13 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
                 creerGroupeButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(creerGroupeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(46, 80, 0, 0);
+        getContentPane().add(creerGroupeButton, gridBagConstraints);
 
         supprModGroupeButton.setText("Supprimer / Modifier");
         supprModGroupeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -53,13 +63,29 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
                 supprModGroupeButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(supprModGroupeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(27, 70, 82, 0);
+        getContentPane().add(supprModGroupeButton, gridBagConstraints);
 
         groupeLabel.setText("Gestion des groupes");
-        getContentPane().add(groupeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(37, 80, 0, 0);
+        getContentPane().add(groupeLabel, gridBagConstraints);
 
         utilLabel.setText("Gestion des utilisateurs");
-        getContentPane().add(utilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 90, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(37, 71, 0, 0);
+        getContentPane().add(utilLabel, gridBagConstraints);
 
         creerUtilButton.setText("Créer un utilisateur");
         creerUtilButton.addActionListener(new java.awt.event.ActionListener() {
@@ -67,7 +93,13 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
                 creerUtilButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(creerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 150, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(46, 61, 0, 0);
+        getContentPane().add(creerUtilButton, gridBagConstraints);
 
         supprModUtilButton.setText("Supprimer / Modifier");
         supprModUtilButton.addActionListener(new java.awt.event.ActionListener() {
@@ -75,10 +107,21 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
                 supprModUtilButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(supprModUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 200, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(27, 61, 82, 0);
+        getContentPane().add(supprModUtilButton, gridBagConstraints);
 
         jButton3.setText("Déconnexion");
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 11, 0, 25);
+        getContentPane().add(jButton3, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

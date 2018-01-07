@@ -8,7 +8,9 @@ package ihm;
 import client.Client;
 import client.Reseaux;
 import client.ThreadEcoute;
+import javax.swing.JOptionPane;
 import message.MessageReponseConnexion;
+import serveur.Serveur;
 
 /**
  *
@@ -56,12 +58,6 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
             }
         });
         getContentPane().add(connexionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
-
-        passwordField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordFieldActionPerformed(evt);
-            }
-        });
         getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 190, -1));
 
         passwordLabel.setText("Mot de passe");
@@ -73,20 +69,19 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passwordFieldActionPerformed
-
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        Reseaux reseau = new Reseaux("127.0.0.1", 8090);
+        Serveur serveur = new Serveur();
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
-        MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
-        if(messReponse.getAccepte()){
-            Client client = new Client(messReponse.getUtilisateur(), reseau);
-            ThreadEcoute thread = new ThreadEcoute(reseau, client);
+        if(){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
+            this.dispose();
         }
+        else {
+            JOptionPane.showMessageDialog(null, "Informations incorrectes");
+        }
+        
+        
     }//GEN-LAST:event_connexionButtonActionPerformed
 
     /**

@@ -5,11 +5,17 @@
  */
 package ihm;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListModel;
+import modele.Groupe;
+import modele.Utilisateur;
 
 /**
  *
@@ -17,6 +23,8 @@ import javax.swing.ListModel;
  */
 public class FenetreServeurCreerGr extends javax.swing.JFrame {
     private DefaultListModel listeModele;
+    private DefaultComboBoxModel comboUtilModele;
+    private DefaultComboBoxModel comboGrModele;
     /**
      * Creates new form FenetreServeurCreerGr
      */
@@ -32,6 +40,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         nomGrLabel = new javax.swing.JLabel();
         nomGrField = new javax.swing.JTextField();
@@ -56,14 +65,34 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création de groupe");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         nomGrLabel.setText("Nom du groupe :");
-        getContentPane().add(nomGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
-        getContentPane().add(nomGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 120, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(76, 40, 0, 0);
+        getContentPane().add(nomGrLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 114;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(76, 12, 0, 0);
+        getContentPane().add(nomGrField, gridBagConstraints);
 
         ajouterUtilLabel.setText("Ajouter un utilisateur :");
-        getContentPane().add(ajouterUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(70, 20, 0, 0);
+        getContentPane().add(ajouterUtilLabel, gridBagConstraints);
 
         searchUtilField.setText("search");
         searchUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -71,10 +100,24 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 searchUtilFieldKeyReleased(evt);
             }
         });
-        getContentPane().add(searchUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 120, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 114;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(70, 12, 0, 0);
+        getContentPane().add(searchUtilField, gridBagConstraints);
 
         ajouterGroupeLabel.setText("Ajouter un groupe : ");
-        getContentPane().add(ajouterGroupeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 20, 0, 0);
+        getContentPane().add(ajouterGroupeLabel, gridBagConstraints);
 
         searchAjoutGrField.setText("search");
         searchAjoutGrField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -82,16 +125,42 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 searchAjoutGrFieldKeyReleased(evt);
             }
         });
-        getContentPane().add(searchAjoutGrField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 120, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 114;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 12, 0, 0);
+        getContentPane().add(searchAjoutGrField, gridBagConstraints);
 
         paramGrLabel.setText("Paramètres du groupe");
-        getContentPane().add(paramGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 100, 0, 0);
+        getContentPane().add(paramGrLabel, gridBagConstraints);
 
         listeUtilGrLabel.setText("Liste des utilisateurs du groupe");
-        getContentPane().add(listeUtilGrLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 131, 0, 0);
+        getContentPane().add(listeUtilGrLabel, gridBagConstraints);
 
         supprUtilLabel.setText("Supprimer un utilisateur :");
-        getContentPane().add(supprUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 260, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 141, 0, 0);
+        getContentPane().add(supprUtilLabel, gridBagConstraints);
 
         searchSupprUtilField.setText("search");
         searchSupprUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -99,7 +168,15 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 searchSupprUtilFieldKeyReleased(evt);
             }
         });
-        getContentPane().add(searchSupprUtilField, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 300, 110, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.ipadx = 104;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 121, 0, 0);
+        getContentPane().add(searchSupprUtilField, gridBagConstraints);
 
         supprimerUtilButton.setText("Supprimer");
         supprimerUtilButton.addActionListener(new java.awt.event.ActionListener() {
@@ -107,10 +184,28 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 supprimerUtilButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(supprimerUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 300, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 11;
+        gridBagConstraints.gridheight = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 18);
+        getContentPane().add(supprimerUtilButton, gridBagConstraints);
 
         creerButton.setText("Créer");
-        getContentPane().add(creerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 370, -1, -1));
+        creerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creerButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 121, 44, 0);
+        getContentPane().add(creerButton, gridBagConstraints);
 
         annulerButton.setText("Annuler");
         annulerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -118,14 +213,33 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 annulerButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(annulerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 370, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 11;
+        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 41, 44, 0);
+        getContentPane().add(annulerButton, gridBagConstraints);
 
         ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModelUtil()));
-        getContentPane().add(ajoutUtilCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 120, -1));
+        comboUtilModele = new DefaultComboBoxModel();
+        setComboUtilModel();
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.ipadx = 64;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+        getContentPane().add(ajoutUtilCombo, gridBagConstraints);
 
         searchSupprUtilLabel.setText("Recherche");
-        getContentPane().add(searchSupprUtilLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 280, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 121, 0, 0);
+        getContentPane().add(searchSupprUtilLabel, gridBagConstraints);
 
         ajouterUtilButton.setText("Ajouter");
         ajouterUtilButton.addActionListener(new java.awt.event.ActionListener() {
@@ -133,11 +247,26 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 ajouterUtilButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(ajouterUtilButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(70, 10, 0, 0);
+        getContentPane().add(ajouterUtilButton, gridBagConstraints);
 
         ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModelGr()));
-        getContentPane().add(ajoutGrCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 120, -1));
+        comboGrModele = new DefaultComboBoxModel();
+        setComboGrModel();
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 7;
+        gridBagConstraints.ipadx = 64;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+        getContentPane().add(ajoutGrCombo, gridBagConstraints);
 
         ajouterGrButton.setText("Ajouter");
         ajouterGrButton.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +274,13 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 ajouterGrButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(ajouterGrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 290, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 10, 0, 0);
+        getContentPane().add(ajouterGrButton, gridBagConstraints);
 
         listeUtilList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -153,10 +288,21 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         listeModele = new DefaultListModel();
-        setListeModel();
         jScrollPane1.setViewportView(listeUtilList);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 60, 160, 180));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 10;
+        gridBagConstraints.gridheight = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 137;
+        gridBagConstraints.ipady = 157;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(16, 141, 0, 0);
+        getContentPane().add(jScrollPane1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -191,11 +337,18 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
 
     private void ajouterGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterGrButtonActionPerformed
         //Faire une requete pour recuperer les utilisateurs du groupe
-        //pour chaque util, faire
-        //if(!listeModel.contains(util)){
-        //listeModele.addElement(util);
-        //}
-        //listeUtilList.setModel(listeModele);
+        String nomGr = (String) ajoutGrCombo.getSelectedItem();
+        Groupe gr = serveur.getGroupeFromNomGroupe(nomGr);
+        List<Utilisateur> utils = gr.getListeUtilisateur();
+        //Ajout de chaque utilisateur à la JList
+        for(Utilisateur ut : utils){
+            //Verif de doublons
+            if(!listeModele.contains(ut)){
+                listeModele.addElement(ut);
+            }
+        }
+        //On met à jour la liste avec son modele
+        listeUtilList.setModel(listeModele);
     }//GEN-LAST:event_ajouterGrButtonActionPerformed
 
     private void supprimerUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprimerUtilButtonActionPerformed
@@ -203,6 +356,13 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         listeModele.remove(index);
         listeUtilList.setModel(listeModele);
     }//GEN-LAST:event_supprimerUtilButtonActionPerformed
+
+    private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
+        List<Utilisateur> listUtil = new ArrayList();
+        for(int i = 0; i < listeModele.size(); i++){
+            listUtil.add((Utilisateur) listeModele.get(i));
+        }
+    }//GEN-LAST:event_creerButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -243,49 +403,24 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         }        
     }
     
-    private String[] getComboBoxModelGr(){
-        //Requete pour recuperer tous les groupes
-        String req = "SELECT....";
-        //ResultSet res = Serveur.requeteBDD(req);
-        /*String groupes[];
-        int i = 0;
-        while(res.next()){
-            groupes[i] = res.getString("nom");
-            i ++;
+    private void setComboGrModel(){
+        
+        Set<String> groupes = serveur.getGroupes();
+        for(String gr : groupes){
+            comboGrModele.addElement(gr);
         }
-        return groupes;*/
-        return new String[] { "Groupe 1", "Groupe 2" };
+        ajoutGrCombo.setModel(comboGrModele);        
     }
     
-    private String[] getComboBoxModelUtil(){
-        //Requete pour recuperer tous les utilisateurs
-        String req = "SELECT....";
-        //ResultSet res = Serveur.requeteBDD(req);
-        /*String util[];
-        int i = 0;
-        while(res.next()){
-            util[i] = res.getString("prenom") + " " + res.getString("nom");
-            i ++;
+    private void setComboUtilModel(){
+        
+        Set<Utilisateur> utils = serveur.getUtilisateurs();
+        for(Utilisateur ut : utils){
+            comboUtilModele.addElement(ut);
         }
-        return util;*/
-        return new String[] { "Util 1", "Util 2" };
+        ajoutUtilCombo.setModel(comboUtilModele);        
     }
     
-    private void setListeModel(){
-        //Requete pour recuperer tous les utilisateurs du groupe
-        String req = "SELECT....";
-        //ResultSet res = Serveur.requeteBDD(req);
-        /*        
-        while(res.next()){
-            modele.addElement(res.getString("prenom") + " " + res.getString("nom"));            
-        }
-        */
-        //A REMPLACER PAR CI DESSUS
-        listeModele.addElement("1");
-        listeModele.addElement("2");
-        //
-        listeUtilList.setModel(listeModele);
-    }
     /**
      * @param args the command line arguments
      */

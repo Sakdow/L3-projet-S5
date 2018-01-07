@@ -77,6 +77,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
             Client client = new Client(messReponse.getUtilisateur(), reseau);
             ThreadEcoute thread = new ThreadEcoute(reseau, client);
             FenetreClient fenetre = new FenetreClient(client, thread);
+            this.dispose();
         }
         else {
             JOptionPane.showMessageDialog(null, "Informations incorrectes");
