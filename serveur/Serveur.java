@@ -58,7 +58,7 @@ public class Serveur {
 
 	public boolean lancer(String idUtilisateur, String mdp) {
 		try {
-			if (isConnecxonServeurAcceptee(idUtilisateur, mdp)) {
+			if (isConnexionServeurAcceptee(idUtilisateur, mdp)) {
 				Thread t = new Thread(new ThreadConnexion(this));
 				t.start();
 				return true;
@@ -565,7 +565,7 @@ public class Serveur {
 		}
 	}
 
-	private boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException {
+	private boolean isConnexionServeurAcceptee(String idUtilisateur, String mdp) throws SQLException {
 		ResultSet res;
 		try {
 			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = 'Aministrateur'");
