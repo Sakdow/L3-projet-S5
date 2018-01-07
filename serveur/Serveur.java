@@ -352,14 +352,14 @@ public class Serveur {
 				res = requeteBaseDeDonnees(
 						"INSERT INTO message (texte,dateM,idT, idU) VALUES ('" + texteToTexteSQL(m.getTexte()) + "',"
 								+ "'" + new java.sql.Timestamp(new java.util.Date().getTime()) + "', '" + idTicket
-								+ "', '" + idCreateur + "')",
+								+ "', '" + texteToTexteSQL(idCreateur) + "')",
 						true);
 				res.first();
 				int idMessage = res.getInt(1);
 				m.setIdMessage(idMessage);
 
-				requeteBaseDeDonnees(
-						"INSERT INTO  lire (idM, idU) VALUES (" + m.getIdMessage() + ", '" + idCreateur + "')");
+				requeteBaseDeDonnees("INSERT INTO  lire (idM, idU) VALUES (" + m.getIdMessage() + ", '"
+						+ texteToTexteSQL(idCreateur) + "')");
 			}
 
 			Set<String> participants = utilisateursGroupe(idGroupe);
@@ -367,11 +367,12 @@ public class Serveur {
 
 			for (String u : participants) {
 				requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('" + u + "', " + idTicket
-						+ ", '" + idGroupe + "', '" + idCreateur + "')");
+						+ ", '" + texteToTexteSQL(idGroupe) + "', '" + texteToTexteSQL(idCreateur) + "')");
 			}
 
-			requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('" + idCreateur + "', "
-					+ idTicket + ", '" + idGroupe + "', '" + idCreateur + "')");
+			requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('"
+					+ texteToTexteSQL(idCreateur) + "', " + idTicket + ", '" + texteToTexteSQL(idGroupe) + "', '"
+					+ texteToTexteSQL(idCreateur) + "')");
 
 			System.out.println(participants.size());
 			envoyerNouveauTicketConnectes(ticket, participants);
@@ -410,7 +411,7 @@ public class Serveur {
 		Set<String> ensembleUtilisateurs = new HashSet<>();
 		ResultSet res;
 		try {
-			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
+			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + texteToTexteSQL(nomGroupe) + "'");
 			for (; res.next();)
 				ensembleUtilisateurs.add(res.getString(1));
 		} catch (SQLException e) {
@@ -684,5 +685,13 @@ public class Serveur {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void modicationGroupe( String nomGroupe, String nouveauNomGroupe, Collection<Utilisateur> utilisateurs ){
+		
+	}
+	
+	public void modificationUtilisateur(String nom, String prenom, String mdp, Collection<String> groupe){
+		
 	}
 }
