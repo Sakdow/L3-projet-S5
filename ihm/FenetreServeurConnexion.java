@@ -42,7 +42,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         usernameLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Connexion");
+        setTitle("Connexion serveur");
         setMinimumSize(new java.awt.Dimension(300, 300));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 

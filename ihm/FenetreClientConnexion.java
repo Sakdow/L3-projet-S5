@@ -34,6 +34,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         titreLabel = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
@@ -45,12 +46,25 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Connexion");
         setMinimumSize(new java.awt.Dimension(300, 300));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         titreLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         titreLabel.setText("Connexion");
-        getContentPane().add(titreLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));
-        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 190, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 150, 0, 0);
+        getContentPane().add(titreLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.ipadx = 184;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 110, 0, 100);
+        getContentPane().add(usernameTextField, gridBagConstraints);
 
         connexionButton.setText("Connexion");
         connexionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -58,20 +72,44 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
                 connexionButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(connexionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
-        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 190, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(50, 170, 17, 0);
+        getContentPane().add(connexionButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.ipadx = 184;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 110, 0, 100);
+        getContentPane().add(passwordField, gridBagConstraints);
 
         passwordLabel.setText("Mot de passe");
-        getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 180, 0, 0);
+        getContentPane().add(passwordLabel, gridBagConstraints);
 
         usernameLabel1.setText("Login");
-        getContentPane().add(usernameLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(51, 200, 0, 0);
+        getContentPane().add(usernameLabel1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        Reseaux reseau = new Reseaux("127.0.0.1", 8090);
+        Reseaux reseau = new Reseaux("77.194.181.122", 8090);
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
         MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
@@ -79,6 +117,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
             Client client = new Client(messReponse.getUtilisateur(), reseau);
             ThreadEcoute thread = new ThreadEcoute(reseau, client);
             fenetre = new FenetreClient(client, thread);
+            fenetre.setVisible(true);
             this.dispose();
         }
         else {

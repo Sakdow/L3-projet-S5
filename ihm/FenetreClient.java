@@ -52,6 +52,7 @@ public class FenetreClient extends javax.swing.JFrame {
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
         this.thread = thread;
+        thread.start();
         initComponents();        
     }
     //DEBUG
@@ -93,6 +94,7 @@ public class FenetreClient extends javax.swing.JFrame {
         //Masquer la colonne d'état
         table.getColumnModel().getColumn(3).setMinWidth(0);
         table.getColumnModel().getColumn(3).setMaxWidth(0);
+        
         this.setWrapStyleWord(true);            
         this.setLineWrap(true);
         this.setColumns(3);
@@ -207,7 +209,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        //ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
+        ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsCreesTreeValueChanged(evt);
@@ -249,7 +251,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        //ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsRecusTreeValueChanged(evt);
@@ -470,6 +472,7 @@ public class FenetreClient extends javax.swing.JFrame {
 
     private void ticketsRecusTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsRecusTreeValueChanged
         Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        //DefaultMutableTreeNode node1 = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
         String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
         ticketRecuSelect = node1;
         groupeRecuSelect = node2;
