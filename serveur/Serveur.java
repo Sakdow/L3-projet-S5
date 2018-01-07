@@ -49,13 +49,15 @@ public class Serveur {
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-
-		Thread t = new Thread(new ThreadConnexion(this));
-		t.start();
 	}
 
 	public int getPort() {
 		return port;
+	}
+	
+	public void lancer(){
+		Thread t = new Thread(new ThreadConnexion(this));
+		t.start();
 	}
 
 	Set<AssocUtilisateurSocket> getUtilisateursConnectes() {
