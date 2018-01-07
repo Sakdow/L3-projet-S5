@@ -52,6 +52,7 @@ public class FenetreClient extends javax.swing.JFrame {
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
         this.thread = thread;
+        thread.start();
         initComponents();        
     }
     //DEBUG
@@ -70,6 +71,7 @@ public class FenetreClient extends javax.swing.JFrame {
             int row,
             int column) {
         this.setText((String)value);
+        //Gestion des couleurs des messages
         String etat = (String)table.getValueAt(row, 3);
         if(etat != null){
             switch(etat){
@@ -87,14 +89,15 @@ public class FenetreClient extends javax.swing.JFrame {
                     break;    
                 default:
                     setBackground(Color.white);
-            }
-                
-            
+            }            
         }
+        //Masquer la colonne d'état
+        table.getColumnModel().getColumn(3).setMinWidth(0);
+        table.getColumnModel().getColumn(3).setMaxWidth(0);
         
         this.setWrapStyleWord(true);            
         this.setLineWrap(true);
-        this.setColumns(1);
+        this.setColumns(3);
         int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
         int textLength = this.getText().length();
         int lines = textLength / (this.getColumns() + 1) +1;//+1, cause we need at least 1 row.  
@@ -133,6 +136,7 @@ public class FenetreClient extends javax.swing.JFrame {
         usernameLabel = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         discussionTable = new javax.swing.JTable();
+        refreshButton = new javax.swing.JButton();
 
         discussionArea.setColumns(20);
         discussionArea.setRows(5);
@@ -167,6 +171,7 @@ public class FenetreClient extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 7;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
@@ -204,7 +209,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        //ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
+        ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsCreesTreeValueChanged(evt);
@@ -246,7 +251,7 @@ public class FenetreClient extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        //ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsRecusTreeValueChanged(evt);
@@ -260,11 +265,11 @@ public class FenetreClient extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.ipadx = 145;
         gridBagConstraints.ipady = 255;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(36, 20, 69, 0);
+        gridBagConstraints.insets = new java.awt.Insets(36, 20, 0, 0);
         getContentPane().add(ongletsDiscu, gridBagConstraints);
 
         saisieDiscuArea.setColumns(20);
@@ -278,10 +283,10 @@ public class FenetreClient extends javax.swing.JFrame {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.gridheight = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 267;
-        gridBagConstraints.ipady = 17;
+        gridBagConstraints.ipadx = 349;
+        gridBagConstraints.ipady = 58;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -297,6 +302,7 @@ public class FenetreClient extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridheight = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 10, 0, 0);
         getContentPane().add(envoyerButton, gridBagConstraints);
@@ -373,12 +379,26 @@ public class FenetreClient extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 567;
-        gridBagConstraints.ipady = 203;
+        gridBagConstraints.ipady = 243;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(16, 10, 0, 7);
+        gridBagConstraints.insets = new java.awt.Insets(16, 10, 0, 0);
         getContentPane().add(jScrollPane5, gridBagConstraints);
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 6, 0, 0);
+        getContentPane().add(refreshButton, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -452,6 +472,7 @@ public class FenetreClient extends javax.swing.JFrame {
 
     private void ticketsRecusTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsRecusTreeValueChanged
         Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
+        //DefaultMutableTreeNode node1 = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
         String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
         ticketRecuSelect = node1;
         groupeRecuSelect = node2;
@@ -470,6 +491,22 @@ public class FenetreClient extends javax.swing.JFrame {
         }
         discussionTable.setModel(tableModele);
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        //Effacer la discussion précedente de l'interface
+        tableModele = new DefaultTableModel();
+        //Afficher la discussion correspondante
+        NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
+        for(MessageConversation mess : ensembleMessage){
+            String[] ligne = new String[5];
+            ligne[0] = mess.getCreateur().toString();
+            ligne[1] = mess.getTexte();
+            ligne[2] = mess.getDate().toString();
+            ligne[3] = mess.getEtatGroupe().toString();
+            tableModele.addRow(ligne);
+        }
+        discussionTable.setModel(tableModele);
+    }//GEN-LAST:event_refreshButtonActionPerformed
     private DefaultMutableTreeNode getArbreModelRecus(){
         //PARTIE TICKETS RECUS
         if(client != null){
@@ -550,7 +587,7 @@ public class FenetreClient extends javax.swing.JFrame {
         //Remplissage des lignes par des messages
         //if utilisateur alors mettre a droite
         String[] test = {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "LU_PAR_TOUS"
             };
         tableModele.addRow(test);
         discussionTable.setModel(tableModele);
@@ -603,6 +640,7 @@ public class FenetreClient extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane ongletsDiscu;
+    private javax.swing.JButton refreshButton;
     private javax.swing.JTextArea saisieDiscuArea;
     private javax.swing.JTree ticketsCreesTree;
     private javax.swing.JTree ticketsRecusTree;

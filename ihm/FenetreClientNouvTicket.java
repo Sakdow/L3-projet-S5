@@ -9,6 +9,8 @@ import client.Client;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 import modele.EtatMessage;
 import modele.Groupe;
 import modele.MessageConversation;
@@ -24,16 +26,15 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
      */
     private Client client;
     private List<Groupe> listeGroupes;
+    private DefaultComboBoxModel comboModele;
     public FenetreClientNouvTicket(Client client) {
-        initComponents();
         this.client = client;
-        listeGroupes = client.getListeGroupe();
-        
-    }
-    //DEBUG
-    public FenetreClientNouvTicket() {
+        this.listeGroupes = client.getListeGroupe();
         initComponents();
-    }
+        
+        //listeGroupes = client.getListeGroupe();
+        
+    }       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,7 +59,8 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Groupe 1", "Groupe 2" }));
-        groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(getComboBoxModel()));
+        comboModele = new DefaultComboBoxModel();
+        setComboBoxModel();
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -144,73 +146,31 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
         String nomTicket = nomTicketField.getText();
-        String nomGr = (String) groupeComboBox.getSelectedItem();
+        int indGroupe = groupeComboBox.getSelectedIndex();
         String message = messageArea.getText();        
         Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());        
-        Groupe groupe = new Groupe(nomGr);
-        for(Groupe gr : listeGroupes){
-            if(groupe.equals(gr)){
-                groupe = gr;
-            }
-        }
+        Groupe groupe = listeGroupes.get(indGroupe);
         if(client != null){
             MessageConversation messageConv = new MessageConversation(-1, client.getUtilisateurClient(), message, date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
             client.creerTicket(groupe, nomTicket, messageConv);
-        }
+            this.dispose();
+        }        
         
     }//GEN-LAST:event_creerButtonActionPerformed
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_annulerButtonActionPerformed
-    private String[] getComboBoxModel(){
-        //Requete pour recuperer tous les groupes
-        String req = "SELECT....";
-        //ResultSet res = Serveur.requeteBDD(req);
-        /*String groupes[];
-        int i = 0;
-        while(res.next()){
-            groupes[i] = res.getString("nom");
-            i ++;
+    private void setComboBoxModel(){
+        List<Groupe> groupes = client.getListeGroupe();
+        if(groupes != null){
+            for(Groupe gr : groupes){
+                comboModele.addElement(gr.getIdGroupe());
+            }            
         }
-        return groupes;*/
-        return new String[] { "Groupe 1", "Groupe 2" };
+        groupeComboBox.setModel(comboModele);       
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreClientNouvTicket.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreClientNouvTicket.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreClientNouvTicket.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreClientNouvTicket.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FenetreClientNouvTicket().setVisible(true);
-            }
-        });
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton annulerButton;
     private javax.swing.JButton creerButton;

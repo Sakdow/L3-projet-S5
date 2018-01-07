@@ -127,22 +127,22 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void creerGroupeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerGroupeButtonActionPerformed
-        FenetreServeurCreerGr fenetre = new FenetreServeurCreerGr();
+        FenetreServeurCreerGr fenetre = new FenetreServeurCreerGr(serveur);
         fenetre.setVisible(true);
     }//GEN-LAST:event_creerGroupeButtonActionPerformed
 
     private void supprModGroupeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprModGroupeButtonActionPerformed
-        FenetreServeurGestGroupe fenetre = new FenetreServeurGestGroupe();
+        FenetreServeurGestGroupe fenetre = new FenetreServeurGestGroupe(serveur);
         fenetre.setVisible(true);
     }//GEN-LAST:event_supprModGroupeButtonActionPerformed
 
     private void creerUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerUtilButtonActionPerformed
-        FenetreServeurCreerUtil fenetre = new FenetreServeurCreerUtil();
+        FenetreServeurCreerUtil fenetre = new FenetreServeurCreerUtil(serveur);
         fenetre.setVisible(true);
     }//GEN-LAST:event_creerUtilButtonActionPerformed
 
     private void supprModUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprModUtilButtonActionPerformed
-        FenetreServeurGestUtil fenetre = new FenetreServeurGestUtil();
+        FenetreServeurGestUtil fenetre = new FenetreServeurGestUtil(serveur);
         fenetre.setVisible(true);
     }//GEN-LAST:event_supprModUtilButtonActionPerformed
 
@@ -174,11 +174,11 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FenetreServeurAccueil().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

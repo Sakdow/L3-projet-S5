@@ -42,7 +42,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         usernameLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Connexion");
+        setTitle("Connexion serveur");
         setMinimumSize(new java.awt.Dimension(300, 300));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -73,7 +73,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         Serveur serveur = new Serveur();
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
-        if(){
+        boolean lance = serveur.lancer(id, mdp);
+        if(lance){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
             this.dispose();
         }

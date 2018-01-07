@@ -92,7 +92,7 @@ public class Client {
 	public void ajouterTicket(Ticket ticket) {
 		Utilisateur createur = ticket.getCreateur();
 		Groupe groupe = ticket.getGroupe();
-		if (createur.getIdUtilisateur().equals(utilisateurClient.getIdUtilisateur())) {
+		if (createur.equals(utilisateurClient)) {
 			ajouterTicketMap(ticketsCree, ticket, groupe);
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);

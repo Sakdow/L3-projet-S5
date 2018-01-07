@@ -34,7 +34,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel&lt;&gt;(getComboBoxModel()));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="comboModele = new DefaultComboBoxModel();&#xa;setComboBoxModel();"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
       <Constraints>
