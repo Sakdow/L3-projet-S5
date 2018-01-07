@@ -2,11 +2,11 @@ package serveur;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import message.Message;
 import message.MessageDeconnexion;
 import message.MessageMessageConversation;
+import message.MessageMiseAJourEtat;
 import message.MessageTicket;
 
 class ThreadEcouteTraitementClient implements Runnable {
@@ -21,9 +21,8 @@ class ThreadEcouteTraitementClient implements Runnable {
 
 	@Override
 	public void run() {
-		ObjectOutputStream out = utilisateurSocket.getOut();
 		ObjectInputStream in = utilisateurSocket.getIn();
-		for( ; !Thread.interrupted() ;){
+		for (; !Thread.interrupted();) {
 			try {
 				Message messageRecu = (Message) in.readObject();
 				if (messageRecu instanceof MessageDeconnexion) {
@@ -33,15 +32,18 @@ class ThreadEcouteTraitementClient implements Runnable {
 					MessageTicket m = (MessageTicket) messageRecu;
 					serveur.nouveauTicket(m.getTicket());
 				} else if (messageRecu instanceof MessageMessageConversation) {
-	//				serveur.nouveauMessage((MessageMessageConversation) messageRecu);
+					serveur.nouveauMessageConversation((MessageMessageConversation) messageRecu);
+				} else if( messageRecu instanceof MessageMiseAJourEtat ){
+					serveur.messageConversationLu((MessageMiseAJourEtat) messageRecu);
 				}
-	
+
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				serveur.deconnexionUtilisateur(utilisateurSocket);
+				return;
 			}
 		}
 	}

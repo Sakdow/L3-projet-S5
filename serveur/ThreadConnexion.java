@@ -5,8 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -40,7 +38,7 @@ class ThreadConnexion implements Runnable {
 				Object objetRecu = in.readObject();
 				MessageDemConnexion messageRecu = (MessageDemConnexion) objetRecu;
 
-				boolean connexionAccepted = isConnectionAccepted(messageRecu);
+				boolean connexionAccepted = serveur.isConnectionClientAccepted(messageRecu);
 
 				String idUtilisateur = messageRecu.getIdUtilisateur();
 				Utilisateur utilisateur = serveur.getUtilisateurFromId(idUtilisateur);
@@ -48,7 +46,7 @@ class ThreadConnexion implements Runnable {
 				boolean dejaConnecte = utilisateursConnectes
 						.contains(new AssocUtilisateurSocket(utilisateur, null, null, null));
 
-				if (!connexionAccepted || dejaConnecte){
+				if (!connexionAccepted || dejaConnecte) {
 					out.writeObject(new MessageReponseConnexion(false, null));
 					out.flush();
 					out.close();
@@ -69,7 +67,7 @@ class ThreadConnexion implements Runnable {
 								serveur.messageRecu(m, idUtilisateur);
 							}
 						}
-						out.writeObject(new MessageTicket(t, false));
+						out.writeObject(new MessageTicket(t));
 						out.flush();
 					}
 
@@ -78,7 +76,7 @@ class ThreadConnexion implements Runnable {
 						out.writeObject(new MessageGroupe(groupe));
 						out.flush();
 					}
-					
+
 					Thread t = new Thread(e);
 					t.start();
 				}
@@ -88,19 +86,6 @@ class ThreadConnexion implements Runnable {
 			e.printStackTrace();
 		}
 
-	}
-
-	private boolean isConnectionAccepted(MessageDemConnexion message) {
-
-		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
-
-		try {
-			ResultSet resultat = serveur.requeteBaseDeDonnees(requete);
-			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 }

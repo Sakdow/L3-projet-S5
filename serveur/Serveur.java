@@ -2,6 +2,7 @@ package serveur;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import message.Message;
+import message.MessageDemConnexion;
 import message.MessageMessageConversation;
+import message.MessageMiseAJourEtat;
 import message.MessageTicket;
 import modele.EtatMessage;
 import modele.Groupe;
@@ -60,7 +62,7 @@ public class Serveur {
 		return utilisateursConnectes;
 	}
 
-	ResultSet requeteBaseDeDonnees(String requete) throws SQLException {
+	private ResultSet requeteBaseDeDonnees(String requete) throws SQLException {
 		Pattern pattern = Pattern.compile("^INSERT INTO *");
 		Matcher matcher = pattern.matcher(requete);
 		if (matcher.find()) {
@@ -70,7 +72,7 @@ public class Serveur {
 		return baseDeDonnees.requete(requete);
 	}
 
-	ResultSet requeteBaseDeDonnees(String requete, boolean insertAndReturnKey) throws SQLException {
+	private ResultSet requeteBaseDeDonnees(String requete, boolean insertAndReturnKey) throws SQLException {
 		if (insertAndReturnKey)
 			return baseDeDonnees.requeteInsertReturnKey(requete);
 		baseDeDonnees.requeteInsertWithoutReturn(requete);
@@ -205,9 +207,26 @@ public class Serveur {
 
 			res = requeteBaseDeDonnees("SELECT COUNT(*) FROM recevoir WHERE idM = " + idMessage);
 			res.next();
-			int nb = res.getInt(1);
-			System.out.println(nb + "/" + nombreParticipants);
-			return nb >= nombreParticipants;
+			return res.getInt(1) >= nombreParticipants;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	boolean isMessageLuParTous(int idMessage) throws SQLException {
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idMessage);
+			res.first();
+			int idTicket = res.getInt(1);
+			Set<String> participants = getParticipantsTickets(idTicket);
+			int nombreParticipants = participants.size();
+
+			res = requeteBaseDeDonnees("SELECT COUNT(*) FROM lire WHERE idM = " + idMessage);
+			res.next();
+			return res.getInt(1) >= nombreParticipants;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -221,7 +240,6 @@ public class Serveur {
 			requeteBaseDeDonnees("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + ",'" + idUtilisateur + "')");
 
 			if (isMessageRecuParTous(idMessage)) {
-				System.out.println("lu par tous : " + idUtilisateur);
 				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idMessage);
 				res.first();
 				int idTicket = res.getInt(1);
@@ -238,10 +256,7 @@ public class Serveur {
 					Utilisateur u = getUtilisateurFromId(idU);
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
-						System.out.println("M : \n\t" + assoc.getUtilisateur().getIdUtilisateur());
-						System.out.println("\t" + u.getIdUtilisateur());
 						if (assoc.getUtilisateur().equals(u)) {
-							System.out.println("Coucou");
 							m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idU));
 							ObjectOutputStream out = assoc.getOut();
 							out.writeObject(new MessageMessageConversation(idTicket, nomGroupe, m));
@@ -324,8 +339,6 @@ public class Serveur {
 				m.setIdMessage(idMessage);
 
 				requeteBaseDeDonnees(
-						"INSERT INTO recevoir (idM, idU) VALUES (" + m.getIdMessage() + ", '" + idCreateur + "')");
-				requeteBaseDeDonnees(
 						"INSERT INTO  lire (idM, idU) VALUES (" + m.getIdMessage() + ", '" + idCreateur + "')");
 			}
 
@@ -339,7 +352,7 @@ public class Serveur {
 
 			requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('" + idCreateur + "', "
 					+ idTicket + ", '" + idGroupe + "', '" + idCreateur + "')");
-			
+
 			System.out.println(participants.size());
 			envoyerNouveauTicketConnectes(ticket, participants);
 		} catch (SQLException e) {
@@ -388,111 +401,147 @@ public class Serveur {
 		return ensembleUtilisateurs;
 	}
 
-	// private void nouveauMessage(MessageMessageConversation message) {
-	// MessageConversation messageConv = message.getMessageConv();
-	// Utilisateur createur = messageConv.getCreateur();
-	// String idCreateur = createur.getIdUtilisateur();
-	// // Ajout du message dans la bdd
-	// ResultSet res = requeteBaseDeDonnees("INSERT INTO message
-	// (texte,dateM,idT, idU) VALUES ('"
-	// + messageConv.getTexte() + "'," + new java.sql.Date(new
-	// java.util.Date().getTime()) + ", '"
-	// + message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')",
-	// true);
-	// res.first();
-	// int idMessage = res.getInt(1);
-	//
-	// int idTicket = message.getIdTicket();
-	//
-	// res = requeteBaseDeDonnees("SELECT titre FROM Ticket WHERE idT = " +
-	// idTicket);
-	// res.first();
-	//
-	// String nomGroupe = nomGroupeFromIdTicket(idTicket);
-	//
-	// Set<String> participantsTicket = new HashSet<>();
-	//
-	// res = serveur.requeteBDD("SELECT createur FROM participer WHERE idT = " +
-	// idTicket);
-	// res.first();
-	// participantsTicket.add(res.getString(1));
-	//
-	// res = serveur.requeteBDD("SELECT idU FROM appartenir WHERE nomG = '" +
-	// nomGroupe + "'");
-	// }
+	void nouveauMessageConversation(MessageMessageConversation message) {
+		MessageConversation messageConv = message.getMessageConv();
+		Utilisateur createur = messageConv.getCreateur();
+		int idTicket = message.getIdTicket();
 
-	// EtatMessage miseAJourEtatTicket(MessageConversation message, Utilisateur
-	// u, int idTicket) {
-	// Set<String> participantsMessages = getParticipantsTickets(idTicket);
-	// try {
-	// boolean nonRecuParUtilisateur = false;
-	// ResultSet res = requeteBaseDeDonnees("SELECT * FROM recevoir WHERE idM =
-	// " + message.getIdMessage()
-	// + " AND idU ='" + u.getIdUtilisateur() + "'");
-	// if (res.next()) {
-	// nonRecuParUtilisateur = true;
-	// requeteBaseDeDonnees("INSERT INTO recevoir (idM, idU) VALUES (" +
-	// message.getIdMessage() + ", '"
-	// + u.getIdUtilisateur() + "'");
-	// }
-	//
-	// if (nonRecuParUtilisateur) {
-	// res = requeteBaseDeDonnees("SELECT COUNT(*) FROM recevoir WHERE idM = " +
-	// message.getIdMessage());
-	// res.first();
-	// if (res.getInt(1) < participantsMessages.size()) {
-	// message.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
-	// } else {
-	// envoyerUtilisateursConnectes(new MessageMessageConversation(idTicket,
-	// messageConv), utilisateur);
-	// }
-	// }
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees(
+					"INSERT INTO message (texte,dateM,idT, idU) VALUES ('" + texteToTexteSQL(messageConv.getTexte())
+							+ "', '" + new java.sql.Timestamp(new java.util.Date().getTime()) + "' , '"
+							+ message.getIdTicket() + "', '" + createur.getIdUtilisateur() + "')",
+					true);
+			res.first();
+			int idMessage = res.getInt(1);
+			messageConv.setIdMessage(idMessage);
 
-	// private void envoyerMessageConversationConnectes(MessageConversation m,
-	// Utilisateur... utilisateurs) {
-	// for (Utilisateur u : utilisateurs) {
-	// for (Iterator<AssocUtilisateurSocket> ite =
-	// utilisateursConnectes.iterator(); ite.hasNext();) {
-	// AssocUtilisateurSocket assoc = ite.next();
-	// if (assoc.utilisateur.equals(u)) {
-	// ObjectOutputStream out = assoc.getOut();
-	// try {
-	// out.writeObject(message);
-	// out.flush();
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// break;
-	// }
-	// }
-	// }
-	// }
+			requeteBaseDeDonnees(
+					"INSERT INTO lire (idM, idU) VALUES (" + idMessage + ", '" + createur.getIdUtilisateur() + "')");
+			envoyerNouveauMessageConnectes(messageConv, idTicket);
 
-	// void envoyerUtilisateursConnectes(Message message, Utilisateur...
-	// utilisateurs) {
-	// for (Utilisateur u : utilisateurs) {
-	// for (Iterator<AssocUtilisateurSocket> ite =
-	// utilisateursConnectes.iterator(); ite.hasNext();) {
-	// AssocUtilisateurSocket assoc = ite.next();
-	// if (assoc.getUtilisateur().equals(u)) {
-	// ObjectOutputStream out = assoc.getOut();
-	// try {
-	// out.writeObject(message);
-	// out.flush();
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// break;
-	// }
-	// }
-	// }
-	// }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	private void envoyerNouveauMessageConnectes(MessageConversation messageConversation, int idTicket) {
+		Set<String> idParticipants = getParticipantsTickets(idTicket);
+		Utilisateur createur = messageConversation.getCreateur();
+		String idCreateur = createur.getIdUtilisateur();
+		String nomGroupe = nomGroupeFromIdTicket(idTicket);
+
+		for (String idU : idParticipants) {
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				if (assoc.getUtilisateur().getIdUtilisateur().equals(idU)) {
+					ObjectOutputStream out = assoc.getOut();
+
+					messageRecu(messageConversation, idU);
+					messageConversation.setLuParUtilisateur(idU.equals(idCreateur));
+
+					try {
+						out.writeObject(new MessageMessageConversation(idTicket, nomGroupe, messageConversation));
+						out.flush();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					break;
+				}
+			}
+		}
+	}
+
+	private String nomGroupeFromIdTicket(int idTicket) {
+		String idGroupe = "";
+		try {
+			ResultSet res = requeteBaseDeDonnees("SELECT nomG FROM participer WHERE idT = " + idTicket);
+			if (res != null && res.first())
+				idGroupe = res.getString(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return idGroupe;
+	}
+
+	void messageConversationLu(MessageMiseAJourEtat message) {
+		int idM = message.getIdMessage();
+		String idUtilisateur = message.getIdUtilisateur();
+		try {
+			requeteBaseDeDonnees("INSERT INTO lire (idM, idU) VALUES (" + idM + ", '" + idUtilisateur + "')");
+			if (isMessageLuParTous(idM)) {
+				MessageConversation messageLu = messageConversationFromId(idM);
+
+				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idM);
+				res.first();
+				int idTicket = res.getInt(1);
+
+				Set<String> participants = getParticipantsTickets(idTicket);
+				participants.remove(idUtilisateur);
+
+				messageLu.setEtatGroupe(EtatMessage.LU_PAR_TOUS);
+
+				res = requeteBaseDeDonnees("SELECT nomG FROM participer WHERE idT = " + idTicket);
+				res.first();
+				String nomGroupe = res.getString(1);
+
+				for (String idU : participants) {
+					Utilisateur u = getUtilisateurFromId(idU);
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().equals(u)) {
+							messageLu.setLuParUtilisateur(isMessageLuParUtilisateur(messageLu, idU));
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject(new MessageMessageConversation(idTicket, nomGroupe, messageLu));
+							out.flush();
+							break;
+						}
+					}
+				}
+
+			}
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private MessageConversation messageConversationFromId(int idMessage) throws SQLException {
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT texte,dateM,idU FROM message WHERE idM = " + idMessage);
+			if (!res.first())
+				return null;
+			String texte = res.getString("texte");
+			Date date = res.getDate("dateM");
+			String idAuteur = res.getString("idU");
+
+			return new MessageConversation(idMessage, getUtilisateurFromId(idAuteur), texte, date,
+					EtatMessage.NON_RECU_PAR_LE_SERVEUR, false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	boolean isConnectionClientAccepted(MessageDemConnexion message) {
+
+		String requete = "SELECT mdp FROM Utilisateur WHERE idU = '" + message.getIdUtilisateur() + "'";
+
+		try {
+			ResultSet resultat = requeteBaseDeDonnees(requete);
+			return resultat.next() && resultat.getObject("mdp").toString().equals(message.getMotDePasse());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
