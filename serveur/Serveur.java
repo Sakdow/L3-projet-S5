@@ -55,9 +55,18 @@ public class Serveur {
 		return port;
 	}
 
-	public void lancer() {
-		Thread t = new Thread(new ThreadConnexion(this));
-		t.start();
+	public boolean lancer(String idUtilisateur, String mdp) {
+		try {
+			if( isConnecxonServeurAcceptee(idUtilisateur, mdp) ){
+				Thread t = new Thread(new ThreadConnexion(this));
+				t.start();
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	Set<AssocUtilisateurSocket> getUtilisateursConnectes() {
@@ -547,7 +556,7 @@ public class Serveur {
 		}
 	}
 
-	public boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException{
+	private boolean isConnecxonServeurAcceptee(String idUtilisateur, String mdp) throws SQLException{
 		ResultSet res;
 		try {
 			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = 'Administrateur'");
