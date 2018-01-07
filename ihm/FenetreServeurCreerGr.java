@@ -5,9 +5,12 @@
  */
 package ihm;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -16,6 +19,7 @@ import javax.swing.JList;
 import javax.swing.ListModel;
 import modele.Groupe;
 import modele.Utilisateur;
+import serveur.Serveur;
 
 /**
  *
@@ -25,10 +29,12 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     private DefaultListModel listeModele;
     private DefaultComboBoxModel comboUtilModele;
     private DefaultComboBoxModel comboGrModele;
+    private Serveur serveur;
     /**
      * Creates new form FenetreServeurCreerGr
      */
-    public FenetreServeurCreerGr() {
+    public FenetreServeurCreerGr(Serveur serveur) {
+        this.serveur = serveur;
         initComponents();
     }
 
@@ -338,17 +344,25 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     private void ajouterGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterGrButtonActionPerformed
         //Faire une requete pour recuperer les utilisateurs du groupe
         String nomGr = (String) ajoutGrCombo.getSelectedItem();
-        Groupe gr = serveur.getGroupeFromNomGroupe(nomGr);
-        List<Utilisateur> utils = gr.getListeUtilisateur();
-        //Ajout de chaque utilisateur à la JList
-        for(Utilisateur ut : utils){
-            //Verif de doublons
-            if(!listeModele.contains(ut)){
-                listeModele.addElement(ut);
-            }
+        Groupe gr = null;
+        try {
+            gr = serveur.getGroupeFromNomGroupe(nomGr);
+        } catch (SQLException ex) {
+            Logger.getLogger(FenetreServeurCreerGr.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //On met à jour la liste avec son modele
-        listeUtilList.setModel(listeModele);
+        if(gr != null){
+            List<Utilisateur> utils = gr.getListeUtilisateur();
+            //Ajout de chaque utilisateur à la JList
+            for(Utilisateur ut : utils){
+                //Verif de doublons
+                if(!listeModele.contains(ut)){
+                    listeModele.addElement(ut);
+                }
+            }
+            //On met à jour la liste avec son modele
+            listeUtilList.setModel(listeModele);
+        }
+        
     }//GEN-LAST:event_ajouterGrButtonActionPerformed
 
     private void supprimerUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprimerUtilButtonActionPerformed
@@ -362,6 +376,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         for(int i = 0; i < listeModele.size(); i++){
             listUtil.add((Utilisateur) listeModele.get(i));
         }
+        serveur.creerGroupe(nomGrField.getText(), listUtil);
     }//GEN-LAST:event_creerButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
@@ -420,41 +435,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         }
         ajoutUtilCombo.setModel(comboUtilModele);        
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurCreerGr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurCreerGr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurCreerGr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurCreerGr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FenetreServeurCreerGr().setVisible(true);
-            }
-        });
-    }
+        
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ajoutGrCombo;

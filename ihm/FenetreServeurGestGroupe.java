@@ -6,11 +6,14 @@
 package ihm;
 
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -20,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import modele.Groupe;
 import modele.Utilisateur;
+import serveur.Serveur;
 
 /**
  *
@@ -31,10 +35,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private DefaultComboBoxModel comboGrModele;
     private DefaultComboBoxModel comboUtilModele;
     private Map<String, List<Utilisateur>> grMap;
+    private Serveur serveur;
     /**
      * Creates new form FenetreServeurGestGroupe
      */
-    public FenetreServeurGestGroupe() {
+    public FenetreServeurGestGroupe(Serveur serveur) {
+        this.serveur = serveur;
         grMap = new TreeMap();
         initComponents();
     }
@@ -484,7 +490,13 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
     private void ajoutGrUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajoutGrUtilButtonActionPerformed
         String nomGr = (String) ajoutGrCombo.getSelectedItem();
-        Groupe gr = serveur.getGroupeFromNomGroupe(nomGr);
+        
+        Groupe gr = null;
+        try {
+            gr = serveur.getGroupeFromNomGroupe(nomGr);
+        } catch (SQLException ex) {
+            Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //On recupère les utilisateurs du groupe qu'on veut fusionner
         List<Utilisateur> utils = gr.getListeUtilisateur();
         //On get la liste correspondant au groupe dans lequel on est
@@ -554,7 +566,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private void setListeModelUtil(){
         String nomGr = listeUtilGrList.getSelectedValue();
         if(nomGr != null){
-            Groupe gr = serveur.getGroupeFromNomGroupe(gr);
+            Groupe gr = null;
+            try {
+                gr = serveur.getGroupeFromNomGroupe(nomGr);
+            } catch (SQLException ex) {
+                Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
+            }
             List<Utilisateur> utils = gr.getListeUtilisateur();
             //Ajout de chaque utilisateur dans la JList
             for(Utilisateur ut : utils){
@@ -586,43 +603,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         }
         ajoutUtilCombo.setModel(comboUtilModele);        
     }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FenetreServeurGestGroupe().setVisible(true);
-            }
-        });
-    }
-
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accepterButton;
     private javax.swing.JComboBox<String> ajoutGrCombo;

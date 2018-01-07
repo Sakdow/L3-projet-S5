@@ -8,6 +8,8 @@ package ihm;
 import client.Client;
 import client.Reseaux;
 import client.ThreadEcoute;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import message.MessageReponseConnexion;
 
@@ -16,7 +18,7 @@ import message.MessageReponseConnexion;
  * @author Lucas
  */
 public class FenetreClientConnexion extends javax.swing.JFrame {
-
+    private FenetreClient fenetre;
     /**
      * Creates new form FenetreConnexion
      */
@@ -76,7 +78,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         if(messReponse.getAccepte()){
             Client client = new Client(messReponse.getUtilisateur(), reseau);
             ThreadEcoute thread = new ThreadEcoute(reseau, client);
-            FenetreClient fenetre = new FenetreClient(client, thread);
+            fenetre = new FenetreClient(client, thread);
             this.dispose();
         }
         else {
@@ -116,6 +118,16 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FenetreClientConnexion().setVisible(true);
+                
+                /*while(true){
+                    try {
+                        Thread.sleep(2000);
+                        System.out.println("test");
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }*/
             }
         });
     }
