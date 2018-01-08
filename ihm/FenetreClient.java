@@ -70,6 +70,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     public void update(Observable o, Object arg) {
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        int onglet = ongletsDiscu.getSelectedIndex();  
+        if(onglet == 0){
+            setLignes(ticketCreeSelect);
+        }
+        else {
+            setLignes(ticketRecuSelect);
+        }
         this.validate();
     }
     
@@ -135,6 +142,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jScrollPane4 = new javax.swing.JScrollPane();
         discussionArea = new javax.swing.JTextArea();
@@ -150,8 +158,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         envoyerButton = new javax.swing.JButton();
         titreDiscuLabel = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        discussionTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         discussionTable2 = new javax.swing.JTable();
@@ -164,6 +170,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(500, 400));
         setPreferredSize(new java.awt.Dimension(800, 600));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         creerTicketButton.setText("Créer nouveau ticket");
         creerTicketButton.addActionListener(new java.awt.event.ActionListener() {
@@ -171,6 +178,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 creerTicketButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        getContentPane().add(creerTicketButton, gridBagConstraints);
 
         decoButton.setText("Déconnexion");
         decoButton.addActionListener(new java.awt.event.ActionListener() {
@@ -178,6 +192,14 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 decoButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 8;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 4);
+        getContentPane().add(decoButton, gridBagConstraints);
 
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
@@ -199,6 +221,17 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
         ongletsDiscu.addTab("Reçus", jScrollPane2);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 145;
+        gridBagConstraints.ipady = 243;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 20, 0, 0);
+        getContentPane().add(ongletsDiscu, gridBagConstraints);
+
         saisieDiscuArea.setColumns(20);
         saisieDiscuArea.setRows(5);
         saisieDiscuArea.setToolTipText("écire un message...");
@@ -206,14 +239,41 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         saisieDiscuArea.setPreferredSize(new java.awt.Dimension(300, 94));
         jScrollPane3.setViewportView(saisieDiscuArea);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 317;
+        gridBagConstraints.ipady = 47;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(9, 10, 1, 0);
+        getContentPane().add(jScrollPane3, gridBagConstraints);
+
         envoyerButton.setText("Envoyer");
         envoyerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 envoyerButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 0);
+        getContentPane().add(envoyerButton, gridBagConstraints);
 
         titreDiscuLabel.setText("Discussion");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(17, 10, 0, 0);
+        getContentPane().add(titreDiscuLabel, gridBagConstraints);
 
         usernameLabel.setText("Prénom Nom");
         if(client != null){
@@ -222,81 +282,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 usernameLabel.setText(util.getPrenom() + " " + util.getNom());
             }
         }
-
-        jScrollPane5.setPreferredSize(new java.awt.Dimension(650, 400));
-
-        Dimension dim = new Dimension(1000, 1000);
-        discussionTable.setPreferredScrollableViewportSize(dim);
-        discussionTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3"
-            }
-        ));
-        //Gestion selection de ligne
-        discussionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                if (discussionTable.getSelectedRow() > -1) {
-                    // print first column value from selected row
-                    System.out.println(discussionTable.getValueAt(discussionTable.getSelectedRow(), 1).toString());
-                }
-            }
-        });
-        //Mise en place du modele
-        tableModele = new DefaultTableModel();
-        //setTableModel();
-        //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
-        discussionTable.setToolTipText("");
-        //discussionTable.getColumnModel().getColumn(1).setPreferredWidth(180);
-        discussionTable.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        discussionTable.setMaximumSize(new java.awt.Dimension(3000, 3000));
-        discussionTable.setMinimumSize(new java.awt.Dimension(100, 50));
-        discussionTable.setPreferredSize(new java.awt.Dimension(300, 128));
-        discussionTable.setShowHorizontalLines(false);
-        discussionTable.setShowVerticalLines(false);
-        jScrollPane5.setViewportView(discussionTable);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        getContentPane().add(usernameLabel, gridBagConstraints);
 
         refreshButton.setText("Refresh");
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
@@ -304,6 +296,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 refreshButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 7, 0, 0);
+        getContentPane().add(refreshButton, gridBagConstraints);
 
         discussionTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -337,65 +336,18 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         tableModele = new DefaultTableModel();
         setTableModel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(220, 220, 220)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(envoyerButton)
-                .addGap(33, 33, 33)
-                .addComponent(refreshButton))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(creerTicketButton)
-                        .addGap(499, 499, 499)
-                        .addComponent(usernameLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(ongletsDiscu, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(titreDiscuLabel)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(decoButton))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(creerTicketButton))
-                            .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(decoButton))
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ongletsDiscu, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(titreDiscuLabel)
-                                .addGap(16, 16, 16)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(envoyerButton)
-                            .addComponent(refreshButton)))))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 427;
+        gridBagConstraints.ipady = 213;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(26, 10, 0, 0);
+        getContentPane().add(jScrollPane6, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -490,6 +442,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         }        
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
     private void setLignes(Ticket ticketSelect){
+        //On vide la table des discussions
+        clearTable();
         NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
         for(MessageConversation mess : ensembleMessage){
             String[] ligne = new String[5];
@@ -504,13 +458,23 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     }
     
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        //Effacer la discussion précedente de l'interface
-        for(int i = 0; i < tableModele.getRowCount(); i++){
-            tableModele.removeRow(i);
-            
-        }       
-        discussionTable.setModel(tableModele);
+        int onglet = ongletsDiscu.getSelectedIndex();  
+        if(onglet == 0){
+            setLignes(ticketCreeSelect);
+        }
+        else {
+            setLignes(ticketRecuSelect);
+        } 
+        
     }//GEN-LAST:event_refreshButtonActionPerformed
+    private void clearTable(){
+        int nb = tableModele.getRowCount();
+        for(int i = 0; i < nb; i++){
+            tableModele.removeRow(0);            
+        }       
+        discussionTable2.setModel(tableModele);
+    }
+    
     private DefaultMutableTreeNode getArbreModelRecus(){
         //PARTIE TICKETS RECUS
         if(client != null){
@@ -636,14 +600,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private javax.swing.JButton creerTicketButton;
     private javax.swing.JButton decoButton;
     private javax.swing.JTextArea discussionArea;
-    private javax.swing.JTable discussionTable;
     private javax.swing.JTable discussionTable2;
     private javax.swing.JButton envoyerButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane ongletsDiscu;
     private javax.swing.JButton refreshButton;
