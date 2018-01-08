@@ -787,11 +787,19 @@ public class Serveur {
 		try {
 			requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '" + mdp
 					+ "'	 WHERE idU = '" + idU + "'");
+			
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+					ObjectOutputStream out = assoc.getOut();
+					out.writeObject(new MessageGroupe(nouveauG, true));
+					out.flush();
+				}
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public void supprimerGroupe(String nomG) throws SQLException {
@@ -801,17 +809,6 @@ public class Serveur {
 				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
 			}
 			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG = '" + nomG + "'");
-			requeteBaseDeDonnees(
-					"INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
-			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
-				AssocUtilisateurSocket assoc = ite.next();
-				if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
-					ObjectOutputStream out = assoc.getOut();
-					out.writeObject(new MessageGroupe(nouveauG, true));
-					out.flush();
-				}
-			}
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
