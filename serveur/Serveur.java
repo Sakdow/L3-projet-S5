@@ -538,7 +538,6 @@ public class Serveur {
 						}
 					}
 				}
-				
 
 			}
 		} catch (SQLException | IOException e) {
@@ -736,10 +735,20 @@ public class Serveur {
 							+ idT + ", '" + nouveauNomGroupe + "', '" + idCreateur + "')");
 				}
 			}
-			
-			for( Utilisateur u : utilisateurs ){
+			Groupe nouveauG = new Groupe(nouveauNomGroupe);
+
+			for (Utilisateur u : utilisateurs) {
 				String idU = u.getIdUtilisateur();
-				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
+				requeteBaseDeDonnees(
+						"INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
+				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+					AssocUtilisateurSocket assoc = ite.next();
+					if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+						ObjectOutputStream out = assoc.getOut();
+						out.writeObject(new MessageGroupe(nouveauG, true));
+						out.flush();
+					}
+				}
 			}
 
 		} catch (SQLException | IOException e) {
@@ -774,7 +783,14 @@ public class Serveur {
 		return utilisateurs;
 	}
 
-	public void modificationUtilisateur(String nom, String prenom, String mdp, Collection<String> groupe) {
+	public void modificationUtilisateur(String idU, String nom, String prenom, String mdp, Collection<String> groupe) {
+		try {
+			requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '" + mdp
+					+ "'	 WHERE idU = '" + idU + "'");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -785,6 +801,17 @@ public class Serveur {
 				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
 			}
 			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG = '" + nomG + "'");
+			requeteBaseDeDonnees(
+					"INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+					ObjectOutputStream out = assoc.getOut();
+					out.writeObject(new MessageGroupe(nouveauG, true));
+					out.flush();
+				}
+			}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
