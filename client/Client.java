@@ -1,6 +1,5 @@
 package client;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,13 @@ import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
 
-public class Client extends Observable{
+public class Client extends Observable {
 	private final Map<Groupe, List<Ticket>> ticketsCree;
 	private final Map<Groupe, List<Ticket>> ticketsRecu;
 	private final List<Groupe> listeGroupe;
 	private final Utilisateur utilisateurClient;
 	private final Reseaux reseaux;
-        
+
 	public Client(Utilisateur utilisateurClient, Reseaux reseaux) {
 		super();
 		this.utilisateurClient = utilisateurClient;
@@ -31,18 +30,26 @@ public class Client extends Observable{
 	}
 
 	public void ajouterGroupe(Groupe groupe) {
-			if (!listeGroupe.contains(groupe)) {
-				listeGroupe.add(groupe);
-                                setChanged();
-                                notifyObservers();
-			}
+		if (!listeGroupe.contains(groupe)) {
+			listeGroupe.add(groupe);
+			setChanged();
+			notifyObservers();
+		}
 	}
 
-    @Override
-    public synchronized void addObserver(Observer o) {
-        super.addObserver(o); //To change body of generated methods, choose Tools | Templates.
-    }
-        
+	public void supprimerGroupe(Groupe groupe) {
+		if (listeGroupe.contains(groupe)) {
+			listeGroupe.remove(groupe);
+			setChanged();
+			notifyObservers();
+		}
+	}
+
+	@Override
+	public synchronized void addObserver(Observer o) {
+		super.addObserver(o); // To change body of generated methods, choose
+								// Tools | Templates.
+	}
 
 	private boolean rechercheEtModificationMessageConv(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe,
 			MessageConversation messConv) {
@@ -68,7 +75,6 @@ public class Client extends Observable{
 		Ticket ticket = new Ticket(idTicket, null, null, null, null);
 		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
-
 		if (ticketsCree.containsKey(groupe)) {
 			ajoute = rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
@@ -76,9 +82,9 @@ public class Client extends Observable{
 		if (!ajoute && ticketsRecu.containsKey(groupe)) {
 			rechercheEtModificationMessageConv(ticketsRecu, ticket, groupe, messConv);
 		}
-                
-                setChanged();
-                notifyObservers();
+
+		setChanged();
+		notifyObservers();
 	}
 
 	private void ajouterTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
@@ -109,8 +115,8 @@ public class Client extends Observable{
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
-                setChanged();
-                notifyObservers();
+		setChanged();
+		notifyObservers();
 	}
 
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {
