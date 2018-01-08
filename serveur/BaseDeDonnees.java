@@ -21,12 +21,14 @@ class BaseDeDonnees {
 	}
 
 	public ResultSet requeteInsertReturnKey(String requete) throws SQLException {
+		System.out.println(requete);
 		Statement state = bdd.createStatement();
 		state.executeUpdate(requete, Statement.RETURN_GENERATED_KEYS);
 		return state.getGeneratedKeys();
 	}
 
 	public void requeteInsertWithoutReturn(String requete) throws SQLException {
+		System.out.println(requete);
 		Statement state = bdd.prepareStatement(requete);
 		state.execute(requete);
 	}

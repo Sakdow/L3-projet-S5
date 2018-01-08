@@ -441,8 +441,8 @@ public class Serveur {
 		try {
 			res = requeteBaseDeDonnees(
 					"INSERT INTO message (texte,dateM,idT, idU) VALUES ('" + texteToTexteSQL(messageConv.getTexte())
-							+ "', '" + new java.sql.Timestamp(new java.util.Date().getTime()) + "' , '"
-							+ message.getIdTicket() + "', '" + texteToTexteSQL(createur.getIdUtilisateur()) + "')",
+							+ "', '" + new java.sql.Timestamp(new java.util.Date().getTime()) + "' , "
+							+ message.getIdTicket() + ", '" + texteToTexteSQL(createur.getIdUtilisateur()) + "')",
 					true);
 			res.first();
 			int idMessage = res.getInt(1);
