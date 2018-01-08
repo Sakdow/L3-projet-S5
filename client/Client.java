@@ -1,8 +1,11 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.TreeMap;
 
 import message.MessageTicket;
@@ -11,29 +14,35 @@ import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
 
-public class Client {
-	private Map<Groupe, List<Ticket>> ticketsCree;
-	private Map<Groupe, List<Ticket>> ticketsRecu;
-	private List<Groupe> listeGroupe;
-	private Utilisateur utilisateurClient;
-	private Reseaux reseaux;
-
+public class Client extends Observable{
+	private final Map<Groupe, List<Ticket>> ticketsCree;
+	private final Map<Groupe, List<Ticket>> ticketsRecu;
+	private final List<Groupe> listeGroupe;
+	private final Utilisateur utilisateurClient;
+	private final Reseaux reseaux;
+        
 	public Client(Utilisateur utilisateurClient, Reseaux reseaux) {
 		super();
 		this.utilisateurClient = utilisateurClient;
 		this.reseaux = reseaux;
-		ticketsCree = new TreeMap<>();
-		ticketsRecu = new TreeMap<>();
-		listeGroupe = new LinkedList<>();
+		this.ticketsCree = new TreeMap<>();
+		this.ticketsRecu = new TreeMap<>();
+		this.listeGroupe = new LinkedList<>();
 	}
 
 	public void ajouterGroupe(Groupe groupe) {
-		synchronized (listeGroupe) {
 			if (!listeGroupe.contains(groupe)) {
 				listeGroupe.add(groupe);
+                                setChanged();
+                                notifyObservers();
 			}
-		}
 	}
+
+    @Override
+    public synchronized void addObserver(Observer o) {
+        super.addObserver(o); //To change body of generated methods, choose Tools | Templates.
+    }
+        
 
 	private boolean rechercheEtModificationMessageConv(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe,
 			MessageConversation messConv) {
@@ -67,6 +76,9 @@ public class Client {
 		if (!ajoute && ticketsRecu.containsKey(groupe)) {
 			rechercheEtModificationMessageConv(ticketsRecu, ticket, groupe, messConv);
 		}
+                
+                setChanged();
+                notifyObservers();
 	}
 
 	private void ajouterTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
@@ -97,6 +109,8 @@ public class Client {
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
+                setChanged();
+                notifyObservers();
 	}
 
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {

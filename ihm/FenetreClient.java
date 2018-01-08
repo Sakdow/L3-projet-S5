@@ -14,7 +14,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
@@ -38,7 +41,7 @@ import serveur.Serveur;
  *
  * @author Lucas
  */
-public class FenetreClient extends javax.swing.JFrame {
+public class FenetreClient extends javax.swing.JFrame implements Observer{
 
     /**
      * Creates new form FenetreClient
@@ -53,6 +56,7 @@ public class FenetreClient extends javax.swing.JFrame {
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
         this.thread = thread;
+        this.client.addObserver(this);
         thread.start();
         initComponents();        
     }
@@ -60,6 +64,13 @@ public class FenetreClient extends javax.swing.JFrame {
     public FenetreClient(){
         initComponents();
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.validate();
+    }
+    
+    
 
     public class LineWrapCellRenderer extends JTextArea implements TableCellRenderer {
 
