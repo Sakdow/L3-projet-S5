@@ -98,16 +98,13 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsCreesTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-                  <TreeModel code="JTree&#xa; administration&#xa;  blue&#xa;  violet&#xa;  red&#xa;  yellow&#xa; groupe 3.1&#xa;  basketball&#xa;  soccer&#xa;  football&#xa;  hockey&#xa; food&#xa;  hot dogs&#xa;  pizza&#xa;  ravioli&#xa;  bananas"/>
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelCrees())" type="code"/>
                 </Property>
               </Properties>
               <Events>
                 <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="ticketsCreesTreeValueChanged"/>
               </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));"/>
-              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -127,16 +124,13 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsRecusTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-                  <TreeModel code="JTree&#xa; groupe 1.1&#xa;  Probl&#xe8;me chauffage&#xa;  Annulation de cours&#xa;  red&#xa;  yellow&#xa; groupe 4.2&#xa;  basketball&#xa;  soccer&#xa;  football&#xa;  hockey&#xa; food&#xa;  hot dogs&#xa;  pizza&#xa;  ravioli&#xa;  bananas"/>
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelRecus())" type="code"/>
                 </Property>
               </Properties>
               <Events>
                 <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="ticketsRecusTreeValueChanged"/>
               </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));"/>
-              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -224,23 +218,8 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="discussionTable">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor" postCode="//Gestion selection de ligne&#xa;discussionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {&#xa;    @Override&#xa;    public void valueChanged(ListSelectionEvent event) {&#xa;        if (discussionTable.getSelectedRow() &gt; -1) {&#xa;            // print first column value from selected row&#xa;            System.out.println(discussionTable.getValueAt(discussionTable.getSelectedRow(), 1).toString());&#xa;        }&#xa;    }&#xa;});&#xa;//Mise en place du modele&#xa;tableModele = new DefaultTableModel();&#xa;setTableModel();">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object">
-                  <Data value="util1"/>
-                  <Data value="util2"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="true" title="Title 2" type="java.lang.String">
-                  <Data value="message1"/>
-                  <Data value="message2"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
-              </Table>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="//Gestion selection de ligne&#xa;discussionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {&#xa;    @Override&#xa;    public void valueChanged(ListSelectionEvent event) {&#xa;        if (discussionTable.getSelectedRow() &gt; -1) {&#xa;            // print first column value from selected row&#xa;            System.out.println(discussionTable.getValueAt(discussionTable.getSelectedRow(), 1).toString());&#xa;        }&#xa;    }&#xa;});&#xa;//Mise en place du modele&#xa;tableModele = new DefaultTableModel();&#xa;setTableModel();">
+              <Connection code="new javax.swing.table.DefaultTableModel()" type="code"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="" postCode="discussionTable.getColumnModel().getColumn(1).setPreferredWidth(180);"/>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
