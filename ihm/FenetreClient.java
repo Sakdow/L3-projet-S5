@@ -499,7 +499,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             ligne[3] = mess.getEtatGroupe().toString();
             tableModele.addRow(ligne);
         }      
-        discussionTable.setModel(tableModele);
+        discussionTable2.setModel(tableModele);
         //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
     }
     
