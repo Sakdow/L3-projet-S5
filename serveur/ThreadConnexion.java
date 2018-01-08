@@ -75,7 +75,7 @@ class ThreadConnexion implements Runnable {
 
 					List<Groupe> groupesUtilisateur = serveur.groupesUtilisateur(idUtilisateur);
 					for (Groupe groupe : groupesUtilisateur) {
-						out.writeObject(new MessageGroupe(groupe));
+						out.writeObject(new MessageGroupe(groupe,true));
 						out.flush();
 					}
 

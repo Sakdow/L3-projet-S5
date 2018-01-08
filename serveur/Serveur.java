@@ -16,6 +16,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.org.apache.xerces.internal.impl.dv.dtd.NMTOKENDatatypeValidator;
+
 import message.MessageDemConnexion;
 import message.MessageGroupe;
 import message.MessageMessageConversation;
@@ -59,7 +61,7 @@ public class Serveur {
 	public boolean lancer(String idUtilisateur, String mdp) {
 		try {
 			if (isConnexionServeurAcceptee(idUtilisateur, mdp)) {
-				System.out.println("Connexion acceptée - Allumage serveur");
+				System.out.println("Connexion acceptï¿½e - Allumage serveur");
 				Thread t = new Thread(new ThreadConnexion(this));
 				t.start();
 				return true;
@@ -252,7 +254,7 @@ public class Serveur {
 			int idMessage = m.getIdMessage();
 			requeteBaseDeDonnees("INSERT INTO recevoir (idM, idU) VALUES (" + idMessage + ",'"
 					+ texteToTexteSQL(idUtilisateur) + "')");
-			
+
 			m.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
 
 			if (isMessageRecuParTous(idMessage)) {
@@ -512,10 +514,10 @@ public class Serveur {
 
 				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idM);
 				res.first();
+
 				int idTicket = res.getInt(1);
 
 				Set<String> participants = getParticipantsTickets(idTicket);
-				participants.remove(idUtilisateur);
 
 				messageLu.setEtatGroupe(EtatMessage.LU_PAR_TOUS);
 
@@ -536,6 +538,7 @@ public class Serveur {
 						}
 					}
 				}
+				
 
 			}
 		} catch (SQLException | IOException e) {
@@ -615,7 +618,7 @@ public class Serveur {
 					AssocUtilisateurSocket assoc = ite.next();
 					if (assoc.getUtilisateur().equals(u)) {
 						ObjectOutputStream out = assoc.getOut();
-						out.writeObject(new MessageGroupe(g));
+						out.writeObject(new MessageGroupe(g, true));
 						out.flush();
 						break;
 					}
@@ -701,10 +704,92 @@ public class Serveur {
 	}
 
 	public void modicationGroupe(String nomGroupe, String nouveauNomGroupe, Collection<Utilisateur> utilisateurs) {
+		Set<String> anciensUtilisateursGroupe = new HashSet<>();
+		try {
 
+			// Suppression du groupe chez tous les utilisateurs
+			Groupe g = getGroupeFromNomGroupe(nomGroupe);
+			anciensUtilisateursGroupe.addAll(getUtilisateursGroupe(nomGroupe));
+			for (String u : anciensUtilisateursGroupe) {
+				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+					AssocUtilisateurSocket assoc = ite.next();
+					if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+						ObjectOutputStream out = assoc.getOut();
+						out.writeObject(new MessageGroupe(g, false));
+						out.flush();
+					}
+				}
+
+			}
+
+			// Modification du groupe dans la bdd
+			requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + nouveauNomGroupe + "')");
+
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT idU,idT,createur FROM participer WHERE nomG = '" + nomGroupe + "'");
+			for (; res.next();) {
+				String idU = res.getString("idU");
+				int idT = res.getInt("idT");
+				String idCreateur = res.getString("createur");
+				if (idU.equals(idCreateur) || containsUtilisateurById(utilisateurs, idU)) {
+					requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur ) VALUES ('" + idU + "', "
+							+ idT + ", '" + nouveauNomGroupe + "', '" + idCreateur + "')");
+				}
+			}
+			
+			for( Utilisateur u : utilisateurs ){
+				String idU = u.getIdUtilisateur();
+				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
+			}
+
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private boolean containsUtilisateurById(Collection<? extends Utilisateur> collection, String id) {
+		for (Iterator<? extends Utilisateur> ite = collection.iterator(); ite.hasNext();) {
+			Utilisateur u = ite.next();
+			if (u.getIdUtilisateur().equals(id))
+				return true;
+		}
+
+		return false;
+	}
+
+	private Collection<String> getUtilisateursGroupe(String nomGroupe) throws SQLException {
+		Set<String> utilisateurs = new HashSet<>();
+		ResultSet res;
+		try {
+			res = requeteBaseDeDonnees("SELECT idU FROM appartenir WHERE nomG = '" + nomGroupe + "'");
+			for (; res.next();)
+				utilisateurs.add(res.getString(1));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+
+		return utilisateurs;
 	}
 
 	public void modificationUtilisateur(String nom, String prenom, String mdp, Collection<String> groupe) {
+
+	}
+
+	public void supprimerGroupe(String nomG) throws SQLException {
+		try {
+			ResultSet res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + nomG + "' GROUP BY idT");
+			for (; res.next();) {
+				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
+			}
+			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG = '" + nomG + "'");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
 
 	}
 }

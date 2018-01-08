@@ -68,14 +68,18 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-        ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
-        ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        if(ticketsCreesTree != null)
+            ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
+        if(ticketsRecusTree != null)
+            ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
         int onglet = ongletsDiscu.getSelectedIndex();  
         if(onglet == 0){
-            setLignes(ticketCreeSelect);
+            if(ticketCreeSelect != null)
+                setLignes(ticketCreeSelect);
         }
         else {
-            setLignes(ticketRecuSelect);
+            if(ticketRecuSelect != null)
+                setLignes(ticketRecuSelect);
         }
         this.validate();
     }
