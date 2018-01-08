@@ -105,9 +105,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     setBackground(Color.white);
             }            
         }
-        //Masquer la colonne d'état
+        //Masquer la colonne d'état et de l'objet Message
         table.getColumnModel().getColumn(3).setMinWidth(0);
         table.getColumnModel().getColumn(3).setMaxWidth(0);
+        table.getColumnModel().getColumn(4).setMinWidth(0);
+        table.getColumnModel().getColumn(4).setMaxWidth(0);
         
         this.setWrapStyleWord(true);            
         this.setLineWrap(true);
@@ -185,7 +187,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
@@ -215,9 +217,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 145;
-        gridBagConstraints.ipady = 255;
+        gridBagConstraints.ipady = 244;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(36, 20, 0, 0);
         getContentPane().add(ongletsDiscu, gridBagConstraints);
@@ -233,10 +235,10 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 349;
-        gridBagConstraints.ipady = 58;
+        gridBagConstraints.ipady = 47;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -252,7 +254,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridheight = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 10, 0, 0);
         getContentPane().add(envoyerButton, gridBagConstraints);
@@ -282,6 +283,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         getContentPane().add(usernameLabel, gridBagConstraints);
 
         jScrollPane5.setBorder(null);
+        jScrollPane5.setPreferredSize(new java.awt.Dimension(650, 400));
 
         discussionTable.setModel(new javax.swing.table.DefaultTableModel());
         //Gestion selection de ligne
@@ -297,9 +299,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //Mise en place du modele
         tableModele = new DefaultTableModel();
         setTableModel();
+        discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
         discussionTable.setToolTipText("");
         discussionTable.getColumnModel().getColumn(1).setPreferredWidth(180);
+        discussionTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         discussionTable.setIntercellSpacing(new java.awt.Dimension(0, 0));
+        discussionTable.setMaximumSize(new java.awt.Dimension(3000, 3000));
+        discussionTable.setMinimumSize(new java.awt.Dimension(100, 50));
         discussionTable.setPreferredSize(new java.awt.Dimension(300, 128));
         discussionTable.setShowHorizontalLines(false);
         discussionTable.setShowVerticalLines(false);
@@ -308,10 +314,10 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 567;
-        gridBagConstraints.ipady = 243;
+        gridBagConstraints.ipadx = 536;
+        gridBagConstraints.ipady = 254;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -327,7 +333,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridheight = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 6, 0, 0);
         getContentPane().add(refreshButton, gridBagConstraints);
@@ -375,38 +380,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 //Effacer la discussion précedente de l'interface
                 //tableModele = new DefaultTableModel();
                 //Afficher la discussion correspondante
-                NavigableSet<MessageConversation> ensembleMessage = ticketCreeSelect.getFilDiscussion().getEnsembleMessage();
-                for(MessageConversation mess : ensembleMessage){
-                    String[] ligne = new String[5];
-                    ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
-                    ligne[1] = mess.getTexte();
-                    ligne[2] = mess.getDate().toString();
-                    ligne[3] = mess.getEtatGroupe().toString();
-                    tableModele.addRow(ligne);
-                }      
-                discussionTable.setModel(tableModele);
+                setLignes(ticketCreeSelect);
                 //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
             }            
-        }       
+        }        
         
-        /*Ticket node1 = (Ticket) evt.getPath().getLastPathComponent();
-        String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
-        ticketCreeSelect = node1;
-        groupeCreeSelect = node2;
-        titreDiscuLabel.setText(ticketCreeSelect.toString());
-        //Effacer la discussion précedente de l'interface
-        tableModele = new DefaultTableModel();
-        //Afficher la discussion correspondante
-        NavigableSet<MessageConversation> ensembleMessage = ticketCreeSelect.getFilDiscussion().getEnsembleMessage();
-        for(MessageConversation mess : ensembleMessage){
-            String[] ligne = new String[5];
-            ligne[0] = mess.getCreateur().toString();
-            ligne[1] = mess.getTexte();
-            ligne[2] = mess.getDate().toString();            
-            tableModele.addRow(ligne);
-        }
-        discussionTable.setModel(tableModele);
-        */
     }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
@@ -445,33 +423,39 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 //Effacer la discussion précedente de l'interface
                 //tableModele = new DefaultTableModel();
                 //Afficher la discussion correspondante
-                NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
-                for(MessageConversation mess : ensembleMessage){
-                    String[] ligne = new String[5];
-                    ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
-                    ligne[1] = mess.getTexte();
-                    ligne[2] = mess.getDate().toString();
-                    ligne[3] = mess.getEtatGroupe().toString();
-                    tableModele.addRow(ligne);
-                }      
-                discussionTable.setModel(tableModele);
+                setLignes(ticketRecuSelect);
                 //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
             }
             
         }        
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
-
+    private void setLignes(Ticket ticketSelect){
+        NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
+        for(MessageConversation mess : ensembleMessage){
+            String[] ligne = new String[5];
+            ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
+            ligne[1] = mess.getTexte();
+            ligne[2] = mess.getDate().toString();
+            ligne[3] = mess.getEtatGroupe().toString();
+            tableModele.addRow(ligne);
+        }      
+        discussionTable.setModel(tableModele);
+        //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+    }
+    
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         //Effacer la discussion précedente de l'interface
         tableModele = new DefaultTableModel();
         //Afficher la discussion correspondante
         NavigableSet<MessageConversation> ensembleMessage = ticketRecuSelect.getFilDiscussion().getEnsembleMessage();
         for(MessageConversation mess : ensembleMessage){
-            String[] ligne = new String[5];
+            //String[] ligne = new String[5];
+            Object[] ligne = new Object[5];
             ligne[0] = mess.getCreateur().toString();
             ligne[1] = mess.getTexte();
             ligne[2] = mess.getDate().toString();
             ligne[3] = mess.getEtatGroupe().toString();
+            ligne[4] = mess;
             tableModele.addRow(ligne);
         }
         discussionTable.setModel(tableModele);
@@ -536,32 +520,22 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         return null;
     }
     
-    private void setTableModel(){
+    private void setTableModel(){//OBSOLETE, a virer
         //Création de colonnes
         //tableModele.addColumn("Image");
         tableModele.addColumn("Nom utilisateur");
         tableModele.addColumn("Message");
         tableModele.addColumn("Date");
         tableModele.addColumn("Etat");
-        //TEST
-        /*MessageConversation mess = new MessageConversation(45, null, "je suis le test", null, EtatMessage.LU_PAR_TOUS, true);
         
-        String[] ligne = new String[4];
-            //ligne[0] = mess.getCreateur().toString();
-            ligne[1] = mess.getTexte();
-            //ligne[2] = mess.getDate().toString();
-            ligne[3] = mess.getEtatGroupe().toString();
-            tableModele.addRow(ligne);
-         */      
-        //Remplissage des lignes par des messages
-        //if utilisateur alors mettre a droite
         String[] test = {
                 "Title 1", "Title 2", "Title 3", "LU_PAR_TOUS"
             };
         tableModele.addRow(test);
         discussionTable.setModel(tableModele);
-        discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
+         
     }
+         
     /**
      * @param args the command line arguments
      */
