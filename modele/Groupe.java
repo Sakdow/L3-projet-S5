@@ -33,7 +33,7 @@ public class Groupe implements Serializable, Comparable<Groupe> {
 	public boolean equals(Object obj) {
 		if(obj instanceof Groupe){
 			Groupe groupe = (Groupe) obj;
-			return (this.getIdGroupe() == groupe.getIdGroupe());
+			return (this.getIdGroupe().equals(groupe.getIdGroupe()));
 		}
 		return false;
 	}
