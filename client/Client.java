@@ -113,7 +113,6 @@ public class Client extends Observable {
 		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
 		if (ticketsCree.containsKey(groupe)) {
-                        System.out.println("blablabla");
 			ajoute = rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
 

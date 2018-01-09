@@ -31,7 +31,6 @@ public class ThreadEcoute extends Thread {
 						client.supprimerGroupe(messageGroupe.getGroupe());
 					}
 				} else {
-                                        System.out.println("sqdqsdqsdsq");
 					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
 					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
