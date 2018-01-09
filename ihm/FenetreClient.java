@@ -100,7 +100,10 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             boolean hasFocus,
             int row,
             int column) {
-        this.setText((String)value);
+        if(value.getClass() != MessageConversation.class){
+            this.setText((String)value);
+        }
+        
         //Gestion des couleurs des messages
         String etat = (String)table.getValueAt(row, 3);
         if(etat != null){
@@ -333,7 +336,10 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             public void valueChanged(ListSelectionEvent event) {
                 if (discussionTable2.getSelectedRow() > -1) {
                     MessageConversation mess = (MessageConversation) discussionTable2.getValueAt(discussionTable2.getSelectedRow(), 4);
+                    System.out.println(mess);
                     MessageMiseAJourEtat messMaj = new MessageMiseAJourEtat(ticketSelect.getIdTicket(), mess.getIdMessage(), client.getUtilisateurClient().getIdUtilisateur(), mess.getEtatGroupe(), true);
+                    //envoi du message de mise a jour lu
+                    client.getReseaux().envoyerMessage(messMaj);
                 }
             }
         });
@@ -448,11 +454,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         clearTable();
         NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
         for(MessageConversation mess : ensembleMessage){
-            String[] ligne = new String[5];
+            Object[] ligne = new Object[5];
             ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
             ligne[1] = mess.getTexte();
             ligne[2] = mess.getDate().toString();
             ligne[3] = mess.getEtatGroupe().toString();
+            ligne[4] = mess;
             tableModele.addRow(ligne);
         }      
         discussionTable2.setModel(tableModele);
