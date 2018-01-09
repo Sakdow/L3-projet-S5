@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.TreeMap;
+import message.MessageMessageConversation;
 import message.MessageReponseConnexion;
 
 import message.MessageTicket;
+import modele.EtatMessage;
 import modele.Groupe;
 import modele.MessageConversation;
 import modele.Ticket;
@@ -31,6 +34,27 @@ public class Client extends Observable {
 		this.ticketsRecu = new TreeMap<>();
 		this.listeGroupe = new LinkedList<>();
 	}
+        
+        
+        private void rechercheEtEnvoieMessageNonRecuServeur(Set<Groupe> set){
+            for (Groupe gr : set){
+                for(Ticket tk : ticketsCree.get(gr)){
+                    for(MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()){
+                        if(messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)){
+                            reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        public void renvoieMessageNonRecuParServeur(){
+            Set<Groupe> setCree = ticketsCree.keySet();
+            Set<Groupe> setRecu = ticketsRecu.keySet();
+            rechercheEtEnvoieMessageNonRecuServeur(setCree);
+            rechercheEtEnvoieMessageNonRecuServeur(setRecu);
+        }
 
         public static Client lancer (String ip, int port, String idUtilisateur, String motDePasse){
             Reseaux reseau = new Reseaux(ip, port);
@@ -89,6 +113,7 @@ public class Client extends Observable {
 		Groupe groupe = new Groupe(idGroupe);
 		boolean ajoute = false;
 		if (ticketsCree.containsKey(groupe)) {
+                        System.out.println("blablabla");
 			ajoute = rechercheEtModificationMessageConv(ticketsCree, ticket, groupe, messConv);
 		}
 

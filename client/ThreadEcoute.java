@@ -31,6 +31,7 @@ public class ThreadEcoute extends Thread {
 						client.supprimerGroupe(messageGroupe.getGroupe());
 					}
 				} else {
+                                        System.out.println("sqdqsdqsdsq");
 					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
 					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
@@ -41,6 +42,7 @@ public class ThreadEcoute extends Thread {
                                 while(!this.isInterrupted() && messageConnexion == null ){
                                     messageConnexion = reseaux.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
                                 }
+                                client.renvoieMessageNonRecuParServeur();
                             }
                         }
 		}
