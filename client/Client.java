@@ -95,6 +95,7 @@ public class Client extends Observable {
 				if (t.getFilDiscussion().getEnsembleMessage().contains(messConv))
 					for (MessageConversation m : t.getFilDiscussion().getEnsembleMessage()) {
 						if (m.equals(messConv)) {
+                                                        m.setIdMessage(messConv.getIdMessage());
 							m.setEtatGroupe(messConv.getEtatGroupe());
 							m.setLuParUtilisateur(messConv.isLuParUtilisateur());
 						}
