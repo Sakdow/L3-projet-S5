@@ -26,4 +26,25 @@ public class FilDiscussion implements Serializable {
 		return ensembleMessage;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof FilDiscussion))
+			return false;
+		FilDiscussion other = (FilDiscussion) obj;
+
+		if (ensembleMessage == other.ensembleMessage)
+			return true;
+		if (ensembleMessage == null)
+			return false;
+
+		if (this.ensembleMessage.size() != other.ensembleMessage.size())
+			return false;
+		
+		return this.ensembleMessage.containsAll(other.ensembleMessage);
+	}
+
 }

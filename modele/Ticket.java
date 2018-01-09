@@ -22,24 +22,27 @@ public class Ticket implements Serializable {
 	public void ajouterMessage(MessageConversation message) {
 		filDiscussion.ajouterMessage(message);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Ticket){
+		if (obj instanceof Ticket) {
 			Ticket ticket = (Ticket) obj;
-			return (this.getIdTicket() == ticket.getIdTicket());
+			if (this.getIdTicket() == ticket.getIdTicket())
+				return true;
+			return this.nom.equals(ticket.nom) && this.groupe.equals(ticket.groupe)
+					&& this.createur.equals(ticket.createur) && this.filDiscussion.equals(ticket.filDiscussion);
 		}
 		return false;
 	}
-	
+
 	public String toString() {
-	    return nom;
+		return nom;
 	}
 
 	public int getIdTicket() {
 		return idTicket;
 	}
-	
+
 	public void setIdTicket(int idTicket) {
 		this.idTicket = idTicket;
 	}
