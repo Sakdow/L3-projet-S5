@@ -336,7 +336,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             public void valueChanged(ListSelectionEvent event) {
                 if (discussionTable2.getSelectedRow() > -1) {
                     MessageConversation mess = (MessageConversation) discussionTable2.getValueAt(discussionTable2.getSelectedRow(), 4);
-                    System.out.println(mess);
                     MessageMiseAJourEtat messMaj = new MessageMiseAJourEtat(ticketSelect.getIdTicket(), mess.getIdMessage(), client.getUtilisateurClient().getIdUtilisateur(), mess.getEtatGroupe(), true);
                     //envoi du message de mise a jour lu
                     client.getReseaux().envoyerMessage(messMaj);
@@ -457,7 +456,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Object[] ligne = new Object[5];
             ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
             ligne[1] = mess.getTexte();
-            ligne[2] = mess.getDate().toString();
+            boolean lu = mess.isLuParUtilisateur();
+            String estLu = "(Non lu)";
+            if(lu){
+                estLu = "(Lu)";
+            }
+            ligne[2] = mess.getDate().toString() + " " + estLu;
             ligne[3] = mess.getEtatGroupe().toString();
             ligne[4] = mess;
             tableModele.addRow(ligne);
@@ -544,7 +548,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         
         discussionTable2.setModel(tableModele);
         //tableModele.fireTableDataChanged();
-        //discussionTable.repaint();
+        //discussionTable2.repaint();
         discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
         
          
