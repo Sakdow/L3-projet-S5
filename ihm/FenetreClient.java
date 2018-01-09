@@ -30,6 +30,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import message.MessageMessageConversation;
+import message.MessageMiseAJourEtat;
 import message.MessageTicket;
 import modele.EtatMessage;
 import modele.Groupe;
@@ -51,6 +52,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private ThreadEcoute thread;
     private Ticket ticketRecuSelect;
     private Ticket ticketCreeSelect;
+    private Ticket ticketSelect;
     private String groupeRecuSelect;
     private String groupeCreeSelect;
     private DefaultTableModel tableModele;
@@ -130,7 +132,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         this.setColumns(3);
         int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
         int textLength = this.getText().length();
-        int lines = textLength / (this.getColumns() + 1) +1;//+1, cause we need at least 1 row.  
+        int lines = textLength / (this.getColumns()) +1;//+1, cause we need at least 1 row.  
           
         int height = fontHeight * lines;     
         table.setRowHeight(row, height);
@@ -207,7 +209,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         getContentPane().add(decoButton, gridBagConstraints);
 
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
-        ticketsCreesTree.setRootVisible(false);
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsCreesTreeValueChanged(evt);
@@ -218,7 +219,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Créés", jScrollPane1);
 
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
-        ticketsRecusTree.setRootVisible(false);
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 ticketsRecusTreeValueChanged(evt);
@@ -325,6 +325,16 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        //Gestion clic de ligne
+        discussionTable2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                if (discussionTable2.getSelectedRow() > -1) {
+                    MessageConversation mess = (MessageConversation) discussionTable2.getValueAt(discussionTable2.getSelectedRow(), 4);
+                    MessageMiseAJourEtat messMaj = new MessageMiseAJourEtat(ticketSelect.getIdTicket(), mess.getIdMessage(), client.getUtilisateurClient().getIdUtilisateur(), mess.getEtatGroupe(), true);
+                }
+            }
+        });
         jScrollPane6.setViewportView(discussionTable2);
         tableModele = new DefaultTableModel();
         setTableModel();
@@ -381,8 +391,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 ticketCreeSelect = node1;
                 groupeCreeSelect = node2;
                 titreDiscuLabel.setText(ticketCreeSelect.toString());
-                //Effacer la discussion précedente de l'interface
-                //tableModele = new DefaultTableModel();
+                ticketSelect = ticketCreeSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketCreeSelect);
                 //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
@@ -424,8 +433,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 ticketRecuSelect = node1;
                 groupeRecuSelect = node2;
                 titreDiscuLabel.setText(ticketRecuSelect.toString());
-                //Effacer la discussion précedente de l'interface
-                //tableModele = new DefaultTableModel();
+                ticketSelect = ticketRecuSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketRecuSelect);
                 //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
