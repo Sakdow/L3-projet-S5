@@ -373,12 +373,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //onglet 0 = crees, onglet 1 = recus
             int onglet = ongletsDiscu.getSelectedIndex();
             if(onglet == 0){
-                ticketCreeSelect.ajouterMessage(messConv);
+                client.ajouterMessageConv(ticketCreeSelect.getIdTicket(), ticketCreeSelect.getGroupe().getIdGroupe(), messConv);
                 MessageMessageConversation messTicket = new MessageMessageConversation(ticketCreeSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messTicket);  
             }
             if(onglet == 1){
-                ticketRecuSelect.ajouterMessage(messConv);
+                client.ajouterMessageConv(ticketRecuSelect.getIdTicket(), ticketRecuSelect.getGroupe().getIdGroupe(), messConv);
                 MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketRecuSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messEnvoye);            
             }        
