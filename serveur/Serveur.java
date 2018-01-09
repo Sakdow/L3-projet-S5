@@ -291,7 +291,7 @@ public class Serveur {
 
 	}
 
-	List<Groupe> groupesUtilisateur(String idUtilisateur) {
+	public List<Groupe> groupesUtilisateur(String idUtilisateur) {
 		List<Groupe> groupes = new ArrayList<>();
 		ResultSet res;
 		try {
