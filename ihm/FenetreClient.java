@@ -336,9 +336,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             public void valueChanged(ListSelectionEvent event) {
                 if (discussionTable2.getSelectedRow() > -1) {
                     MessageConversation mess = (MessageConversation) discussionTable2.getValueAt(discussionTable2.getSelectedRow(), 4);
-                    MessageMiseAJourEtat messMaj = new MessageMiseAJourEtat(ticketSelect.getIdTicket(), mess.getIdMessage(), client.getUtilisateurClient().getIdUtilisateur(), mess.getEtatGroupe(), true);
-                    //envoi du message de mise a jour lu
-                    client.getReseaux().envoyerMessage(messMaj);
+                    if(!mess.isLuParUtilisateur()){
+                        MessageMiseAJourEtat messMaj = new MessageMiseAJourEtat(ticketSelect.getIdTicket(), mess.getIdMessage(), client.getUtilisateurClient().getIdUtilisateur(), mess.getEtatGroupe(), true);
+                        //envoi du message de mise a jour lu
+                        client.getReseaux().envoyerMessage(messMaj);
+                    }
                 }
             }
         });
@@ -397,7 +399,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
               String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
                 ticketCreeSelect = node1;
                 groupeCreeSelect = node2;
-                titreDiscuLabel.setText(ticketCreeSelect.toString());
+                titreDiscuLabel.setText(ticketCreeSelect.getNom());
                 ticketSelect = ticketCreeSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketCreeSelect);
@@ -439,7 +441,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
               String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
                 ticketRecuSelect = node1;
                 groupeRecuSelect = node2;
-                titreDiscuLabel.setText(ticketRecuSelect.toString());
+                titreDiscuLabel.setText(ticketRecuSelect.getNom());
                 ticketSelect = ticketRecuSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketRecuSelect);
