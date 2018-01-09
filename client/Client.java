@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -129,16 +130,20 @@ public class Client extends Observable {
 		if (tickets.containsKey(groupe)) {
 			boolean ajout = false;
 			List<Ticket> listeTicket = tickets.get(groupe);
-			for (Ticket t : listeTicket) {
+			for (Iterator<Ticket> ite = listeTicket.iterator() ; ite.hasNext() ; ) {
+				Ticket t = ite.next();
 				if (t.equals(ticket)) {
-					t = ticket;
+					ite.remove();
+					listeTicket.add(ticket);
 					ajout = true;
+					break;
 				}
 			}
 			if (!ajout) {
 				listeTicket.add(ticket);
 			}
 		} else {
+			System.out.println("Nouveau ticket : " + ticket.getNom());
 			List<Ticket> listeTicket = new LinkedList<>();
 			listeTicket.add(ticket);
 			tickets.put(groupe, listeTicket);
