@@ -109,13 +109,11 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        Reseaux reseau = new Reseaux("77.194.181.122", 8090);
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
-        MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
-        if(messReponse.getAccepte()){
-            Client client = new Client(messReponse.getUtilisateur(), reseau);
-            ThreadEcoute thread = new ThreadEcoute(reseau, client);
+        Client client = Client.lancer("77.194.181.122", 8090, id, mdp);
+        if(client != null){
+            ThreadEcoute thread = new ThreadEcoute(client.getReseaux(), client);
             fenetre = new FenetreClient(client, thread);
             fenetre.setVisible(true);
             this.dispose();

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
+import message.MessageReponseConnexion;
 
 import message.MessageTicket;
 import modele.Groupe;
@@ -19,16 +20,28 @@ public class Client extends Observable {
 	private final List<Groupe> listeGroupe;
 	private final Utilisateur utilisateurClient;
 	private final Reseaux reseaux;
+        private String motDePasse;
 
-	public Client(Utilisateur utilisateurClient, Reseaux reseaux) {
+	public Client(Utilisateur utilisateurClient, Reseaux reseaux, String motDePasse) {
 		super();
 		this.utilisateurClient = utilisateurClient;
 		this.reseaux = reseaux;
+                this.motDePasse = motDePasse;
 		this.ticketsCree = new TreeMap<>();
 		this.ticketsRecu = new TreeMap<>();
 		this.listeGroupe = new LinkedList<>();
 	}
 
+        public static Client lancer (String ip, int port, String idUtilisateur, String motDePasse){
+            Reseaux reseau = new Reseaux(ip, port);
+            MessageReponseConnexion messReponse = reseau.connexionServeur(idUtilisateur, motDePasse);
+            if(messReponse.getAccepte()){
+                return new Client(messReponse.getUtilisateur(), reseau, motDePasse);
+            } else {
+                return null;
+            }
+        }
+        
 	public void ajouterGroupe(Groupe groupe) {
 		if (!listeGroupe.contains(groupe)) {
 			listeGroupe.add(groupe);
@@ -140,6 +153,10 @@ public class Client extends Observable {
 
 	public Reseaux getReseaux() {
 		return reseaux;
+	}
+
+        public String getMotDePasse() {
+		return motDePasse;
 	}
 
 	public List<Groupe> getListeGroupe() {

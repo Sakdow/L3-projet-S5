@@ -17,7 +17,7 @@ public class ThreadEcoute extends Thread {
 	}
 
 	public void run() {
-		while (!Thread.interrupted()) {
+		while (!this.isInterrupted()) {
 			Message messageRecu = reseaux.ecoute();
 			if (messageRecu != null) {
 				if (messageRecu instanceof MessageTicket) {
@@ -35,7 +35,14 @@ public class ThreadEcoute extends Thread {
 					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
 				}
-			}
+			} else {
+                            if(!this.isInterrupted()){
+                                Message messageConnexion = reseaux.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+                                while(!this.isInterrupted() && messageConnexion == null ){
+                                    messageConnexion = reseaux.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+                                }
+                            }
+                        }
 		}
 	}
 
