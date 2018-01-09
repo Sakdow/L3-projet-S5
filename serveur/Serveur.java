@@ -368,6 +368,7 @@ public class Serveur {
 				int idMessage = res.getInt(1);
 				m.setIdMessage(idMessage);
 
+				
 				requeteBaseDeDonnees("INSERT INTO  lire (idM, idU) VALUES (" + m.getIdMessage() + ", '"
 						+ texteToTexteSQL(idCreateur) + "')");
 			}
