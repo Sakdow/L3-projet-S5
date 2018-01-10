@@ -90,7 +90,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     setLignes(ticketRecuSelect);
             }
             if(onglet == 2) {
-                if(ticketRecuSelect != null)
+                if(ticketSelect != null)
                     setLignes(ticketSelect);
             }
         }
