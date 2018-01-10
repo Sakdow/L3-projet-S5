@@ -22,10 +22,10 @@ public class FilDiscussion implements Serializable {
 		return ensembleMessage.size();
 	}
         
-        public int getNombreMessageNonLu(){
+         public int getNombreMessageNonLu(){
             int nombreMessageNonLu = 0;
             for(MessageConversation m : ensembleMessage){
-                if(m.isLuParUtilisateur() == false){
+                if(!m.isLuParUtilisateur()){
                     nombreMessageNonLu++;
                 }
             }
