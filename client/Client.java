@@ -164,6 +164,9 @@ public class Client extends Observable {
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
+                
+                System.out.println(ticketsRecu.isEmpty());
+                
 		setChanged();
 		notifyObservers();
 	}
@@ -182,10 +185,22 @@ public class Client extends Observable {
 	public Map<Groupe, List<Ticket>> getTicketsRecu() {
 		return ticketsRecu;
 	}
+        
+        public Map<Groupe, List<Ticket>> getTicketsTous(){
+            Map<Groupe, List<Ticket>> ticketsTous = new TreeMap<>();
+            ticketsTous.putAll(ticketsRecu);
+            for(Groupe gr : ticketsCree.keySet()){
+                for(Ticket tk : ticketsCree.get(gr)){
+                    ajouterTicketMap(ticketsTous,tk,gr);
+                }
+            }
+            return ticketsTous;
+        }
 
 	public Utilisateur getUtilisateurClient() {
 		return utilisateurClient;
 	}
+        
 
 	public Reseaux getReseaux() {
 		return reseaux;
