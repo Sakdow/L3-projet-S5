@@ -81,15 +81,15 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
         if(ongletsDiscu != null){
             int onglet =    ongletsDiscu.getSelectedIndex();  
-            if(onglet == 0){
+            if(onglet == 1){
                 if(ticketCreeSelect != null)
                     setLignes(ticketCreeSelect);
             }
-            if(onglet == 1) {
+            if(onglet == 2) {
                 if(ticketRecuSelect != null)
                     setLignes(ticketRecuSelect);
             }
-            if(onglet == 2) {
+            if(onglet == 0) {
                 if(ticketSelect != null)
                     setLignes(ticketSelect);
             }
@@ -176,7 +176,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         }
                     }                               
                     if(nbNonLu > 0){
-                        this.setText(value.toString() + " " + nbNonLu );
+                        this.setText(value.toString() + " (" + nbNonLu + ") " );
                         this.setFont(new Font(Font.SERIF,Font.BOLD,14));
                     }
                 }                  
@@ -425,19 +425,19 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());      
             MessageConversation messConv = new MessageConversation(-1, client.getUtilisateurClient(), saisieDiscuArea.getText(), date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
             //Recuperer ticket selectionné dans l'arbre
-            //onglet 0 = crees, onglet 1 = recus, 2 = all
+            //onglet 1 = crees, onglet 2 = recus, 0 = all
             int onglet = ongletsDiscu.getSelectedIndex();
-            if(onglet == 0){
+            if(onglet == 1){
                 client.ajouterMessageConv(ticketCreeSelect.getIdTicket(), ticketCreeSelect.getGroupe().getIdGroupe(), messConv);
                 MessageMessageConversation messTicket = new MessageMessageConversation(ticketCreeSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messTicket);  
             }
-            if(onglet == 1){
+            if(onglet == 2){
                 client.ajouterMessageConv(ticketRecuSelect.getIdTicket(), ticketRecuSelect.getGroupe().getIdGroupe(), messConv);
                 MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketRecuSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messEnvoye);            
             }
-            if(onglet == 2){
+            if(onglet == 0){
                 ticketSelect.ajouterMessage(messConv);
                 MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messEnvoye);
