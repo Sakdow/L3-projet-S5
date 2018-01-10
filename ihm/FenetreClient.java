@@ -55,6 +55,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private Ticket ticketSelect;
     private String groupeRecuSelect;
     private String groupeCreeSelect;
+    private String groupeSelect;
     private DefaultTableModel tableModele;
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
@@ -74,15 +75,21 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         if(ticketsRecusTree != null)
             ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+         if(ticketsAllTree != null)
+            ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
         if(ongletsDiscu != null){
             int onglet =    ongletsDiscu.getSelectedIndex();  
             if(onglet == 0){
                 if(ticketCreeSelect != null)
                     setLignes(ticketCreeSelect);
             }
-            else {
+            if(onglet == 1) {
                 if(ticketRecuSelect != null)
                     setLignes(ticketRecuSelect);
+            }
+            if(onglet == 2) {
+                if(ticketRecuSelect != null)
+                    setLignes(ticketSelect);
             }
         }
         this.validate();
@@ -164,6 +171,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ticketsCreesTree = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
         ticketsRecusTree = new javax.swing.JTree();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ticketsAllTree = new javax.swing.JTree();
         jScrollPane3 = new javax.swing.JScrollPane();
         saisieDiscuArea = new javax.swing.JTextArea();
         envoyerButton = new javax.swing.JButton();
@@ -232,6 +241,17 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         jScrollPane2.setViewportView(ticketsRecusTree);
 
         ongletsDiscu.addTab("Reçus", jScrollPane2);
+
+        ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
+        ticketsAllTree.setRootVisible(false);
+        ticketsAllTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                ticketsAllTreeValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(ticketsAllTree);
+
+        ongletsDiscu.addTab("Tous", jScrollPane5);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -370,18 +390,23 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());      
             MessageConversation messConv = new MessageConversation(-1, client.getUtilisateurClient(), saisieDiscuArea.getText(), date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
             //Recuperer ticket selectionné dans l'arbre
-            //onglet 0 = crees, onglet 1 = recus
+            //onglet 0 = crees, onglet 1 = recus, 2 = all
             int onglet = ongletsDiscu.getSelectedIndex();
             if(onglet == 0){
-                client.ajouterMessageConv(ticketCreeSelect.getIdTicket(), ticketCreeSelect.getGroupe().getIdGroupe(), messConv);
+                ticketCreeSelect.ajouterMessage(messConv);
                 MessageMessageConversation messTicket = new MessageMessageConversation(ticketCreeSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messTicket);  
             }
             if(onglet == 1){
-                client.ajouterMessageConv(ticketRecuSelect.getIdTicket(), ticketRecuSelect.getGroupe().getIdGroupe(), messConv);
+                ticketRecuSelect.ajouterMessage(messConv);
                 MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketRecuSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messEnvoye);            
-            }        
+            }
+            if(onglet == 2){
+                ticketSelect.ajouterMessage(messConv);
+                MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketSelect.getIdTicket(), messConv);
+                client.getReseaux().envoyerMessage(messEnvoye);
+            }
             //On efface le texte de la saisie
             saisieDiscuArea.setText("");
         }
@@ -450,6 +475,27 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             
         }        
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
+
+    private void ticketsAllTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsAllTreeValueChanged
+        if (evt.isAddedPath()) {
+            TreePath path = evt.getPath();
+            Object treeNode = path.getLastPathComponent();
+            Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
+            String text = userObject.toString();
+            if (userObject instanceof Ticket) {
+              Ticket node1 = (Ticket) userObject;
+              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                ticketSelect = node1;
+                groupeSelect = node2;
+                titreDiscuLabel.setText(ticketSelect.getNom());
+                ticketSelect = ticketRecuSelect;
+                //Afficher la discussion correspondante
+                setLignes(ticketSelect);
+                
+            }
+            
+        }  
+    }//GEN-LAST:event_ticketsAllTreeValueChanged
     private void setLignes(Ticket ticketSelect){
         //On vide la table des discussions
         clearTable();
@@ -539,6 +585,63 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         return null;
     }
     
+    private DefaultMutableTreeNode getArbreModelAll(){
+        if(client != null){
+            Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
+            Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
+            //Racine
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-1, "Tickets", null, null, null));
+            DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[300];
+            int indexGr = 0;            
+            //Création des noeuds des groupes
+            Set<Groupe> groupesC = ticketsCree.keySet();
+            
+            //On parcourt d'abord les groupes de tickets recu
+            for(Groupe gr : groupesC){
+                treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
+                List<Ticket> ticketsC = ticketsCree.get(gr);                
+                List<Ticket> ticketsR = ticketsRecu.get(gr);
+                
+                //Création des noeuds des tickets cree pour chaque groupe
+                for(Ticket tk : ticketsC){
+                    DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
+                    treeNode[indexGr].add(node);
+                }
+                //Si on trouve aussi des tickets recus pour le groupe
+                if(ticketsR != null){
+                    //Création des noeuds des tickets recus
+                    for(Ticket tk : ticketsR){
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
+                        treeNode[indexGr].add(node);                        
+                    }
+                    //Le groupe est traité, on l'enleve de la map
+                    ticketsRecu.remove(gr);
+                }
+                indexGr ++;
+            }            
+            //On parcourt les groupes restants des tickets recus
+            Set<Groupe> groupesR = ticketsRecu.keySet();
+            for(Groupe gr : groupesR){
+                treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
+                List<Ticket> ticketsR = ticketsRecu.get(gr);
+                //Création des noeuds des tickets cree pour chaque groupe
+                for(Ticket tk : ticketsR){
+                    DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
+                    treeNode[indexGr].add(node);
+                }
+                indexGr ++;
+            }   
+            //On relie chaque noeud de groupe a la racine
+            for(int i = 0; i < indexGr ; i++){
+                if(treeNode[i] != null)
+                    root.add(treeNode[i]);
+            }        
+            return root;
+       }
+       //si le client n'est pas initialisé        
+       return null;
+    }
+    
     private void setTableModel(){
         //Création de colonnes
         //tableModele.addColumn("Image");
@@ -601,9 +704,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane ongletsDiscu;
     private javax.swing.JTextArea saisieDiscuArea;
+    private javax.swing.JTree ticketsAllTree;
     private javax.swing.JTree ticketsCreesTree;
     private javax.swing.JTree ticketsRecusTree;
     private javax.swing.JLabel titreDiscuLabel;

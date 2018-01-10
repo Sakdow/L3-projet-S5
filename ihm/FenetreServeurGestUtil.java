@@ -14,6 +14,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import modele.Groupe;
 import modele.Utilisateur;
 import serveur.Serveur;
@@ -28,6 +29,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     private DefaultListModel listeModeleGr;
     private DefaultComboBoxModel comboGrModele;
     private Map<Utilisateur, List<Groupe>> utilMap;
+    private List<Groupe> listeGr;
     private Serveur serveur;
     /**
      * Creates new form FenetreServeurGestGroupe
@@ -63,7 +65,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         supprDuGroupeLabel = new javax.swing.JLabel();
         searchSupprGrField = new javax.swing.JTextField();
         searchAjoutGrField = new javax.swing.JTextField();
-        retirerDuGrButton = new javax.swing.JButton();
+        retirerGrButton = new javax.swing.JButton();
         ajoutGrUtilButton = new javax.swing.JButton();
         modifPrenomLabel = new javax.swing.JLabel();
         modifPrenomField = new javax.swing.JTextField();
@@ -264,10 +266,10 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 250, 0, 0);
         getContentPane().add(searchAjoutGrField, gridBagConstraints);
 
-        retirerDuGrButton.setText("Supprimer");
-        retirerDuGrButton.addActionListener(new java.awt.event.ActionListener() {
+        retirerGrButton.setText("Supprimer");
+        retirerGrButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                retirerDuGrButtonActionPerformed(evt);
+                retirerGrButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -277,7 +279,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.gridheight = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 29);
-        getContentPane().add(retirerDuGrButton, gridBagConstraints);
+        getContentPane().add(retirerGrButton, gridBagConstraints);
 
         ajoutGrUtilButton.setText("Ajouter");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -400,30 +402,37 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     private void supprUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprUtilButtonActionPerformed
         int indUtil = listeUtilList.getSelectedIndex();
         Utilisateur utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
+        //Supprimer par le serveur
+        //TODO
         listeModeleGr.removeElement(utilSelect);
         listeUtilList.setModel(listeModeleGr);
-        //On supprime le groupe de la map
-        utilMap.remove(utilSelect);
+        //On supprime le groupe de la liste
+        listeGr.remove(utilSelect);        
     }//GEN-LAST:event_supprUtilButtonActionPerformed
 
     private void listeUtilListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeUtilListValueChanged
+        int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder les modifications ?", "Confirm",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            //On dit au serveur de modifier
+            //TODO listeGr
+        }
+        //On affiche les groupes du nouvel user selectionne
         setListeModelGr();
     }//GEN-LAST:event_listeUtilListValueChanged
 
-    private void retirerDuGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerDuGrButtonActionPerformed
+    private void retirerGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerGrButtonActionPerformed
         //groupe selectionné
         int index = listeGrUtilList.getSelectedIndex();
         //util selectionné
         int indUtil = listeUtilList.getSelectedIndex();
         Utilisateur utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
         listeModeleGr.remove(index);
-        listeGrUtilList.setModel(listeModeleGr);
-        //On get la liste correspondant a l'utilisateur dans lequel on est
-        List<Groupe> liste = utilMap.get(utilSelect);
-        //On supprime le groupe à l'index index car l'ordre est le même
-        liste.remove(index);        
-        utilMap.put(utilSelect, liste);
-    }//GEN-LAST:event_retirerDuGrButtonActionPerformed
+        listeGrUtilList.setModel(listeModeleGr);        
+        //On supprime le groupe de la liste
+        listeGr.remove(index);        
+        
+    }//GEN-LAST:event_retirerGrButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -487,9 +496,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         Set<Utilisateur> utils = serveur.getUtilisateurs();
         //Ajout de chaque utilisateur dans la JList
         for(Utilisateur ut : utils){
-            listeModeleUtil.addElement(ut);
-            //Mise à jour de la map qui sera traitée par le serveur
-            utilMap.put(ut, new ArrayList<Groupe>());            
+            listeModeleUtil.addElement(ut);                       
         }
         listeUtilList.setModel(listeModeleUtil);
     }
@@ -502,9 +509,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             comboGrModele.addElement(gr);
         }
         ajoutGrCombo.setModel(comboGrModele);        
-    }
-    
-    
+    }   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accepterButton;
@@ -526,7 +531,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     private javax.swing.JTextField modifPrenomField;
     private javax.swing.JLabel modifPrenomLabel;
     private javax.swing.JLabel paramGrLabel;
-    private javax.swing.JButton retirerDuGrButton;
+    private javax.swing.JButton retirerGrButton;
     private javax.swing.JTextField searchAjoutGrField;
     private javax.swing.JTextField searchSupprGrField;
     private javax.swing.JLabel searchSupprGrLabel;

@@ -50,9 +50,10 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         nomTicketLabel = new javax.swing.JLabel();
         nomTicketField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        messageArea = new javax.swing.JTextField();
         creerButton = new javax.swing.JButton();
         annulerButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        messageArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création de ficket");
@@ -67,7 +68,7 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 23;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(50, 18, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(56, 18, 0, 0);
         getContentPane().add(groupeComboBox, gridBagConstraints);
 
         groupeLabel.setText("Groupe :");
@@ -75,7 +76,7 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(53, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(59, 10, 0, 0);
         getContentPane().add(groupeLabel, gridBagConstraints);
 
         nomTicketLabel.setText("Nom du ticket :");
@@ -104,16 +105,6 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(44, 10, 0, 0);
         getContentPane().add(jLabel1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 174;
-        gridBagConstraints.ipady = 18;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(32, 18, 0, 0);
-        getContentPane().add(messageArea, gridBagConstraints);
 
         creerButton.setText("Créer");
         creerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -122,10 +113,10 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(124, 65, 11, 0);
+        gridBagConstraints.insets = new java.awt.Insets(30, 21, 11, 9);
         getContentPane().add(creerButton, gridBagConstraints);
 
         annulerButton.setText("Annuler");
@@ -135,11 +126,29 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(124, 34, 11, 10);
+        gridBagConstraints.insets = new java.awt.Insets(30, 80, 11, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
+
+        messageArea.setColumns(20);
+        messageArea.setRows(5);
+        jScrollPane1.setViewportView(messageArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 157;
+        gridBagConstraints.ipady = 97;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(38, 18, 0, 0);
+        getContentPane().add(jScrollPane1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -177,7 +186,8 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> groupeComboBox;
     private javax.swing.JLabel groupeLabel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField messageArea;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea messageArea;
     private javax.swing.JTextField nomTicketField;
     private javax.swing.JLabel nomTicketLabel;
     // End of variables declaration//GEN-END:variables

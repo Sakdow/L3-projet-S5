@@ -34,14 +34,17 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private DefaultListModel listeModeleGr;
     private DefaultComboBoxModel comboGrModele;
     private DefaultComboBoxModel comboUtilModele;
-    private Map<String, List<Utilisateur>> grMap;
+    private List<Utilisateur> listeUtil;
+    private Groupe groupeSelect;
+    private boolean grModifie;
     private Serveur serveur;
     /**
      * Creates new form FenetreServeurGestGroupe
      */
     public FenetreServeurGestGroupe(Serveur serveur) {
         this.serveur = serveur;
-        grMap = new TreeMap();
+        listeUtil = new ArrayList();
+        groupeSelect = null;
         initComponents();
     }
 
@@ -438,26 +441,36 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         int index = listeGroupeList.getSelectedIndex();
         listeModeleGr.remove(index);
         listeGroupeList.setModel(listeModeleGr);
-        //On supprime le groupe de la map
-        grMap.remove(listeGroupeList.getSelectedValue());
+        int response = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ?", "Confirm",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            //On supprime le groupe
+            //TODO
+        }
+        
     }//GEN-LAST:event_supprGrButtonActionPerformed
 
     private void modifierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifierButtonActionPerformed
-        String nouvNom = modifNomField.getText();
-        //Verification des doublons
-        boolean trouve = false;
-        for(int i = 0; i < listeModeleGr.size(); i++){
-            if(nouvNom.equals(listeModeleGr.get(i))){
-                trouve = true;
-                i = listeModeleGr.size() + 1;
-                JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
+        int response = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment modifier ce groupe ?", "Confirm",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            String nouvNom = modifNomField.getText();
+            //Verification des doublons
+            boolean trouve = false;
+            for(int i = 0; i < listeModeleGr.size(); i++){
+                if(nouvNom.equals(listeModeleGr.get(i))){
+                    trouve = true;
+                    i = listeModeleGr.size() + 1;
+                    JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
+                }
             }
-        }
-        if(!trouve){
-           int index = listeGroupeList.getSelectedIndex();
-           listeModeleGr.set(index, nouvNom);
-           listeGroupeList.setModel(listeModeleGr);
-        }
+            if(!trouve){
+               //On envoie au serveur les modif
+               //TODO listeUtil
+               //rafraichir la liste des groupes
+               setListeModelGr();               
+            }
+        }        
         
     }//GEN-LAST:event_modifierButtonActionPerformed
 
@@ -465,14 +478,28 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         int index = listeUtilGrList.getSelectedIndex();
         listeModeleGr.remove(index);
         listeUtilGrList.setModel(listeModeleGr);
-        //On get la liste correspondant au groupe dans lequel on est
-        List<Utilisateur> liste = grMap.get(listeGroupeList.getSelectedValue());
         //On supprime l'utilisateur à l'index index car l'ordre est le même
-        liste.remove(index);
-        grMap.put(listeGroupeList.getSelectedValue(), liste);
+        listeUtil.remove(index);        
     }//GEN-LAST:event_retirerDuGrButtonActionPerformed
 
     private void listeGroupeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeGroupeListValueChanged
+        //Si un autre groupe était deja selectionné (liste util non vide) et modifications ont eu lieu
+        if((groupeSelect != null) && grModifie){
+            int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder ?", "Confirm",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                //On modifie le groupe
+            
+                //TODO
+            }
+            //sinon on n'envoie rien au serveur
+        }
+        grModifie = false;
+        listeGroupeList.removeAll();
+        int indGrSelect = listeGroupeList.getSelectedIndex();
+        groupeSelect = (Groupe) listeModeleGr.get(indGrSelect);
+        //On affiche la liste du nouveau groupe selectionné
+        
         setListeModelUtil();
     }//GEN-LAST:event_listeGroupeListValueChanged
 
@@ -480,11 +507,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         if(!listeModeleUtil.contains(ajoutUtilCombo.getSelectedItem())){
             listeModeleUtil.addElement(ajoutUtilCombo.getSelectedItem());
             listeUtilGrList.setModel(listeModeleUtil);
-            //On get la liste correspondant au groupe dans lequel on est
-            List<Utilisateur> liste = grMap.get(listeGroupeList.getSelectedValue());
-            //On ajoute l'utilisateur à la map
-            liste.add((Utilisateur) ajoutUtilCombo.getSelectedItem());
-            grMap.put(listeGroupeList.getSelectedValue(), liste);
+            listeUtil.add((Utilisateur) ajoutUtilCombo.getSelectedItem());
         }
     }//GEN-LAST:event_ajoutUtilGrButtonActionPerformed
 
@@ -500,16 +523,15 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         //On recupère les utilisateurs du groupe qu'on veut fusionner
         List<Utilisateur> utils = gr.getListeUtilisateur();
         //On get la liste correspondant au groupe dans lequel on est
-        List<Utilisateur> liste = grMap.get(listeGroupeList.getSelectedValue());
+        
         for(Utilisateur ut : utils){
             if(!listeModeleUtil.contains(ut)){
                 listeModeleUtil.addElement(ut);
-                listeUtilGrList.setModel(listeModeleUtil);                
-                //On ajoute l'utilisateur à la liste de la map
-                liste.add((Utilisateur) ut);                
+                //On ajoute l'utilisateur à la liste
+                listeUtil.add((Utilisateur) ut);                
             }
         }
-        grMap.put(listeGroupeList.getSelectedValue(), liste);       
+        listeUtilGrList.setModel(listeModeleUtil); 
     }//GEN-LAST:event_ajoutGrUtilButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
@@ -557,8 +579,6 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         //Ajout de chaque groupe dans la JList
         for(String gr : groupes){
             listeModeleGr.addElement(gr);
-            //On construit la map pour ensuite envoyer les modifications
-            grMap.put(gr, new ArrayList<Utilisateur>());
         }
         listeGroupeList.setModel(listeModeleGr);        
     }
@@ -569,18 +589,15 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             Groupe gr = null;
             try {
                 gr = serveur.getGroupeFromNomGroupe(nomGr);
+                listeUtil = gr.getListeUtilisateur();
+                //Ajout de chaque utilisateur dans la JList
+                for(Utilisateur ut : listeUtil){
+                    listeModeleUtil.addElement(ut);
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
             }
-            List<Utilisateur> utils = gr.getListeUtilisateur();
-            //Ajout de chaque utilisateur dans la JList
-            for(Utilisateur ut : utils){
-                listeModeleUtil.addElement(ut);
-                //Mise à jour de la map qui sera traitée par le serveur
-                List<Utilisateur> liste = grMap.get(nomGr);
-                liste.add(ut);
-                grMap.put(nomGr, liste);
-            }   
+               
             listeUtilGrList.setModel(listeModeleUtil);
         }
         

@@ -109,11 +109,13 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
+        Reseaux reseau = new Reseaux("77.194.181.122", 8090);
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
-        Client client = Client.lancer("77.194.181.122", 8090, id, mdp);
-        if(client != null){
-            ThreadEcoute thread = new ThreadEcoute(client.getReseaux(), client);
+        MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
+        if(messReponse.getAccepte()){
+            Client client = new Client(messReponse.getUtilisateur(), reseau);
+            ThreadEcoute thread = new ThreadEcoute(reseau, client);
             fenetre = new FenetreClient(client, thread);
             fenetre.setVisible(true);
             this.dispose();
@@ -156,15 +158,6 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
             public void run() {
                 new FenetreClientConnexion().setVisible(true);
                 
-                /*while(true){
-                    try {
-                        Thread.sleep(2000);
-                        System.out.println("test");
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                }*/
             }
         });
     }
