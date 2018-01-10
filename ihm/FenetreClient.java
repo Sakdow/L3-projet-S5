@@ -173,16 +173,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     if(!mess.isLuParUtilisateur()){
                         nbNonLu ++;
                     }
-                }
-                               
+                }                               
                 if(nbNonLu > 0){
                     this.setText(value.toString() + " " + nbNonLu );
                     this.setFont(new Font(Font.SERIF,Font.BOLD,14));
                 }  
-            }
-              
-              
-            
+            }          
             
         return this;
         }
@@ -525,7 +521,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 ticketSelect = node1;
                 groupeSelect = node2;
                 titreDiscuLabel.setText(ticketSelect.getNom());
-                ticketSelect = ticketRecuSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketSelect);
                 
