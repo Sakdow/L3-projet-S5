@@ -367,18 +367,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
@@ -438,7 +426,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 client.getReseaux().envoyerMessage(messEnvoye);            
             }
             if(onglet == 0){
-                ticketSelect.ajouterMessage(messConv);
+                client.ajouterMessageConv(ticketSelect.getIdTicket(), ticketSelect.getGroupe().getIdGroupe(), messConv);               
                 MessageMessageConversation messEnvoye = new MessageMessageConversation(ticketSelect.getIdTicket(), messConv);
                 client.getReseaux().envoyerMessage(messEnvoye);
             }
@@ -582,8 +570,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }
-            ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
+            }        
             return root;
         }
         //si le client n'est pas initialisé
