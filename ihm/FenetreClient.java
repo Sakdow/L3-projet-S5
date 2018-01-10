@@ -19,6 +19,7 @@ import java.util.NavigableSet;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -436,27 +437,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         
     }//GEN-LAST:event_envoyerButtonActionPerformed
     
-    private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
-        if (evt.isAddedPath()) {
-            TreePath path = evt.getPath();
-            Object treeNode = path.getLastPathComponent();
-            Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
-            String text = userObject.toString();
-            if (userObject instanceof Ticket) {
-              Ticket node1 = (Ticket) userObject;
-              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
-                ticketCreeSelect = node1;
-                groupeCreeSelect = node2;
-                titreDiscuLabel.setText(ticketCreeSelect.getNom());
-                ticketSelect = ticketCreeSelect;
-                //Afficher la discussion correspondante
-                setLignes(ticketCreeSelect);
-                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
-            }            
-        }        
-        
-    }//GEN-LAST:event_ticketsCreesTreeValueChanged
-
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
         //Affichage d'une fenetre de creation de ticket
         if(client != null){
@@ -485,19 +465,40 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
             String text = userObject.toString();
             if (userObject instanceof Ticket) {
-              Ticket node1 = (Ticket) userObject;
-              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                Ticket node1 = (Ticket) userObject;
+                String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
                 ticketRecuSelect = node1;
                 groupeRecuSelect = node2;
                 titreDiscuLabel.setText(ticketRecuSelect.getNom());
                 ticketSelect = ticketRecuSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketRecuSelect);
-                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
+                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
             }
-            
-        }        
+
+        }
     }//GEN-LAST:event_ticketsRecusTreeValueChanged
+
+    private void ticketsCreesTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsCreesTreeValueChanged
+        if (evt.isAddedPath()) {
+            TreePath path = evt.getPath();
+            Object treeNode = path.getLastPathComponent();
+            Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
+            String text = userObject.toString();
+            if (userObject instanceof Ticket) {
+                Ticket node1 = (Ticket) userObject;
+                String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                ticketCreeSelect = node1;
+                groupeCreeSelect = node2;
+                titreDiscuLabel.setText(ticketCreeSelect.getNom());
+                ticketSelect = ticketCreeSelect;
+                //Afficher la discussion correspondante
+                setLignes(ticketCreeSelect);
+                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+            }
+        }
+
+    }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void ticketsAllTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsAllTreeValueChanged
         if (evt.isAddedPath()) {
@@ -506,17 +507,17 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
             String text = userObject.toString();
             if (userObject instanceof Ticket) {
-              Ticket node1 = (Ticket) userObject;
-              String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
+                Ticket node1 = (Ticket) userObject;
+                String node2 = evt.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString();
                 ticketSelect = node1;
                 groupeSelect = node2;
                 titreDiscuLabel.setText(ticketSelect.getNom());
                 //Afficher la discussion correspondante
                 setLignes(ticketSelect);
-                
+
             }
-            
-        }  
+
+        }
     }//GEN-LAST:event_ticketsAllTreeValueChanged
     private void setLignes(Ticket ticketSelect){
         //On vide la table des discussions
@@ -551,6 +552,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //PARTIE TICKETS RECUS
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
+            System.out.println(ticketsRecu);
+            System.out.println(ticketsRecu.isEmpty());
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets reçus", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];
@@ -570,7 +573,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }        
+            }
+            ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
             return root;
         }
         //si le client n'est pas initialisé
@@ -581,6 +585,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //PARTIE TICKETS CREES
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
+            System.out.println(ticketsCree);
+            System.out.println(ticketsCree.isEmpty());
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets crées", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];
@@ -612,6 +618,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
             Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
+            Map<Groupe, List<Ticket>> ticketsRest = new TreeMap<>();
+            ticketsRest.putAll(ticketsRest);
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-1, "Tickets", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[300];
@@ -624,7 +632,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
                 List<Ticket> ticketsC = ticketsCree.get(gr);                
                 List<Ticket> ticketsR = ticketsRecu.get(gr);
-                
+                                
                 //Création des noeuds des tickets cree pour chaque groupe
                 for(Ticket tk : ticketsC){
                     DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
@@ -638,15 +646,15 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         treeNode[indexGr].add(node);                        
                     }
                     //Le groupe est traité, on l'enleve de la map
-                    ticketsRecu.remove(gr);
+                    ticketsRest.remove(gr);
                 }
                 indexGr ++;
             }            
             //On parcourt les groupes restants des tickets recus
-            Set<Groupe> groupesR = ticketsRecu.keySet();
+            Set<Groupe> groupesR = ticketsRest.keySet();
             for(Groupe gr : groupesR){
                 treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
-                List<Ticket> ticketsR = ticketsRecu.get(gr);
+                List<Ticket> ticketsR = ticketsRest.get(gr);
                 //Création des noeuds des tickets cree pour chaque groupe
                 for(Ticket tk : ticketsR){
                     DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
