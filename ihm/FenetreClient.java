@@ -200,12 +200,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         creerTicketButton = new javax.swing.JButton();
         decoButton = new javax.swing.JButton();
         ongletsDiscu = new javax.swing.JTabbedPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ticketsAllTree = new javax.swing.JTree();
         jScrollPane1 = new javax.swing.JScrollPane();
         ticketsCreesTree = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
         ticketsRecusTree = new javax.swing.JTree();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        ticketsAllTree = new javax.swing.JTree();
         jScrollPane3 = new javax.swing.JScrollPane();
         saisieDiscuArea = new javax.swing.JTextArea();
         envoyerButton = new javax.swing.JButton();
@@ -253,6 +253,17 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 4);
         getContentPane().add(decoButton, gridBagConstraints);
 
+        ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
+        ticketsAllTree.setRootVisible(false);
+        ticketsAllTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                ticketsAllTreeValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(ticketsAllTree);
+
+        ongletsDiscu.addTab("Tous", jScrollPane5);
+
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
         ticketsCreesTree.setRootVisible(false);
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
@@ -274,17 +285,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         jScrollPane2.setViewportView(ticketsRecusTree);
 
         ongletsDiscu.addTab("Reçus", jScrollPane2);
-
-        ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
-        ticketsAllTree.setRootVisible(false);
-        ticketsAllTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                ticketsAllTreeValueChanged(evt);
-            }
-        });
-        jScrollPane5.setViewportView(ticketsAllTree);
-
-        ongletsDiscu.addTab("Tous", jScrollPane5);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
