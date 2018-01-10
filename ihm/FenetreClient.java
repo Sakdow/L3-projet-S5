@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Observable;
@@ -178,8 +179,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     }                               
                     if(nbNonLu > 0){
                         this.setText(value.toString() + " (" + nbNonLu + ") " );
-                        this.setFont(new Font(Font.SERIF,Font.BOLD,14));
-                    }
+                        //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                        nbNonLu = 0;
+                    }                    
                 }                  
             }          
             
