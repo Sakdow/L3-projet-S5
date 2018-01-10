@@ -256,6 +256,7 @@ public class Serveur {
 					+ texteToTexteSQL(idUtilisateur) + "')");
 
 			m.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
+			m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idUtilisateur));
 
 			if (isMessageRecuParTous(idMessage)) {
 				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idMessage);
@@ -374,16 +375,11 @@ public class Serveur {
 			}
 
 			Set<String> participants = utilisateursGroupe(idGroupe);
-			participants.remove(idCreateur);
 
 			for (String u : participants) {
 				requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('" + u + "', " + idTicket
 						+ ", '" + texteToTexteSQL(idGroupe) + "', '" + texteToTexteSQL(idCreateur) + "')");
 			}
-
-			requeteBaseDeDonnees("INSERT INTO participer (idU,idT,nomG, createur) VALUES ('"
-					+ texteToTexteSQL(idCreateur) + "', " + idTicket + ", '" + texteToTexteSQL(idGroupe) + "', '"
-					+ texteToTexteSQL(idCreateur) + "')");
 
 			System.out.println(participants.size());
 			envoyerNouveauTicketConnectes(ticket, participants);
