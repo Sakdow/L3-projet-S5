@@ -552,8 +552,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //PARTIE TICKETS RECUS
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
-            System.out.println(ticketsRecu);
-            System.out.println(ticketsRecu.isEmpty());
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets reçus", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];
@@ -585,8 +583,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //PARTIE TICKETS CREES
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
-            System.out.println(ticketsCree);
-            System.out.println(ticketsCree.isEmpty());
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets crées", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];

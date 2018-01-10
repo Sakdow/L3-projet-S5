@@ -32,6 +32,7 @@ public class ThreadEcoute extends Thread {
 					}
 				} else {
 					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
+                                        System.out.println(nouveauMessConv.getMessageConv().getEtatGroupe());
 					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
 				}

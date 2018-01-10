@@ -149,7 +149,6 @@ public class Client extends Observable {
 				listeTicket.add(ticket);
 			}
 		} else {
-			System.out.println("Nouveau ticket : " + ticket.getNom());
 			List<Ticket> listeTicket = new LinkedList<>();
 			listeTicket.add(ticket);
 			tickets.put(groupe, listeTicket);
@@ -164,8 +163,6 @@ public class Client extends Observable {
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
-                
-                System.out.println(ticketsRecu.isEmpty());
                 
 		setChanged();
 		notifyObservers();
