@@ -196,6 +196,15 @@ public class Client extends Observable {
             }
             return ticketsTous;
         }
+        
+        public int getNombreMessageGroupeNonLu(Map<Groupe, List<Ticket>> map, Groupe gr){
+            int nombreMessageNonLu;
+            nombreMessageNonLu = 0;
+            for(Ticket t :map.get(gr)){
+                nombreMessageNonLu = nombreMessageNonLu + t.getFilDiscussion().getNombreMessageNonLu();
+            }
+            return nombreMessageNonLu;
+        }
 
 	public Utilisateur getUtilisateurClient() {
 		return utilisateurClient;
