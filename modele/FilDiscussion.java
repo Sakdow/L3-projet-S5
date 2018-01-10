@@ -21,6 +21,16 @@ public class FilDiscussion implements Serializable {
 	public int getNombreMessage() {
 		return ensembleMessage.size();
 	}
+        
+        public int getNombreMessageNonLu(){
+            int nombreMessageNonLu = 0;
+            for(MessageConversation m : ensembleMessage){
+                if(m.isLuParUtilisateur() == false){
+                    nombreMessageNonLu++;
+                }
+            }
+            return nombreMessageNonLu;
+        }
 
 	public NavigableSet<MessageConversation> getEnsembleMessage() {
 		return ensembleMessage;
