@@ -39,10 +39,16 @@ public class Client extends Observable {
         
         private void rechercheEtEnvoieMessageNonRecuServeur(Set<Groupe> set){
             for (Groupe gr : set){
-                for(Ticket tk : ticketsCree.get(gr)){
-                    for(MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()){
-                        if(messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)){
-                            reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
+                if(gr != null){
+                    for(Ticket tk : ticketsCree.get(gr)){
+                        if(tk.getIdTicket() == -1){
+                            reseaux.envoyerMessage(new MessageTicket(tk));
+                        } else {
+                            for(MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()){
+                                if(messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)){
+                                    reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
+                                }
+                            }
                         }
                     }
                 }
