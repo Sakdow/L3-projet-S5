@@ -114,7 +114,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         String mdp = new String(passwordField.getPassword());
         MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
         if(messReponse.getAccepte()){
-            Client client = new Client(messReponse.getUtilisateur(), reseau);
+            Client client = new Client(messReponse.getUtilisateur(), reseau, mdp);
             ThreadEcoute thread = new ThreadEcoute(reseau, client);
             fenetre = new FenetreClient(client, thread);
             fenetre.setVisible(true);

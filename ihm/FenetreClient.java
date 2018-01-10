@@ -10,6 +10,7 @@ import client.ThreadEcoute;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import message.MessageMessageConversation;
 import message.MessageMiseAJourEtat;
@@ -151,6 +153,41 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     }
 
 }
+    
+    public class MyTreeCellRender extends DefaultTreeCellRenderer {
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
+  
+            super.getTreeCellRendererComponent(
+                    tree, value, sel,
+                    expanded, leaf, row,
+                    hasFocus);
+            //On cherche le nombre de message non lu dans le ticket
+            int nbNonLu = 0;              
+            if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Ticket.class)){
+                Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
+                NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
+                //Pour chaque message, on regarde s'il a été lu
+                for(MessageConversation mess : ensembleMessage){
+                    if(!mess.isLuParUtilisateur()){
+                        nbNonLu ++;
+                    }
+                }
+                               
+                if(nbNonLu > 0){
+                    this.setText(value.toString() + " " + nbNonLu );
+                    this.setFont(new Font(Font.SERIF,Font.BOLD,14));
+                }  
+            }
+              
+              
+            
+            
+        return this;
+        }
+        
+    }
     
      /**
      * This method is called from within the constructor to initialize the form.
@@ -548,7 +585,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }        
+            }
+            ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
             return root;
         }
         //si le client n'est pas initialisé
@@ -578,7 +616,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }        
+            }
+            ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
             return root;
             }
         //si le client n'est pas initialisé
@@ -635,7 +674,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             for(int i = 0; i < indexGr ; i++){
                 if(treeNode[i] != null)
                     root.add(treeNode[i]);
-            }        
+            }
+            ticketsAllTree.setCellRenderer(new MyTreeCellRender());
             return root;
        }
        //si le client n'est pas initialisé        
