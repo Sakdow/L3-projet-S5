@@ -169,15 +169,17 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
                 NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
                 //Pour chaque message, on regarde s'il a été lu
-                for(MessageConversation mess : ensembleMessage){
-                    if(!mess.isLuParUtilisateur()){
-                        nbNonLu ++;
+                if(ensembleMessage != null){
+                    for(MessageConversation mess : ensembleMessage){
+                        if(!mess.isLuParUtilisateur()){
+                            nbNonLu ++;
+                        }
+                    }                               
+                    if(nbNonLu > 0){
+                        this.setText(value.toString() + " " + nbNonLu );
+                        this.setFont(new Font(Font.SERIF,Font.BOLD,14));
                     }
-                }                               
-                if(nbNonLu > 0){
-                    this.setText(value.toString() + " " + nbNonLu );
-                    this.setFont(new Font(Font.SERIF,Font.BOLD,14));
-                }  
+                }                  
             }          
             
         return this;
@@ -554,7 +556,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         for(int i = 0; i < nb; i++){
             tableModele.removeRow(0);            
         }       
-        discussionTable2.setModel(tableModele);
+        discussionTable2.setModel(tableModele);        
     }
     
     private DefaultMutableTreeNode getArbreModelRecus(){
