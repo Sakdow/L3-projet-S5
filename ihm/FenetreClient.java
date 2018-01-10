@@ -616,52 +616,25 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     
     private DefaultMutableTreeNode getArbreModelAll(){
         if(client != null){
-            Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
-            Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
-            Map<Groupe, List<Ticket>> ticketsRest = new TreeMap<>();
-            ticketsRest.putAll(ticketsRest);
+            Map<Groupe, List<Ticket>> ticketsTous = client.getTicketsTous();            
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-1, "Tickets", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[300];
             int indexGr = 0;            
             //Création des noeuds des groupes
-            Set<Groupe> groupesC = ticketsCree.keySet();
+            Set<Groupe> groupes = ticketsTous.keySet();
             
             //On parcourt d'abord les groupes de tickets recu
-            for(Groupe gr : groupesC){
+            for(Groupe gr : groupes){
                 treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
-                List<Ticket> ticketsC = ticketsCree.get(gr);                
-                List<Ticket> ticketsR = ticketsRecu.get(gr);
-                                
+                List<Ticket> tickets = ticketsTous.get(gr);                
                 //Création des noeuds des tickets cree pour chaque groupe
-                for(Ticket tk : ticketsC){
+                for(Ticket tk : tickets){
                     DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
                     treeNode[indexGr].add(node);
-                }
-                //Si on trouve aussi des tickets recus pour le groupe
-                if(ticketsR != null){
-                    //Création des noeuds des tickets recus
-                    for(Ticket tk : ticketsR){
-                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
-                        treeNode[indexGr].add(node);                        
-                    }
-                    //Le groupe est traité, on l'enleve de la map
-                    ticketsRest.remove(gr);
-                }
+                }               
                 indexGr ++;
             }            
-            //On parcourt les groupes restants des tickets recus
-            Set<Groupe> groupesR = ticketsRest.keySet();
-            for(Groupe gr : groupesR){
-                treeNode[indexGr] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
-                List<Ticket> ticketsR = ticketsRest.get(gr);
-                //Création des noeuds des tickets cree pour chaque groupe
-                for(Ticket tk : ticketsR){
-                    DefaultMutableTreeNode node = new DefaultMutableTreeNode(tk);
-                    treeNode[indexGr].add(node);
-                }
-                indexGr ++;
-            }   
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < indexGr ; i++){
                 if(treeNode[i] != null)
