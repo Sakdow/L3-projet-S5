@@ -276,10 +276,10 @@ public class Serveur {
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
 						if (assoc.getUtilisateur().equals(u)) {
-							m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idU));
 							ObjectOutputStream out = assoc.getOut();
 							MessageConversation messageMain = new MessageConversation(m.getIdMessage(), m.getCreateur(),
-									m.getTexte(), m.getDate(), m.getEtatGroupe(), m.isLuParUtilisateur());
+									m.getTexte(), m.getDate(), m.getEtatGroupe(),
+									isMessageLuParUtilisateur(m, idU));
 							MessageMessageConversation mA = new MessageMessageConversation(idTicket, nomGroupe,
 									messageMain);
 							out.writeObject(mA);
