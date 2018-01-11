@@ -34,24 +34,25 @@ public class MessageConversation implements Serializable, Comparable<MessageConv
 	public boolean equals(Object obj) {
 		if (obj instanceof MessageConversation) {
 			MessageConversation messConv = (MessageConversation) obj;
-			if (this.getIdMessage() == messConv.getIdMessage()) {
+			if (this.idMessage == messConv.idMessage) {
 				return true;
 			} else {
-				if (createur.equals(messConv.getCreateur()) && texte.equals(messConv.getTexte())
-						&& date.equals(messConv.getDate())) {
-					return true;
-				}
+				return createur.equals(messConv.createur) && date.equals(messConv.date) && texte.equals(messConv.texte);
 			}
 		}
 		return false;
 	}
 
 	public int compareTo(MessageConversation conversationToCompare) {
-		if (this.equals(conversationToCompare))
-			return 0;
 		int res = date.compareTo(conversationToCompare.getDate());
-		if (res != 0)
+		if(res != 0){
 			return res;
+		}
+		
+		if(this.equals(conversationToCompare)){
+			return 0;
+		}
+		
 		return this.idMessage - conversationToCompare.idMessage;
 	}
 

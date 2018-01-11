@@ -20,7 +20,7 @@ public class Ticket implements Serializable {
 	}
 
 	public void ajouterMessage(MessageConversation message) {
-		filDiscussion.ajouterMessage(message);
+		filDiscussion.ajouterOuModifierMessage(message);
 	}
 
 	@Override
