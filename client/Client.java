@@ -43,10 +43,14 @@ public class Client extends Observable {
                     for(Ticket tk : ticketsCree.get(gr)){
                         if(tk.getIdTicket() == -1){
                             reseaux.envoyerMessage(new MessageTicket(tk));
+                            setChanged();
+                            notifyObservers();
                         } else {
                             for(MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()){
                                 if(messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)){
                                     reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
+                                    setChanged();
+                                    notifyObservers();
                                 }
                             }
                         }
