@@ -48,7 +48,7 @@ public class Serveur {
 		if (port > 0)
 			this.port = port;
 
-		initBDD(adresseBDD, PortBDD);
+		initBDD(adresseBDD, PortBDD, nomBDD, adminBDD, mdpBDD);
 	}
 
 	private void initBDD() {
