@@ -40,6 +40,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         passwordLabel = new javax.swing.JLabel();
         usernameLabel1 = new javax.swing.JLabel();
+        portLabel = new javax.swing.JLabel();
+        portField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Connexion serveur");
@@ -49,7 +51,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         titreLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         titreLabel.setText("Connexion");
         getContentPane().add(titreLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, 30));
-        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 190, -1));
+        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 190, -1));
 
         connexionButton.setText("Connexion");
         connexionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -58,13 +60,19 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
             }
         });
         getContentPane().add(connexionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
-        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 190, -1));
+        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 190, -1));
 
         passwordLabel.setText("Mot de passe");
-        getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, -1, -1));
+        getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, -1, -1));
 
         usernameLabel1.setText("Login");
-        getContentPane().add(usernameLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, -1, -1));
+        getContentPane().add(usernameLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, -1, -1));
+
+        portLabel.setText("Port");
+        getContentPane().add(portLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, -1, -1));
+
+        portField.setText("8090");
+        getContentPane().add(portField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 100, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -73,6 +81,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         Serveur serveur = new Serveur();
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
+        int port = Integer.parseInt(portField.getText());
         boolean lance = serveur.lancer(id, mdp);
         if(lance){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
@@ -127,6 +136,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
     private javax.swing.JButton connexionButton;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
+    private javax.swing.JTextField portField;
+    private javax.swing.JLabel portLabel;
     private javax.swing.JLabel titreLabel;
     private javax.swing.JLabel usernameLabel1;
     private javax.swing.JTextField usernameTextField;
