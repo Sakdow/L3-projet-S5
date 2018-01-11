@@ -34,23 +34,39 @@ public class Serveur {
 	private NavigableSet<AssocUtilisateurSocket> utilisateursConnectes = new TreeSet<>();
 
 	public Serveur() {
-		initServeur();
+		initBDD();
 	}
 
 	public Serveur(int port) {
 		if (port > 0)
 			this.port = port;
 
-		initServeur();
+		initBDD();
 	}
 
-	private void initServeur() {
+	public Serveur(int port, String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD ) {
+		if (port > 0)
+			this.port = port;
+
+		initBDD(adresseBDD, PortBDD);
+	}
+
+	private void initBDD() {
 		try {
 			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://localhost:3306/Projet", "root", "");
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
+	private void initBDD(String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD) {
+		try {
+			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://"+ adresseBDD +": + " + PortBDD +"/" + nomBDD, adminBDD, mdpBDD);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public int getPort() {
 		return port;
@@ -278,8 +294,7 @@ public class Serveur {
 						if (assoc.getUtilisateur().equals(u)) {
 							ObjectOutputStream out = assoc.getOut();
 							MessageConversation messageMain = new MessageConversation(m.getIdMessage(), m.getCreateur(),
-									m.getTexte(), m.getDate(), m.getEtatGroupe(),
-									isMessageLuParUtilisateur(m, idU));
+									m.getTexte(), m.getDate(), m.getEtatGroupe(), isMessageLuParUtilisateur(m, idU));
 							MessageMessageConversation mA = new MessageMessageConversation(idTicket, nomGroupe,
 									messageMain);
 							out.writeObject(mA);
