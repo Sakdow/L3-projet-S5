@@ -99,17 +99,7 @@ public class Client extends Observable {
 			MessageConversation messConv) {
 		for (Ticket t : tickets.get(groupe)) {
 			if (t.equals(ticket)) {
-				if (t.getFilDiscussion().getEnsembleMessage().contains(messConv))
-					for (MessageConversation m : t.getFilDiscussion().getEnsembleMessage()) {
-						if (m.equals(messConv)) {
-                                                        m.setIdMessage(messConv.getIdMessage());
-							m.setEtatGroupe(messConv.getEtatGroupe());
-							m.setLuParUtilisateur(messConv.isLuParUtilisateur());
-						}
-					}
-				else {
-					t.getFilDiscussion().ajouterMessage(messConv);
-				}
+				t.ajouterMessage(messConv);
 				return true;
 			}
 		}
@@ -149,7 +139,6 @@ public class Client extends Observable {
 				listeTicket.add(ticket);
 			}
 		} else {
-			System.out.println("Nouveau ticket : " + ticket.getNom());
 			List<Ticket> listeTicket = new LinkedList<>();
 			listeTicket.add(ticket);
 			tickets.put(groupe, listeTicket);
@@ -164,8 +153,6 @@ public class Client extends Observable {
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
-                
-                System.out.println(ticketsRecu.isEmpty());
                 
 		setChanged();
 		notifyObservers();

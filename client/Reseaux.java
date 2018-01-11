@@ -81,14 +81,9 @@ public class Reseaux {
 		try {
 
 			Object objetRecu = in.readObject();
-			Message messRecu;
-			if (objetRecu instanceof MessageTicket) {
-				messRecu = (MessageTicket) objetRecu;
-			} else if (objetRecu instanceof MessageGroupe) {
-				messRecu = (MessageGroupe) objetRecu;
-			} else {
-				messRecu = (MessageMessageConversation) objetRecu;
-			}
+                        
+			Message messRecu = (Message) objetRecu;
+                        
 			return messRecu;
 		} catch (UnknownHostException e) {
 

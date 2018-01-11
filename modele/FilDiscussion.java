@@ -11,26 +11,43 @@ public class FilDiscussion implements Serializable {
 	public FilDiscussion(MessageConversation premierMessage) {
 		super();
 		if (premierMessage != null)
-			this.ajouterMessage(premierMessage);
+			this.ajouterOuModifierMessage(premierMessage);
 	}
 
-	public void ajouterMessage(MessageConversation message) {
-		ensembleMessage.add(message);
+	public void ajouterOuModifierMessage(MessageConversation message) {
+		boolean present = false;
+		for (MessageConversation m : ensembleMessage) {
+			if (m.equals(message)) {
+				present = true;
+			}
+		}
+
+		if (present) {
+			for (MessageConversation m : ensembleMessage) {
+				if (m.equals(message)) {
+					m.setEtatGroupe(message.getEtatGroupe());
+					m.setIdMessage(message.getIdMessage());
+					m.setLuParUtilisateur(message.isLuParUtilisateur());
+				}
+			}
+		} else {
+			ensembleMessage.add(message);
+		}
 	}
 
 	public int getNombreMessage() {
 		return ensembleMessage.size();
 	}
-        
-        public int getNombreMessageNonLu(){
-            int nombreMessageNonLu = 0;
-            for(MessageConversation m : ensembleMessage){
-                if(m.isLuParUtilisateur() == false){
-                    nombreMessageNonLu++;
-                }
-            }
-            return nombreMessageNonLu;
-        }
+
+	public int getNombreMessageNonLu() {
+		int nombreMessageNonLu = 0;
+		for (MessageConversation m : ensembleMessage) {
+			if (!m.isLuParUtilisateur()) {
+				nombreMessageNonLu++;
+			}
+		}
+		return nombreMessageNonLu;
+	}
 
 	public NavigableSet<MessageConversation> getEnsembleMessage() {
 		return ensembleMessage;
@@ -53,7 +70,7 @@ public class FilDiscussion implements Serializable {
 
 		if (this.ensembleMessage.size() != other.ensembleMessage.size())
 			return false;
-		
+
 		return this.ensembleMessage.containsAll(other.ensembleMessage);
 	}
 
