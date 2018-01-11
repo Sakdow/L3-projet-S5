@@ -97,9 +97,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             }
         }
         this.validate();
-    }
-    
-    
+    }   
 
     public class LineWrapCellRenderer extends JTextArea implements TableCellRenderer {
 
@@ -169,20 +167,31 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             int nbNonLu = 0;              
             if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Ticket.class)){
                 Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
-                NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
-                //Pour chaque message, on regarde s'il a été lu
-                if(ensembleMessage != null){
-                    for(MessageConversation mess : ensembleMessage){
-                        if(!mess.isLuParUtilisateur()){
-                            nbNonLu ++;
-                        }
-                    }                               
-                    if(nbNonLu > 0){
-                        this.setText(value.toString() + " (" + nbNonLu + ") " );
-                        //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
-                        nbNonLu = 0;
-                    }                    
-                }                  
+                if(tic.getIdTicket() != -1){
+                    NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
+                    //Pour chaque message, on regarde s'il a été lu
+                    if(ensembleMessage != null){
+                        for(MessageConversation mess : ensembleMessage){
+                            if(!mess.isLuParUtilisateur()){
+                                nbNonLu ++;
+                            }
+                        }                               
+                        if(nbNonLu > 0){
+                            this.setText(value.toString() + " (" + nbNonLu + ") " );
+                            //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                            nbNonLu = 0;
+                        }                    
+                    }
+                }
+                //si c'est un groupe :
+                /*else {
+                   if(tic.getIdTicket() == -1){
+                       if(tree.equals(ticketsCreesTree)){
+                           //client.getNombreMessageGroupeNonLu(client.getTicketsCree(), tic.getNom());
+                       }
+                   } 
+                }*/
+                                  
             }          
             
         return this;
@@ -259,6 +268,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         getContentPane().add(decoButton, gridBagConstraints);
 
         ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
+        ticketsAllTree.setCellRenderer(new MyTreeCellRender());
         ticketsAllTree.setRootVisible(false);
         ticketsAllTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -270,6 +280,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Tous", jScrollPane5);
 
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
+        ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
         ticketsCreesTree.setRootVisible(false);
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -281,6 +292,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Créés", jScrollPane1);
 
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
+        ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
         ticketsRecusTree.setRootVisible(false);
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -555,13 +567,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
             //Racine
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets reçus", null, null, null));
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-2, "Tickets reçus", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];
             int index = 0;
             //Création des noeuds des groupes
             Set<Groupe> groupes = ticketsRecu.keySet();
             for(Groupe gr : groupes){
-                treeNode[index] = new DefaultMutableTreeNode(new Ticket(0, gr.getIdGroupe(), null, null, null));
+                treeNode[index] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
                 List<Ticket> tickets = ticketsRecu.get(gr);
                 //Création des noeuds des tickets pour chaque groupe
                 for(Ticket tk : tickets){
@@ -573,8 +585,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }
-            ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
+            }            
             return root;
         }
         //si le client n'est pas initialisé
@@ -586,13 +597,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsCree = client.getTicketsCree();
             //Racine
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(0, "Tickets crées", null, null, null));
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-2, "Tickets crées", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[100];
             int index = 0;
             //Création des noeuds des groupes
             Set<Groupe> groupes = ticketsCree.keySet();
             for(Groupe gr : groupes){
-                treeNode[index] = new DefaultMutableTreeNode(new Ticket(0, gr.getIdGroupe(), null, null, null));
+                treeNode[index] = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
                 List<Ticket> tickets = ticketsCree.get(gr);
                 //Création des noeuds des tickets pour chaque groupe
                 for(Ticket tk : tickets){
@@ -604,8 +615,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On relie chaque noeud de groupe a la racine
             for(int i = 0; i < index ; i++){
                 root.add(treeNode[i]);
-            }
-            ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
+            }            
             return root;
             }
         //si le client n'est pas initialisé
@@ -616,7 +626,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         if(client != null){
             Map<Groupe, List<Ticket>> ticketsTous = client.getTicketsTous();            
             //Racine
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-1, "Tickets", null, null, null));
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-2, "Tickets", null, null, null));
             DefaultMutableTreeNode[] treeNode = new DefaultMutableTreeNode[300];
             int indexGr = 0;            
             //Création des noeuds des groupes
@@ -637,8 +647,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             for(int i = 0; i < indexGr ; i++){
                 if(treeNode[i] != null)
                     root.add(treeNode[i]);
-            }
-            ticketsAllTree.setCellRenderer(new MyTreeCellRender());
+            }            
             return root;
        }
        //si le client n'est pas initialisé        

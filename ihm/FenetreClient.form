@@ -98,7 +98,7 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsAllTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="ticketsAllTree.setCellRenderer(new MyTreeCellRender());">
                   <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelAll())" type="code"/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
@@ -125,7 +125,7 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsCreesTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="ticketsCreesTree.setCellRenderer(new MyTreeCellRender());">
                   <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelCrees())" type="code"/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
@@ -152,7 +152,7 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsRecusTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="ticketsRecusTree.setCellRenderer(new MyTreeCellRender());">
                   <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelRecus())" type="code"/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
