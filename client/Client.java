@@ -179,7 +179,11 @@ public class Client extends Observable {
         
         public Map<Groupe, List<Ticket>> getTicketsTous(){
             Map<Groupe, List<Ticket>> ticketsTous = new TreeMap<>();
-            ticketsTous.putAll(ticketsRecu);
+            for(Groupe gr : ticketsRecu.keySet()){
+                for(Ticket tk : ticketsRecu.get(gr)){
+                    ajouterTicketMap(ticketsTous,tk,gr);
+                }
+            }
             for(Groupe gr : ticketsCree.keySet()){
                 for(Ticket tk : ticketsCree.get(gr)){
                     ajouterTicketMap(ticketsTous,tk,gr);
