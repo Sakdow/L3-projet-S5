@@ -119,7 +119,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         String mdp = new String(passwordField.getPassword());
         int port = 8090;
         try {
-            Properties prop = Configuration.load("../Configuration/config.txt");
+            Properties prop = Configuration.load("src/configuration/config.txt");
             port = Integer.parseInt(prop.getProperty("port", "8090"));
         } catch (IOException ex) {
             Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
