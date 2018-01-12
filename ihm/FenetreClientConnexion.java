@@ -8,6 +8,9 @@ package ihm;
 import client.Client;
 import client.Reseaux;
 import client.ThreadEcoute;
+import configuration.Configuration;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -42,10 +45,6 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         passwordLabel = new javax.swing.JLabel();
         usernameLabel1 = new javax.swing.JLabel();
-        ipLabel = new javax.swing.JLabel();
-        ipField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        portField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Connexion");
@@ -110,88 +109,33 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(11, 180, 0, 0);
         getContentPane().add(usernameLabel1, gridBagConstraints);
 
-        ipLabel.setText("Adresse IP serveur");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 150, 0, 0);
-        getContentPane().add(ipLabel, gridBagConstraints);
-
-        ipField.setText("77.194.181.122");
-        ipField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ipFieldActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 94;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 110, 0, 0);
-        getContentPane().add(ipField, gridBagConstraints);
-
-        jLabel1.setText("Port");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 180, 0, 0);
-        getContentPane().add(jLabel1, gridBagConstraints);
-
-        portField.setText("8090");
-        portField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portFieldActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.ipadx = 104;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 110, 0, 0);
-        getContentPane().add(portField, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        String ip = ipField.getText();
-        int port = Integer.parseInt(portField.getText());        
-        if(port == 0){
-            //default
-            port = 8090;
+        String ip = "localhost";
+        int port = 8090;
+        try {
+            Properties prop = Configuration.load("../Configuration/config.txt");
+            ip = prop.getProperty("ip","localhost");
+            port = Integer.parseInt(prop.getProperty("port", "8090"));
+        } catch (IOException ex) {
+            Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(!ip.isEmpty()){
-           Reseaux reseau = new Reseaux(ip, port);
-           String id = usernameTextField.getText();
-           String mdp = new String(passwordField.getPassword());
-           MessageReponseConnexion messReponse = reseau.connexionServeur(id, mdp);
-           if(messReponse.getAccepte()){
-               Client client = new Client(messReponse.getUtilisateur(), reseau, mdp);
-               ThreadEcoute thread = new ThreadEcoute(reseau, client);
-               fenetre = new FenetreClient(client, thread);
-               fenetre.setVisible(true);
-               this.dispose();
-           } 
-        }        
-        else {
+
+        String id = usernameTextField.getText();
+        String mdp = new String(passwordField.getPassword());
+        Client client = Client.lancer(ip, port, id, mdp);
+        if(client != null){
+            ThreadEcoute thread = new ThreadEcoute(client);
+            fenetre = new FenetreClient(client, thread);
+            fenetre.setVisible(true);
+            this.dispose();
+        } else {
             JOptionPane.showMessageDialog(null, "Informations incorrectes");
-        }
+        }                
+        
     }//GEN-LAST:event_connexionButtonActionPerformed
-
-    private void ipFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ipFieldActionPerformed
-
-    private void portFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_portFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -208,12 +152,8 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connexionButton;
-    private javax.swing.JTextField ipField;
-    private javax.swing.JLabel ipLabel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
-    private javax.swing.JTextField portField;
     private javax.swing.JLabel titreLabel;
     private javax.swing.JLabel usernameLabel1;
     private javax.swing.JTextField usernameTextField;
