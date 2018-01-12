@@ -7,18 +7,16 @@ import message.MessageTicket;
 
 public class ThreadEcoute extends Thread {
 
-	private Reseaux reseaux;
 	private Client client;
 
-	public ThreadEcoute(Reseaux reseaux, Client client) {
+	public ThreadEcoute(Client client) {
 		super();
-		this.reseaux = reseaux;
 		this.client = client;
 	}
 
 	public void run() {
 		while (!this.isInterrupted()) {
-			Message messageRecu = reseaux.ecoute();
+			Message messageRecu = client.getReseaux().ecoute();
 			if (messageRecu != null) {
 				if (messageRecu instanceof MessageTicket) {
                                         
@@ -41,9 +39,9 @@ public class ThreadEcoute extends Thread {
 				}
 			} else {
                             if(!this.isInterrupted()){
-                                Message messageConnexion = reseaux.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+                                Message messageConnexion = client.getReseaux().connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
                                 while(!this.isInterrupted() && messageConnexion == null ){
-                                    messageConnexion = reseaux.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+                                    messageConnexion = client.getReseaux().connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
                                 }
                                 client.renvoieMessageNonRecuParServeur();
                             }
