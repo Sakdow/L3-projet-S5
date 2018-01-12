@@ -128,6 +128,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         boolean lance = serveur.lancer(id, mdp);
         if(lance){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
+            fenetre.setVisible(true);
             this.dispose();
         }
         else {

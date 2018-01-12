@@ -12,6 +12,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -546,7 +550,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             if(lu){
                 estLu = "(Lu)";
             }
-            ligne[2] = mess.getDate().toString() + " " + estLu;
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+            //String date = sdf.format(mess.getDate());
+            Timestamp timeStampDate = new Timestamp(mess.getDate().getTime());            
+            String laDate = timeStampDate.toLocalDateTime().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy hh:mm", Locale.FRENCH));
+            ligne[2] = laDate + " " + estLu;
             ligne[3] = mess.getEtatGroupe().toString();
             ligne[4] = mess;
             tableModele.addRow(ligne);
@@ -565,8 +573,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private DefaultMutableTreeNode getArbreModelRecus(){
         //PARTIE TICKETS RECUS
         if(client != null){
-            Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();
-            System.out.print(ticketsRecu);
+            Map<Groupe, List<Ticket>> ticketsRecu = client.getTicketsRecu();            
             //Racine
             DefaultMutableTreeNode root = new DefaultMutableTreeNode(new Ticket(-2, "Tickets reçus", null, null, null));
             DefaultMutableTreeNode groupeNode;
