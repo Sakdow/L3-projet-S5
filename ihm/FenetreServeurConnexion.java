@@ -33,6 +33,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         titreLabel = new javax.swing.JLabel();
         usernameTextField = new javax.swing.JTextField();
@@ -46,12 +47,26 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Connexion serveur");
         setMinimumSize(new java.awt.Dimension(300, 300));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         titreLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         titreLabel.setText("Connexion");
-        getContentPane().add(titreLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, 30));
-        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 190, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.ipady = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 150, 0, 0);
+        getContentPane().add(titreLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.ipadx = 184;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 110, 0, 100);
+        getContentPane().add(usernameTextField, gridBagConstraints);
 
         connexionButton.setText("Connexion");
         connexionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -59,29 +74,70 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
                 connexionButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(connexionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
-        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 190, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 170, 17, 0);
+        getContentPane().add(connexionButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.ipadx = 184;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 110, 0, 100);
+        getContentPane().add(passwordField, gridBagConstraints);
 
         passwordLabel.setText("Mot de passe");
-        getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 180, 0, 0);
+        getContentPane().add(passwordLabel, gridBagConstraints);
 
         usernameLabel1.setText("Login");
-        getContentPane().add(usernameLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 200, 0, 0);
+        getContentPane().add(usernameLabel1, gridBagConstraints);
 
         portLabel.setText("Port");
-        getContentPane().add(portLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 200, 0, 0);
+        getContentPane().add(portLabel, gridBagConstraints);
 
         portField.setText("8090");
-        getContentPane().add(portField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 100, -1));
+        portField.setPreferredSize(new java.awt.Dimension(6, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.ipadx = 124;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(16, 110, 0, 0);
+        getContentPane().add(portField, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        Serveur serveur = new Serveur();
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
         int port = Integer.parseInt(portField.getText());
+        if(port == 0){
+            port = 8090;
+        }
+        Serveur serveur = new Serveur(port);
         boolean lance = serveur.lancer(id, mdp);
         if(lance){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
@@ -98,32 +154,6 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurConnexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurConnexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurConnexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurConnexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

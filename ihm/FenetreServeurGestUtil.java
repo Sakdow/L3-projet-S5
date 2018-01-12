@@ -256,6 +256,9 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         utilSelect = (Utilisateur) listeModeleUtil.get(indSelect);
         //On affiche la liste du nouveau groupe selectionné
         setListeModelGr();
+        //On remplit les champs 
+        modifNomField.setText(utilSelect.getNom());
+        modifPrenomField.setText(utilSelect.getPrenom());
     }//GEN-LAST:event_listeUtilListValueChanged
 
     private void retirerGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerGrButtonActionPerformed
