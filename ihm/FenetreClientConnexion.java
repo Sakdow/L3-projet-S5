@@ -116,7 +116,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         String ip = "localhost";
         int port = 8090;
         try {
-            Properties prop = Configuration.load("../Configuration/config.txt");
+            Properties prop = Configuration.load("../configuration/config.txt");
             ip = prop.getProperty("ip","localhost");
             port = Integer.parseInt(prop.getProperty("port", "8090"));
         } catch (IOException ex) {

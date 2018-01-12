@@ -8,6 +8,11 @@ package ihm;
 import client.Client;
 import client.Reseaux;
 import client.ThreadEcoute;
+import configuration.Configuration;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import message.MessageReponseConnexion;
 import serveur.Serveur;
@@ -41,8 +46,6 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         passwordLabel = new javax.swing.JLabel();
         usernameLabel1 = new javax.swing.JLabel();
-        portLabel = new javax.swing.JLabel();
-        portField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Connexion serveur");
@@ -108,35 +111,19 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(30, 200, 0, 0);
         getContentPane().add(usernameLabel1, gridBagConstraints);
 
-        portLabel.setText("Port");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 200, 0, 0);
-        getContentPane().add(portLabel, gridBagConstraints);
-
-        portField.setText("8090");
-        portField.setPreferredSize(new java.awt.Dimension(6, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 124;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(16, 110, 0, 0);
-        getContentPane().add(portField, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
-        int port = Integer.parseInt(portField.getText());
-        if(port == 0){
-            port = 8090;
-        }
+        int port = 8090;
+        try {
+            Properties prop = Configuration.load("../Configuration/config.txt");
+            port = Integer.parseInt(prop.getProperty("port", "8090"));
+        } catch (IOException ex) {
+            Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        }     
         Serveur serveur = new Serveur(port);
         boolean lance = serveur.lancer(id, mdp);
         if(lance){
@@ -166,8 +153,6 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
     private javax.swing.JButton connexionButton;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
-    private javax.swing.JTextField portField;
-    private javax.swing.JLabel portLabel;
     private javax.swing.JLabel titreLabel;
     private javax.swing.JLabel usernameLabel1;
     private javax.swing.JTextField usernameTextField;
