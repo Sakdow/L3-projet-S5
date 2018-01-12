@@ -447,10 +447,15 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         listeModeleGr.remove(index);
         listeUtilGrList.setModel(listeModeleGr);
         //On supprime l'utilisateur à l'index index car l'ordre est le même
-        listeUtil.remove(index);        
+        listeUtil.remove(index);
+        grModifie = true;
     }//GEN-LAST:event_retirerDuGrButtonActionPerformed
 
     private void listeGroupeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeGroupeListValueChanged
+        //Si le nom dans le champs est different de celui de base, alors le groupe a été modifié
+        if(!modifNomField.getText().equals(groupeSelect)){
+            grModifie = true;
+        }
         //Si un autre groupe était deja selectionné (liste util non vide) et modifications ont eu lieu
         if((groupeSelect != null) && grModifie){
             int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder ?", "Confirm",
@@ -466,6 +471,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         groupeSelect = listeGroupeList.getSelectedValue();        
         //On affiche la liste du nouveau groupe selectionné        
         setListeModelUtil();
+        modifNomField.setText(groupeSelect);
     }//GEN-LAST:event_listeGroupeListValueChanged
     private void lancerModification(){
         String nouvNom = modifNomField.getText();
@@ -490,6 +496,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             listeModeleUtil.addElement(ajoutUtilCombo.getSelectedItem());
             listeUtilGrList.setModel(listeModeleUtil);
             listeUtil.add((Utilisateur) ajoutUtilCombo.getSelectedItem());
+            grModifie = true;
         }
     }//GEN-LAST:event_ajoutUtilGrButtonActionPerformed
 
@@ -511,7 +518,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             if(!listeModeleUtil.contains(ut)){
                 listeModeleUtil.addElement(ut);
                 //On ajoute l'utilisateur à la liste
-                listeUtil.add((Utilisateur) ut);                
+                listeUtil.add((Utilisateur) ut);
+                grModifie = true;                
             }
         }
         listeUtilGrList.setModel(listeModeleUtil); 
