@@ -352,9 +352,14 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
-        if(!listeGr.isEmpty()){
-            String mdp = new String(mdpField.getPassword());            
+        String nom = nomField.getText();
+        String prenom = prenomField.getText();
+        String mdp = new String(mdpField.getPassword());
+        String mdpC = new String(mdpConfirmField.getPassword());
+        //Verifications
+        if(!nom.isEmpty() && !prenom.isEmpty() && !mdp.isEmpty() && mdp.equals(mdpC)){              
             serveur.creerUtilisateur(idField.getText(), nomField.getText(), prenomField.getText(), mdp, listeGr);
+            this.dispose();
         }        
     }//GEN-LAST:event_creerButtonActionPerformed
 
