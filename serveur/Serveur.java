@@ -44,7 +44,7 @@ public class Serveur {
 		initBDD();
 	}
 
-	public Serveur(int port, String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD ) {
+	public Serveur(int port, String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD) {
 		if (port > 0)
 			this.port = port;
 
@@ -61,12 +61,12 @@ public class Serveur {
 
 	private void initBDD(String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD) {
 		try {
-			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://"+ adresseBDD +": + " + PortBDD +"/" + nomBDD, adminBDD, mdpBDD);
+			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://" + adresseBDD + ": + " + PortBDD + "/" + nomBDD, adminBDD,
+					mdpBDD);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	public int getPort() {
 		return port;
@@ -161,7 +161,7 @@ public class Serveur {
 			res = requeteBaseDeDonnees("SELECT idM, texte, dateM, idU FROM message WHERE idT = " + idTicket);
 			for (; res.next();) {
 				MessageConversation m = new MessageConversation(res.getInt("idM"),
-						getUtilisateurFromId(res.getString("idU")), res.getString("texte"), res.getDate("dateM"),
+						getUtilisateurFromId(res.getString("idU")), res.getString("texte"), new Date(res.getTimestamp("dateM").getTime()),
 						EtatMessage.NON_RECU_PAR_TOUS, false);
 				definirEtatMessageConversation(m, idTicket, idUtilisateur);
 				t.ajouterMessage(m);
@@ -427,6 +427,7 @@ public class Serveur {
 						}
 						out.writeObject(new MessageTicket(ticket));
 						out.flush();
+						break;
 					} catch (IOException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -745,45 +746,74 @@ public class Serveur {
 						ObjectOutputStream out = assoc.getOut();
 						out.writeObject(new MessageGroupe(g, false));
 						out.flush();
+						break;
 					}
 				}
 
 			}
 
 			// Modification du groupe dans la bdd
-			requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + nouveauNomGroupe + "')");
+			requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + texteToTexteSQL(nouveauNomGroupe) + "')");
 
 			ResultSet res = requeteBaseDeDonnees(
-					"SELECT idU,idT,createur FROM participer WHERE nomG = '" + nomGroupe + "'");
+					"SELECT idU,idT,createur FROM participer WHERE nomG = '" + texteToTexteSQL(nomGroupe) + "'");
 			for (; res.next();) {
 				String idU = res.getString("idU");
 				int idT = res.getInt("idT");
 				String idCreateur = res.getString("createur");
 				if (idU.equals(idCreateur) || containsUtilisateurById(utilisateurs, idU)) {
-					requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur ) VALUES ('" + idU + "', "
-							+ idT + ", '" + nouveauNomGroupe + "', '" + idCreateur + "')");
+					requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur ) VALUES ('"
+							+ texteToTexteSQL(idU) + "', " + idT + ", '" + texteToTexteSQL(nouveauNomGroupe) + "', '"
+							+ texteToTexteSQL(idCreateur) + "')");
 				}
 			}
 			Groupe nouveauG = new Groupe(nouveauNomGroupe);
 
 			for (Utilisateur u : utilisateurs) {
 				String idU = u.getIdUtilisateur();
-				requeteBaseDeDonnees(
-						"INSERT INTO appartenir (idU, nomG) VALUES ('" + idU + "', '" + nouveauNomGroupe + "')");
+				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + texteToTexteSQL(idU) + "', '"
+						+ texteToTexteSQL(nouveauNomGroupe) + "')");
 				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 					AssocUtilisateurSocket assoc = ite.next();
 					if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
 						ObjectOutputStream out = assoc.getOut();
 						out.writeObject(new MessageGroupe(nouveauG, true));
 						out.flush();
+						List<Ticket> ticketsNouveauGroupe = ticketsGroupeUtilisateur(nouveauNomGroupe, idU);
+						for (Ticket t : ticketsNouveauGroupe) {
+							out.writeObject(new MessageTicket(t));
+							out.flush();
+						}
+						break;
 					}
 				}
 			}
+
+			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG ='" + texteToTexteSQL(nomGroupe) + "'");
 
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private List<Ticket> ticketsGroupeUtilisateur(String idGroupe, String idU) {
+		List<Ticket> listeTickets = new ArrayList<>();
+
+		try {
+			ResultSet res = requeteBaseDeDonnees("SELECT * FROM participer WHERE nomG = '" + texteToTexteSQL(idGroupe)
+					+ "' AND idU = '" + texteToTexteSQL(idU) + "'");
+
+			for (; res.next();) {
+				Ticket t = buildTicket(res.getInt("idT"), res.getString("createur"), res.getString("nomG"),
+						res.getString("idU"));
+				listeTickets.add(t);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listeTickets;
 	}
 
 	private boolean containsUtilisateurById(Collection<? extends Utilisateur> collection, String id) {
@@ -812,19 +842,87 @@ public class Serveur {
 		return utilisateurs;
 	}
 
-	public void modificationUtilisateur(String idU, String nom, String prenom, String mdp, Collection<String> groupe) {
+	public void modificationUtilisateur(String idU, String nom, String prenom, String mdp, Collection<String> groupes) {
 		try {
 			requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '" + mdp
 					+ "'	 WHERE idU = '" + idU + "'");
 
+			ResultSet res = requeteBaseDeDonnees("SELECT idT,createur, nomG FROM participer WHERE idU = '"
+					+ texteToTexteSQL(idU) + "' GROUP BY idT");
+
+			List<Groupe> groupesUt = groupesUtilisateur(idU);
+
 			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 				AssocUtilisateurSocket assoc = ite.next();
-				if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+				if (assoc.getUtilisateur().getIdUtilisateur().equals(idU)) {
 					ObjectOutputStream out = assoc.getOut();
-					out.writeObject(new MessageGroupe(nouveauG, true));
-					out.flush();
+					for (Groupe g : groupesUt) {
+						if (!groupes.contains(g.getIdGroupe())) {
+							out.writeObject(new MessageGroupe(g, false));
+						}
+					}
 				}
 			}
+
+			for (Groupe g : groupesUt) {
+				if (!groupes.contains(g)) {
+					supprimerUtilisateurGroupe(idU, g);
+				}
+			}
+			for (; res.next();) {
+				int idTicket = res.getInt("idT");
+				Set<String> participantsTicket = getParticipantsTickets(idTicket);
+				for (String utilisateur : participantsTicket) {
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().getIdUtilisateur().equals(utilisateur)) {
+							Ticket t = buildTicket(idTicket, res.getString("createur"), res.getString("nomG"),
+									utilisateur);
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject(new MessageTicket(t));
+							out.flush();
+							break;
+						}
+					}
+				}
+			}
+
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void supprimerUtilisateurGroupe(String idU, Groupe g) {
+		try {
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT recevoir.idM FROM recevoir JOIN (SELECT idM FROM message AS B JOIN (SELECT idT FROM participer WHERE nomG = '"
+							+ texteToTexteSQL(g.getIdGroupe())
+							+ "') AS A ON B.idT = A.idT) AS A ON recevoir.idM = A.idM WHERE idU = '"
+							+ texteToTexteSQL(idU) + "' GROUP BY recevoir.idM");
+			for (; res.next();) {
+				requeteBaseDeDonnees("DELETE FROM recevoir WHERE idM = " + res.getInt(1));
+			}
+
+			res = requeteBaseDeDonnees(
+					"SELECT lire.idM FROM recevoir JOIN (SELECT idM FROM message AS B JOIN (SELECT idT FROM participer WHERE nomG = '"
+							+ texteToTexteSQL(g.getIdGroupe())
+							+ "') AS A ON B.idT = A.idT) AS A ON lire.idM = A.idM WHERE idU = '" + texteToTexteSQL(idU)
+							+ "' GROUP BY lire.idM");
+			for (; res.next();) {
+				requeteBaseDeDonnees("DELETE FROM lire WHERE idM = " + res.getInt(1));
+			}
+
+			res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + texteToTexteSQL(g.getIdGroupe())
+					+ "' AND ( idU = '" + idU + "' AND idU != createur GROUP BY idT");
+
+			for (; res.next();) {
+				requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + res.getInt(1) + " AND idU = '"
+						+ texteToTexteSQL(idU) + "'");
+			}
+			requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG ='" + texteToTexteSQL(g.getIdGroupe())
+					+ "' AND idU = '" + texteToTexteSQL(idU) + "'");
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -834,8 +932,12 @@ public class Serveur {
 	public void supprimerUtilisateur(String idUtilisateur) {
 		try {
 			ResultSet res = requeteBaseDeDonnees(
-					"SELECT idT FROM participer WHERE idU = '" + texteToTexteSQL(idUtilisateur) + "' OR createur = '"
-							+ texteToTexteSQL(idUtilisateur) + "' GROUP BY idT");
+					"SELECT nomG FROM appartenir WHERE idU = '" + texteToTexteSQL(idUtilisateur));
+			for (; res.next();) {
+				supprimerUtilisateurGroupe(idUtilisateur, new Groupe(res.getString(1)));
+			}
+
+			requeteBaseDeDonnees("DELETE FROM utilisateur WHERE idU = '" + texteToTexteSQL(idUtilisateur));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -846,7 +948,18 @@ public class Serveur {
 		try {
 			ResultSet res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + nomG + "' GROUP BY idT");
 			for (; res.next();) {
-				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
+				int idTicket = res.getInt(1);
+				Set<String> participantsTicket = getParticipantsTickets(idTicket);
+				for (String utilisateur : participantsTicket) {
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().getIdUtilisateur().equals(utilisateur)) {
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject("");
+						}
+					}
+				}
+				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + idTicket);
 			}
 			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG = '" + nomG + "'");
 		} catch (SQLException e) {
