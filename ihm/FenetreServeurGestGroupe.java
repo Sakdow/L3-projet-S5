@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -467,15 +468,27 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }//GEN-LAST:event_searchAjoutGrUtilFieldKeyReleased
 
     private void supprGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprGrButtonActionPerformed
+        
         int index = listeGroupeList.getSelectedIndex();
-        listeModeleGr.remove(index);
-        listeGroupeList.setModel(listeModeleGr);
-        int response = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ?", "Confirm",
-        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (response == JOptionPane.YES_OPTION) {
-            //On supprime le groupe
-            //TODO
+        if(index != -1){
+            int response = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ?", "Confirm",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                try {
+                    //On supprime le groupe
+                    serveur.supprimerGroupe(groupeSelect);
+                    //Rafraichissement
+                    listeModeleGr.removeAllElements();
+                    setListeModelGr();
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
+        
         
     }//GEN-LAST:event_supprGrButtonActionPerformed
 

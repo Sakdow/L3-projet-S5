@@ -463,12 +463,15 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     }//GEN-LAST:event_searchAjoutGrFieldKeyReleased
 
     private void supprUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprUtilButtonActionPerformed
-        int indUtil = listeUtilList.getSelectedIndex();
-        Utilisateur utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
         //Le serveur supprime
-        serveur.supprimerUtilisateur(utilSelect.getIdUtilisateur());        
-        listeModeleUtil.removeElement(utilSelect);
-        listeUtilList.setModel(listeModeleUtil);              
+        if(utilSelect != null){
+            serveur.supprimerUtilisateur(utilSelect.getIdUtilisateur());        
+            //listeModeleUtil.removeElement(utilSelect);
+            //listeUtilList.setModel(listeModeleUtil);
+            listeModeleGr.removeAllElements();
+            setListeModelUtil();
+        }
+        
     }//GEN-LAST:event_supprUtilButtonActionPerformed
 
     private void listeUtilListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeUtilListValueChanged
@@ -487,6 +490,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         utilModifie = false;
         listeGr.removeAll(listeGr);
         int indSelect = listeUtilList.getSelectedIndex();
+        System.out.println(indSelect);
         utilSelect = (Utilisateur) listeModeleUtil.get(indSelect);
         //On affiche la liste du nouveau groupe selectionné
         setListeModelGr();
