@@ -435,7 +435,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             @Override
             public void windowClosing(WindowEvent e) {
                 int confirm = JOptionPane.showOptionDialog(
-                    null, "Are You Sure to Close Application?",
+                    null, "Voulez-vous vraiment quitter ?",
                     "Exit Confirmation", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (confirm == 0) {

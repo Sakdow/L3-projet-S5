@@ -5,14 +5,19 @@
  */
 package ihm;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import modele.Groupe;
 import modele.Utilisateur;
 import serveur.Serveur;
@@ -33,6 +38,22 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         this.serveur = serveur;
         listeGr = new ArrayList<>();
         initComponents();
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {               
+                    int confirm = JOptionPane.showOptionDialog(
+                     null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+                     "Confirmation", JOptionPane.YES_NO_OPTION, 
+                     JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }            
+            }
+        };
+        this.addWindowListener(exitListener);
     }
 
     /**
@@ -163,7 +184,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(30, 2, 0, 0);
         getContentPane().add(jLabel2, gridBagConstraints);
 
-        searchAjoutGrField.setText("search");
+        searchAjoutGrField.setToolTipText("Recherche");
         searchAjoutGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchAjoutGrFieldKeyReleased(evt);
@@ -226,7 +247,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(35, 220, 0, 0);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
-        searchSupprGrField.setText("search");
+        searchSupprGrField.setToolTipText("Recherche");
         searchSupprGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchSupprGrFieldKeyReleased(evt);
@@ -338,7 +359,16 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
     }//GEN-LAST:event_creerButtonActionPerformed
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
-        this.dispose();
+        int confirm = JOptionPane.showOptionDialog(
+        null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+        "Confirmation", JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (confirm == 0) {
+            this.dispose();
+        }
+        else {
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_annulerButtonActionPerformed
 
     private void searchSupprGrFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchSupprGrFieldKeyReleased

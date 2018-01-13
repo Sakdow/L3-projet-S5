@@ -117,7 +117,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="searchAjoutGrField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="search"/>
+        <Property name="toolTipText" type="java.lang.String" value="Recherche"/>
       </Properties>
       <Events>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="searchAjoutGrFieldKeyReleased"/>
@@ -184,7 +184,7 @@
     </Container>
     <Component class="javax.swing.JTextField" name="searchSupprGrField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="search"/>
+        <Property name="toolTipText" type="java.lang.String" value="Recherche"/>
       </Properties>
       <Events>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="searchSupprGrFieldKeyReleased"/>

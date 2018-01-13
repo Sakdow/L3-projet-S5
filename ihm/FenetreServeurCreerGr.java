@@ -5,6 +5,9 @@
  */
 package ihm;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +17,10 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import modele.Groupe;
 import modele.Utilisateur;
@@ -36,6 +41,22 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     public FenetreServeurCreerGr(Serveur serveur) {
         this.serveur = serveur;
         initComponents();
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {               
+                    int confirm = JOptionPane.showOptionDialog(
+                     null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+                     "Confirmation", JOptionPane.YES_NO_OPTION, 
+                     JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }            
+            }
+        };
+        this.addWindowListener(exitListener);
     }
 
     /**
@@ -100,7 +121,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(70, 20, 0, 0);
         getContentPane().add(ajouterUtilLabel, gridBagConstraints);
 
-        searchUtilField.setText("search");
+        searchUtilField.setToolTipText("Recherche");
+        searchUtilField.setName(""); // NOI18N
         searchUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchUtilFieldKeyReleased(evt);
@@ -125,7 +147,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(16, 20, 0, 0);
         getContentPane().add(ajouterGroupeLabel, gridBagConstraints);
 
-        searchAjoutGrField.setText("search");
+        searchAjoutGrField.setToolTipText("Recherche");
         searchAjoutGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchAjoutGrFieldKeyReleased(evt);
@@ -168,7 +190,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 141, 0, 0);
         getContentPane().add(supprUtilLabel, gridBagConstraints);
 
-        searchSupprUtilField.setText("search");
+        searchSupprUtilField.setToolTipText("Recherche");
         searchSupprUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchSupprUtilFieldKeyReleased(evt);
@@ -230,11 +252,6 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboUtilModele = new DefaultComboBoxModel();
         setComboUtilModel();
-        ajoutUtilCombo.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                ajoutUtilComboKeyTyped(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 7;
@@ -320,7 +337,17 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
-        this.dispose();
+        int confirm = JOptionPane.showOptionDialog(
+        null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+        "Confirmation", JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (confirm == 0) {
+            this.dispose();
+        }
+        else {
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
+        
     }//GEN-LAST:event_annulerButtonActionPerformed
 
     private void ajouterUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterUtilButtonActionPerformed
@@ -384,11 +411,6 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         }
         serveur.creerGroupe(nomGrField.getText(), listUtil);
     }//GEN-LAST:event_creerButtonActionPerformed
-
-    private void ajoutUtilComboKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ajoutUtilComboKeyTyped
-        String text = (String) ajoutUtilCombo.getSelectedItem();        
-        searchCombo(text, ajoutUtilCombo);
-    }//GEN-LAST:event_ajoutUtilComboKeyTyped
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -430,23 +452,25 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     }
     
     private void setComboGrModel(){
-        
-        Set<String> groupes = serveur.getGroupes();
-        for(String gr : groupes){
-            comboGrModele.addElement(gr);
-        }
-        ajoutGrCombo.setModel(comboGrModele);        
+        if(serveur != null){
+            Set<String> groupes = serveur.getGroupes();
+            for(String gr : groupes){
+                comboGrModele.addElement(gr);
+            }
+            ajoutGrCombo.setModel(comboGrModele);
+        }                
     }
     
     private void setComboUtilModel(){
         
-        Set<Utilisateur> utils = serveur.getUtilisateurs();
-        for(Utilisateur ut : utils){
-            comboUtilModele.addElement(ut);
-        }
-        ajoutUtilCombo.setModel(comboUtilModele);        
-    }
-        
+        if(serveur != null){
+            Set<Utilisateur> utils = serveur.getUtilisateurs();
+            for(Utilisateur ut : utils){
+                comboUtilModele.addElement(ut);
+            }
+            ajoutUtilCombo.setModel(comboUtilModele); 
+        }        
+    }       
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ajoutGrCombo;

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -147,7 +148,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(6, 209, 0, 10);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
-        searchGrField.setText("search");
+        searchGrField.setToolTipText("Recherche");
+        searchGrField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchGrFieldActionPerformed(evt);
+            }
+        });
         searchGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchGrFieldKeyReleased(evt);
@@ -261,7 +267,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 269, 0, 0);
         getContentPane().add(supprDuGroupeLabel, gridBagConstraints);
 
-        searchRetirerDuGrField.setText("search");
+        searchRetirerDuGrField.setToolTipText("Recherche");
         searchRetirerDuGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchRetirerDuGrFieldKeyReleased(evt);
@@ -277,7 +283,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 209, 0, 0);
         getContentPane().add(searchRetirerDuGrField, gridBagConstraints);
 
-        searchAjoutUtilGrField.setText("search");
+        searchAjoutUtilGrField.setToolTipText("Recherche");
         searchAjoutUtilGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchAjoutUtilGrFieldKeyReleased(evt);
@@ -293,7 +299,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 209, 0, 0);
         getContentPane().add(searchAjoutUtilGrField, gridBagConstraints);
 
-        searchAjoutGrUtilField.setText("search");
+        searchAjoutGrUtilField.setToolTipText("Recherche");
         searchAjoutGrUtilField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchAjoutGrUtilFieldKeyReleased(evt);
@@ -405,7 +411,16 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
-        this.dispose();
+        int confirm = JOptionPane.showOptionDialog(
+        null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+        "Confirmation", JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (confirm == 0) {
+            this.dispose();
+        }
+        else {
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_annulerButtonActionPerformed
 
     private void searchGrFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchGrFieldKeyReleased
@@ -537,6 +552,10 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         }
         //sinon on n'envoie rien au serveur
     }//GEN-LAST:event_accepterButtonActionPerformed
+
+    private void searchGrFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGrFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchGrFieldActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list

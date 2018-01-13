@@ -5,6 +5,9 @@
  */
 package ihm;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -39,6 +43,22 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         this.serveur = serveur;
         utilSelect = null;
         initComponents();
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {               
+                    int confirm = JOptionPane.showOptionDialog(
+                     null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+                     "Confirmation", JOptionPane.YES_NO_OPTION, 
+                     JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }            
+            }
+        };
+        this.addWindowListener(exitListener);
     }
 
     /**
@@ -401,7 +421,16 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
-        this.dispose();
+        int confirm = JOptionPane.showOptionDialog(
+        null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+        "Confirmation", JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (confirm == 0) {
+            this.dispose();
+        }
+        else {
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_annulerButtonActionPerformed
 
     private void searchUtilFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchUtilFieldKeyReleased
