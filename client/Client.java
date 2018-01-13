@@ -87,16 +87,17 @@ public class Client extends Observable {
 
 	public void supprimerGroupe(Groupe groupe) {
 		if (listeGroupe.contains(groupe)) {
-			listeGroupe.remove(groupe);
-			setChanged();
-			notifyObservers();
+                    listeGroupe.remove(groupe);
+                    if(ticketsCree.containsKey(groupe)){
+                        ticketsCree.remove(groupe);
+                    }
+                    if(ticketsRecu.containsKey(groupe)){
+                        ticketsRecu.remove(groupe);
+                    }
+                    setChanged();
+                    notifyObservers();
 		}
-                if(ticketsCree.containsKey(groupe)){
-                    ticketsCree.remove(groupe);
-                }
-                if(ticketsRecu.containsKey(groupe)){
-                    ticketsCree.remove(groupe);
-                }
+
 	}
 
 	@Override
