@@ -35,5 +35,14 @@ class BaseDeDonnees {
 		Statement state = bdd.createStatement();
 		state.executeUpdate(requete);
 	}
+	
+	public void close(){
+		try {
+			bdd.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

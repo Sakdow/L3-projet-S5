@@ -54,7 +54,7 @@ class ThreadConnexion implements Runnable {
 					in.close();
 					s.close();
 				} else {
-					System.out.println("Connexion de " + idUtilisateur +" acceptée");
+					System.out.println("Connexion de " + idUtilisateur +" acceptï¿½e");
 					utilisateursConnectes.add(new AssocUtilisateurSocket(utilisateur, s, out, in));
 					out.writeObject(new MessageReponseConnexion(true, utilisateur));
 					out.flush();
@@ -80,6 +80,7 @@ class ThreadConnexion implements Runnable {
 					}
 
 					Thread t = new Thread(e);
+					serveur.listeThreads.add(t);
 					t.start();
 				}
 			}

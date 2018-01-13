@@ -32,6 +32,7 @@ public class Serveur {
 	private BaseDeDonnees baseDeDonnees;
 	private int port = 12000;
 	private NavigableSet<AssocUtilisateurSocket> utilisateursConnectes = new TreeSet<>();
+	List<Thread> listeThreads = new ArrayList<>();
 
 	public Serveur() {
 		initBDD();
@@ -77,6 +78,7 @@ public class Serveur {
 			if (isConnexionServeurAcceptee(idUtilisateur, mdp)) {
 				System.out.println("Connexion accept�e - Allumage serveur");
 				Thread t = new Thread(new ThreadConnexion(this));
+				listeThreads.add(t);
 				t.start();
 				return true;
 			}
@@ -989,6 +991,11 @@ public class Serveur {
 	}
 	
 	public void deconnecterServeur(){
-		
+		for( AssocUtilisateurSocket assoc : utilisateursConnectes )
+			deconnexionUtilisateur(assoc);
+		baseDeDonnees.close();
+		for( Thread t : listeThreads ){
+			t.interrupt();
+		}
 	}
 }
