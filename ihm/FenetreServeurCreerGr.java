@@ -410,7 +410,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
         if(!nomGrField.getText().equals("") && listeUtil != null)
-            serveur.creerGroupe(nomGrField.getText(), listUtil);
+            serveur.creerGroupe(nomGrField.getText(), listeUtil);
     }//GEN-LAST:event_creerButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
