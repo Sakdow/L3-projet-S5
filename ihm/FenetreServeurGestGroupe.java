@@ -455,6 +455,9 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         //Si le nom dans le champs est different de celui de base, alors le groupe a été modifié
         if(!modifNomField.getText().equals(groupeSelect)){
             grModifie = true;
+            //Mise à jour du nouveau nom eventuel dans la liste
+            int ind = listeGroupeList.getSelectedIndex();
+            listeModeleGr.set(ind, modifNomField.getText());
         }
         //Si un autre groupe était deja selectionné (liste util non vide) et modifications ont eu lieu
         if((groupeSelect != null) && grModifie){
@@ -462,7 +465,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 //verif de doublons et modification
-                lancerModification();
+                lancerModification();                
             }
             //sinon on n'envoie rien au serveur
         }

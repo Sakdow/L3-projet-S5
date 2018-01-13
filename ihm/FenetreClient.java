@@ -163,41 +163,43 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
                 boolean leaf, int row, boolean hasFocus) {
-  
-            super.getTreeCellRendererComponent(
-                    tree, value, sel,
-                    expanded, leaf, row,
-                    hasFocus);
-            //On cherche le nombre de message non lu dans le ticket
-            int nbNonLu = 0;              
-            if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Ticket.class)){
-                Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
-                if(tic.getIdTicket() != -1){
-                    NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
-                    //Pour chaque message, on regarde s'il a été lu
-                    if(ensembleMessage != null){
-                        for(MessageConversation mess : ensembleMessage){
-                            if(!mess.isLuParUtilisateur()){
-                                nbNonLu ++;
-                            }
-                        }                               
-                        if(nbNonLu > 0){
-                            this.setText(value.toString() + " (" + nbNonLu + ") " );
-                            //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
-                            nbNonLu = 0;
-                        }                    
+                if(tree != null && value != null && tree.getRowCount() != 0){
+                    super.getTreeCellRendererComponent(
+                        tree, value, sel,
+                        expanded, leaf, row,
+                        hasFocus);
+                //On cherche le nombre de message non lu dans le ticket
+                int nbNonLu = 0;              
+                if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Ticket.class)){
+                    Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
+                    if(tic.getIdTicket() != -1){
+                        NavigableSet<MessageConversation> ensembleMessage = tic.getFilDiscussion().getEnsembleMessage();
+                        //Pour chaque message, on regarde s'il a été lu
+                        if(ensembleMessage != null){
+                            for(MessageConversation mess : ensembleMessage){
+                                if(!mess.isLuParUtilisateur()){
+                                    nbNonLu ++;
+                                }
+                            }                               
+                            if(nbNonLu > 0){
+                                this.setText(value.toString() + " (" + nbNonLu + ") " );
+                                //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                                nbNonLu = 0;
+                            }                    
+                        }
                     }
+                    //si c'est un groupe :
+                    /*else {
+                       if(tic.getIdTicket() == -1){
+                           if(tree.equals(ticketsCreesTree)){
+                               //client.getNombreMessageGroupeNonLu(client.getTicketsCree(), tic.getNom());
+                           }
+                       } 
+                    }*/
+
                 }
-                //si c'est un groupe :
-                /*else {
-                   if(tic.getIdTicket() == -1){
-                       if(tree.equals(ticketsCreesTree)){
-                           //client.getNombreMessageGroupeNonLu(client.getTicketsCree(), tic.getNom());
-                       }
-                   } 
-                }*/
-                                  
-            }          
+            }
+                      
             
         return this;
         }
