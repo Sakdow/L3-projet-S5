@@ -97,7 +97,7 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="ticketsAllTree">
               <Properties>
-                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="ticketsAllTree.setCellRenderer(new MyTreeCellRender());">
+                <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="//ticketsAllTree.setCellRenderer(new MyTreeCellRender());">
                   <Connection code="new javax.swing.tree.DefaultTreeModel(getArbreModelAll())" type="code"/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
