@@ -209,6 +209,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         listeModele = new DefaultListModel();
+        listeGroupesList.setModel(listeModele);
         jScrollPane1.setViewportView(listeGroupesList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -284,6 +285,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         getContentPane().add(annulerButton, gridBagConstraints);
 
         ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboModel = new DefaultComboBoxModel();
         setComboModel();
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

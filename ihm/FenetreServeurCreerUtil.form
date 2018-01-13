@@ -176,7 +176,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="listeModele = new DefaultListModel();"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="listeModele = new DefaultListModel();&#xa;listeGroupesList.setModel(listeModele);"/>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
@@ -246,7 +246,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="setComboModel();"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="comboModel = new DefaultComboBoxModel();&#xa;setComboModel();"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
       <Constraints>
