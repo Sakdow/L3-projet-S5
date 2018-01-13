@@ -353,8 +353,6 @@ public class Serveur {
 			e.printStackTrace();
 		}
 		utilisateursConnectes.remove(assoc);
-		for (AssocUtilisateurSocket a : utilisateursConnectes) {
-		}
 	}
 
 	void nouveauTicket(Ticket ticket) {
@@ -944,7 +942,7 @@ public class Serveur {
 		}
 	}
 
-	public void supprimerGroupe(String nomG) throws SQLException {
+	public void supprimerGroupe(String nomG) throws SQLException, IOException {
 		try {
 			ResultSet res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + nomG + "' GROUP BY idT");
 			for (; res.next();) {
