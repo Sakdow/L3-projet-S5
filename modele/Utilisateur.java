@@ -45,5 +45,9 @@ public class Utilisateur implements Serializable {
 		}
 		return false;
 	}
+        
+        public String toString() {
+		return idUtilisateur;
+	}
 
 }
