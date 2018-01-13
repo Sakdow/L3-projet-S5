@@ -34,12 +34,14 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     private DefaultListModel listeModele;
     private DefaultComboBoxModel comboUtilModele;
     private DefaultComboBoxModel comboGrModele;
+    private List<Utilisateur> listeUtil;
     private Serveur serveur;
     /**
      * Creates new form FenetreServeurCreerGr
      */
     public FenetreServeurCreerGr(Serveur serveur) {
         this.serveur = serveur;
+        listeUtil = new ArrayList<>();
         initComponents();
         WindowListener exitListener = new WindowAdapter() {
             @Override
@@ -354,6 +356,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         
         if(!listeModele.contains(ajoutUtilCombo.getSelectedItem())){
             listeModele.addElement(ajoutUtilCombo.getSelectedItem());
+            listeUtil.add((Utilisateur) ajoutUtilCombo.getSelectedItem());
             listeUtilList.setModel(listeModele);
         }
         
@@ -390,6 +393,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
                 //Verif de doublons
                 if(!listeModele.contains(ut)){
                     listeModele.addElement(ut);
+                    listeUtil.add(ut);
                 }
             }
             //On met à jour la liste avec son modele
@@ -405,11 +409,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
     }//GEN-LAST:event_supprimerUtilButtonActionPerformed
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
-        List<Utilisateur> listUtil = new ArrayList();
-        for(int i = 0; i < listeModele.size(); i++){
-            listUtil.add((Utilisateur) listeModele.get(i));
-        }
-        serveur.creerGroupe(nomGrField.getText(), listUtil);
+        if(!nomGrField.getText().equals("") && listeUtil != null)
+            serveur.creerGroupe(nomGrField.getText(), listUtil);
     }//GEN-LAST:event_creerButtonActionPerformed
     public void searchJList(String text, JList liste, JLabel label) {
         
