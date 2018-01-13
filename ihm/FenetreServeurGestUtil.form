@@ -329,9 +329,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JPasswordField" name="modifMdpField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jPasswordField1"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="5" gridY="20" gridWidth="13" gridHeight="2" fill="0" ipadX="114" ipadY="0" insetsTop="10" insetsLeft="9" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
@@ -339,9 +336,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JPasswordField" name="modifMdpConfirmField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jPasswordField2"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="5" gridY="23" gridWidth="13" gridHeight="2" fill="0" ipadX="114" ipadY="0" insetsTop="7" insetsLeft="9" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>

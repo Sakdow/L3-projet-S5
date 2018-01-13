@@ -394,8 +394,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 250, 0, 0);
         getContentPane().add(ajoutGrCombo, gridBagConstraints);
-
-        modifMdpField.setText("jPasswordField1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 20;
@@ -405,8 +403,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 9, 0, 0);
         getContentPane().add(modifMdpField, gridBagConstraints);
-
-        modifMdpConfirmField.setText("jPasswordField2");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 23;

@@ -325,8 +325,6 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 220, 0, 0);
         getContentPane().add(searchSupprGrLabel, gridBagConstraints);
-
-        mdpField.setText("jPasswordField1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 8;
@@ -336,8 +334,6 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 9, 0, 0);
         getContentPane().add(mdpField, gridBagConstraints);
-
-        mdpConfirmField.setText("jPasswordField2");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 10;
@@ -360,7 +356,10 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         if(!nom.isEmpty() && !prenom.isEmpty() && !mdp.isEmpty() && mdp.equals(mdpC)){              
             serveur.creerUtilisateur(idField.getText(), nomField.getText(), prenomField.getText(), mdp, listeGr);
             this.dispose();
-        }        
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Erreur, il manque des champs et / ou les mots de passe ne correspondent pas.");
+        }
     }//GEN-LAST:event_creerButtonActionPerformed
 
     private void annulerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annulerButtonActionPerformed
