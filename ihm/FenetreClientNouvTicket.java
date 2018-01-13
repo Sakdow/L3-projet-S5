@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import modele.EtatMessage;
 import modele.Groupe;
 import modele.MessageConversation;
@@ -154,15 +155,20 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void creerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerButtonActionPerformed
-        String nomTicket = nomTicketField.getText();
-        int indGroupe = groupeComboBox.getSelectedIndex();
-        String message = messageArea.getText();        
-        Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());        
-        Groupe groupe = listeGroupes.get(indGroupe);
         if(client != null){
-            MessageConversation messageConv = new MessageConversation(-1, client.getUtilisateurClient(), message, date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
-            client.creerTicket(groupe, nomTicket, messageConv);
-            this.dispose();
+            String nomTicket = nomTicketField.getText();
+            int indGroupe = groupeComboBox.getSelectedIndex();
+            String message = messageArea.getText();        
+            Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());        
+            Groupe groupe = listeGroupes.get(indGroupe);
+            if(!nomTicket.equals("") && !message.equals("")){
+                MessageConversation messageConv = new MessageConversation(-1, client.getUtilisateurClient(), message, date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
+                client.creerTicket(groupe, nomTicket, messageConv);
+                this.dispose();
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Champs manquants, veuillez les remplir.");
+            }            
         }        
         
     }//GEN-LAST:event_creerButtonActionPerformed

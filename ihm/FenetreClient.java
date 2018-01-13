@@ -11,6 +11,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -26,6 +29,7 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
@@ -408,6 +412,20 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         jScrollPane6.setViewportView(discussionTable2);
         tableModele = new DefaultTableModel();
         setTableModel();
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                    null, "Are You Sure to Close Application?",
+                    "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    System.exit(0);
+                }
+            }
+        };
+        this.addWindowListener(exitListener);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -427,7 +445,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
         //Envoyer le message
-        if(client != null){
+        if(client != null && !saisieDiscuArea.getText().equals("")){
             Date date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());      
             MessageConversation messConv = new MessageConversation(-1, client.getUtilisateurClient(), saisieDiscuArea.getText(), date, EtatMessage.NON_RECU_PAR_LE_SERVEUR, true);
             //Recuperer ticket selectionné dans l'arbre
@@ -468,7 +486,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private void decoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoButtonActionPerformed
         if(client != null){
             thread.stopper(thread);
-            client.getReseaux().deconnexionServeur(client.getUtilisateurClient().getIdUtilisateur());            
+            client.getReseaux().deconnexionServeur(client.getUtilisateurClient().getIdUtilisateur());
+            FenetreClientConnexion fen = new FenetreClientConnexion();
+            fen.setVisible(true);
             this.dispose();  
         }   
         
