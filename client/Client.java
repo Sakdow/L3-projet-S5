@@ -42,7 +42,7 @@ public class Client extends Observable {
                 if(gr != null){
                     for(Ticket tk : ticketsCree.get(gr)){
                         if(tk.getIdTicket() == -1){
-                            reseaux.envoyerMessage(new MessageTicket(tk, true));
+                            reseaux.envoyerMessage(new MessageTicket(tk));
                             setChanged();
                             notifyObservers();
                         } else {
@@ -198,7 +198,7 @@ public class Client extends Observable {
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {
 		Ticket nouveauTicket = new Ticket(-1, nomTicket, utilisateurClient, groupe, message);
 		this.ajouterTicket(nouveauTicket);
-		MessageTicket messageTicket = new MessageTicket(nouveauTicket, true);
+		MessageTicket messageTicket = new MessageTicket(nouveauTicket);
 		reseaux.envoyerMessage(messageTicket);
 	}
 

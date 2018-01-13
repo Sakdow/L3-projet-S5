@@ -8,6 +8,13 @@ public class MessageTicket extends Message {
 	private Ticket ticket;
         private boolean ajouter;
 
+        public MessageTicket(Ticket ticket) {
+		super();
+                this.ticket = ticket;
+                this.ajouter = true;
+                
+	}
+        
 	public MessageTicket(Ticket ticket, boolean ajouter) {
 		super();
                 this.ticket = ticket;
