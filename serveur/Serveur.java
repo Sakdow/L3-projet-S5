@@ -926,8 +926,18 @@ public class Serveur {
 				int idTicket = res.getInt("idT");
 				requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + idTicket + " AND idU = '"
 						+ texteToTexteSQL(idU) + "'");
-				for( String idU :getParticipantsTickets(idTicket) ){
-					buildTicket(idTicket, createur, nomG, idUtilisateur)
+				for( String idUtilisateur :getParticipantsTickets(idTicket) ){
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().getIdUtilisateur().equals(idUtilisateur)) {
+							Ticket t = buildTicket(idTicket, res.getString("createur"), g.getIdGroupe(), idU);
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject(new MessageTicket(t));
+							out.flush();
+							break;
+						}
+					}
+					
 				}
 			}
 			requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG ='" + texteToTexteSQL(g.getIdGroupe())
@@ -935,7 +945,7 @@ public class Serveur {
 			
 			
 
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
