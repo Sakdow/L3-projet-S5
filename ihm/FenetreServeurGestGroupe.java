@@ -40,6 +40,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private DefaultComboBoxModel comboUtilModele;
     private List<Utilisateur> listeUtil;
     private String groupeSelect;
+    private int indexGrSelect;
     private boolean grModifie;
     private Serveur serveur;
     /**
@@ -169,11 +170,6 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
         searchGrField.setToolTipText("Recherche");
-        searchGrField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchGrFieldActionPerformed(evt);
-            }
-        });
         searchGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchGrFieldKeyReleased(evt);
@@ -212,6 +208,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(15, 50, 0, 0);
         getContentPane().add(modifNomLabel, gridBagConstraints);
+
+        modifNomField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                modifNomFieldKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 31;
@@ -487,25 +489,21 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }//GEN-LAST:event_retirerDuGrButtonActionPerformed
 
     private void listeGroupeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeGroupeListValueChanged
-        //Si le nom dans le champs est different de celui de base, alors le groupe a été modifié
-        /*if(!modifNomField.getText().equals(groupeSelect)){
-            grModifie = true;
-            //Mise à jour du nouveau nom eventuel dans la liste
-            int ind = listeGroupeList.getSelectedIndex();
-            listeModeleGr.set(ind, modifNomField.getText());
-        }*/
         //Si un autre groupe était deja selectionné (liste util non vide) et modifications ont eu lieu
         if((groupeSelect != null) && grModifie){
             int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder ?", "Confirm",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 //verif de doublons et modification
-                lancerModification();                
+                lancerModification();
+                //Mise à jour du nouveau nom eventuel dans la liste
+                listeModeleGr.set(indexGrSelect, modifNomField.getText());
             }
             //sinon on n'envoie rien au serveur
         }
         clearList();
         grModifie = false;
+        indexGrSelect = listeGroupeList.getSelectedIndex();
         listeUtil.removeAll(listeUtil);
         groupeSelect = listeGroupeList.getSelectedValue();        
         //On affiche la liste du nouveau groupe selectionné        
@@ -515,7 +513,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private void lancerModification(){
         String nouvNom = modifNomField.getText();
         //Verification des doublons pour le nom
-        boolean trouve = false;
+        /*boolean trouve = false;
         int i = 0;
         while(!trouve || i < listeModeleGr.size()){
             if(nouvNom.equals(listeModeleGr.get(i)) && i != listeGroupeList.getSelectedIndex()){
@@ -524,12 +522,11 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
             }
             i++;                        
-        }    
+        }*/    
         //Si aucun doublon
-        if(!trouve){
-            System.out.println("MODIF");
-            serveur.modicationGroupe(groupeSelect, nouvNom, listeUtil); 
-        }
+        if(!nouvNom.equals("")){
+            serveur.modicationGroupe(groupeSelect, nouvNom, listeUtil);
+        }       
     }
     private void ajoutUtilGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajoutUtilGrButtonActionPerformed
         if(!listeModeleUtil.contains(ajoutUtilCombo.getSelectedItem())){
@@ -575,9 +572,11 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         //sinon on n'envoie rien au serveur
     }//GEN-LAST:event_accepterButtonActionPerformed
 
-    private void searchGrFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchGrFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchGrFieldActionPerformed
+    private void modifNomFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifNomFieldKeyTyped
+        if(!modifNomField.getText().equals(groupeSelect)){
+            grModifie = true;
+        }
+    }//GEN-LAST:event_modifNomFieldKeyTyped
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -636,9 +635,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
                 gr = serveur.getGroupeFromNomGroupe(nomGr);
                 listeUtil = gr.getListeUtilisateur();
                 //Ajout de chaque utilisateur dans la JList
-                for(Utilisateur ut : listeUtil){
-                    listeModeleUtil.addElement(ut);
+                if(listeUtil != null && !listeUtil.isEmpty()){
+                   for(Utilisateur ut : listeUtil){
+                        listeModeleUtil.addElement(ut);
+                    } 
                 }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(FenetreServeurGestGroupe.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -42,6 +42,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     public FenetreServeurGestUtil(Serveur serveur) {
         this.serveur = serveur;
         utilSelect = null;
+        listeGr = new ArrayList<>();
         initComponents();
         WindowListener exitListener = new WindowAdapter() {
             @Override
@@ -199,6 +200,12 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(7, 30, 0, 0);
         getContentPane().add(modifNomLabel, gridBagConstraints);
+
+        modifNomField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                modifNomFieldKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 9;
@@ -264,7 +271,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 290, 0, 0);
         getContentPane().add(supprDuGroupeLabel, gridBagConstraints);
 
-        searchSupprGrField.setText("search");
+        searchSupprGrField.setToolTipText("");
         searchSupprGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchSupprGrFieldKeyReleased(evt);
@@ -280,7 +287,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 250, 0, 0);
         getContentPane().add(searchSupprGrField, gridBagConstraints);
 
-        searchAjoutGrField.setText("search");
         searchAjoutGrField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchAjoutGrFieldKeyReleased(evt);
@@ -334,6 +340,12 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
         getContentPane().add(modifPrenomLabel, gridBagConstraints);
+
+        modifPrenomField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                modifPrenomFieldKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 18;
@@ -394,6 +406,12 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 250, 0, 0);
         getContentPane().add(ajoutGrCombo, gridBagConstraints);
+
+        modifMdpField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                modifMdpFieldKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 20;
@@ -454,10 +472,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     }//GEN-LAST:event_supprUtilButtonActionPerformed
 
     private void listeUtilListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeUtilListValueChanged
-        //Si un des champs nom ou prenom est different, il y a eu modification
-        if(!modifNomField.getText().equals(utilSelect.getNom()) || !modifPrenomField.getText().equals(utilSelect.getPrenom())){
-            utilModifie = true;
-        }
+        //Si une modification est en cours
         if((utilSelect != null) && utilModifie){
             int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder les modifications ?", "Confirm",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -468,6 +483,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             }            
         }
         //On affiche les groupes du nouvel user selectionne
+        clearList();
         utilModifie = false;
         listeGr.removeAll(listeGr);
         int indSelect = listeUtilList.getSelectedIndex();
@@ -522,6 +538,25 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             utilModifie = true;
         }
     }//GEN-LAST:event_ajoutGrUtilButtonActionPerformed
+
+    private void modifNomFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifNomFieldKeyTyped
+        if(!modifNomField.getText().equals(utilSelect)){
+            utilModifie = true;
+        }
+    }//GEN-LAST:event_modifNomFieldKeyTyped
+
+    private void modifPrenomFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifPrenomFieldKeyTyped
+        if(!modifPrenomField.getText().equals(utilSelect)){
+            utilModifie = true;
+        }
+    }//GEN-LAST:event_modifPrenomFieldKeyTyped
+
+    private void modifMdpFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifMdpFieldKeyTyped
+        String mdp = new String(modifMdpField.getPassword());
+        if(mdp.equals(utilSelect)){
+            utilModifie = true;
+        }
+    }//GEN-LAST:event_modifMdpFieldKeyTyped
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
@@ -566,6 +601,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         if(indUtil != -1){
             utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
             List<Groupe> groupes = serveur.groupesUtilisateur(utilSelect.getIdUtilisateur());
+            System.out.println(groupes);
             //Ajout de chaque groupe dans la JList
             for(Groupe gr : groupes){
                 listeModeleGr.addElement(gr);
@@ -594,7 +630,11 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             comboGrModele.addElement(gr);
         }
         ajoutGrCombo.setModel(comboGrModele);        
-    }   
+    }
+    private void clearList(){
+        listeModeleGr.removeAllElements();
+        listeGrUtilList.setModel(listeModeleGr);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accepterButton;
