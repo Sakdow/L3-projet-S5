@@ -421,7 +421,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         int size = liste.getModel().getSize();
         // Get all item objects
         for (int i = 0; i < size; i++) {
-            String item = (String) liste.getModel().getElementAt(i);
+            String item = liste.getModel().getElementAt(i).toString();
             if(item.contains(text)) {
             int index = i;
             liste.setSelectedIndex(index);
@@ -442,7 +442,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         
         // Get all item objects
         for (int i = 0; i < size; i++) {
-            String item = (String) box.getModel().getElementAt(i);
+            String item = box.getModel().getElementAt(i).toString();
             if(item.contains(text)) {
             int index = i;
             box.setSelectedIndex(index);

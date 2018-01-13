@@ -6,6 +6,9 @@
 package ihm;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,24 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         this.serveur = serveur;
         listeUtil = new ArrayList();
         groupeSelect = null;
+        grModifie = false;
         initComponents();
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {               
+                    int confirm = JOptionPane.showOptionDialog(
+                     null, "Voulez-vous vraiment annuler (ne pas sauver) ?", 
+                     "Confirmation", JOptionPane.YES_NO_OPTION, 
+                     JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }            
+            }
+        };
+        this.addWindowListener(exitListener);
     }
 
     /**
@@ -459,8 +479,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
     private void retirerDuGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerDuGrButtonActionPerformed
         int index = listeUtilGrList.getSelectedIndex();
-        listeModeleGr.remove(index);
-        listeUtilGrList.setModel(listeModeleGr);
+        listeModeleUtil.remove(index);
+        listeUtilGrList.setModel(listeModeleUtil);
         //On supprime l'utilisateur à l'index index car l'ordre est le même
         listeUtil.remove(index);
         grModifie = true;
@@ -468,12 +488,12 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
     private void listeGroupeListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listeGroupeListValueChanged
         //Si le nom dans le champs est different de celui de base, alors le groupe a été modifié
-        if(!modifNomField.getText().equals(groupeSelect)){
+        /*if(!modifNomField.getText().equals(groupeSelect)){
             grModifie = true;
             //Mise à jour du nouveau nom eventuel dans la liste
             int ind = listeGroupeList.getSelectedIndex();
             listeModeleGr.set(ind, modifNomField.getText());
-        }
+        }*/
         //Si un autre groupe était deja selectionné (liste util non vide) et modifications ont eu lieu
         if((groupeSelect != null) && grModifie){
             int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder ?", "Confirm",
@@ -484,6 +504,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             }
             //sinon on n'envoie rien au serveur
         }
+        clearList();
         grModifie = false;
         listeUtil.removeAll(listeUtil);
         groupeSelect = listeGroupeList.getSelectedValue();        
@@ -497,7 +518,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         boolean trouve = false;
         int i = 0;
         while(!trouve || i < listeModeleGr.size()){
-            if(nouvNom.equals(listeModeleGr.get(i))){
+            if(nouvNom.equals(listeModeleGr.get(i)) && i != listeGroupeList.getSelectedIndex()){
                 trouve = true;
                 i = listeModeleGr.size() + 1;
                 JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
@@ -506,6 +527,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         }    
         //Si aucun doublon
         if(!trouve){
+            System.out.println("MODIF");
             serveur.modicationGroupe(groupeSelect, nouvNom, listeUtil); 
         }
     }
@@ -583,7 +605,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         
         // Get all item objects
         for (int i = 0; i < size; i++) {
-            String item = (String) box.getModel().getElementAt(i);
+            String item = box.getModel().getElementAt(i).toString();
             if(item.contains(text)) {
             int index = i;
             box.setSelectedIndex(index);
@@ -607,7 +629,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }
     
     private void setListeModelUtil(){
-        String nomGr = listeUtilGrList.getSelectedValue();
+        String nomGr = listeGroupeList.getSelectedValue();
         if(nomGr != null){
             Groupe gr = null;
             try {
@@ -642,6 +664,11 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             comboUtilModele.addElement(ut);
         }
         ajoutUtilCombo.setModel(comboUtilModele);        
+    }
+    
+    private void clearList(){
+        listeModeleUtil.removeAllElements();
+        listeUtilGrList.setModel(listeModeleUtil);
     }
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
