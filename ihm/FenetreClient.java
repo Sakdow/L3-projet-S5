@@ -72,9 +72,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
         this.thread = thread;
-        thread.start();                
-        initComponents();
-        this.client.addObserver(this);        
+        this.client.addObserver(this);
+        thread.start();
+        initComponents();        
     }
     
     @Override
@@ -203,17 +203,24 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 //Si le noeud est un groupe
                 if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Groupe.class)){
                     Groupe gr = (Groupe) ((DefaultMutableTreeNode) value).getUserObject();
+                    int nbNonLuGr = 0;
                     if(tree.equals(ticketsCreesTree)){
-                        int nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsCree(), gr);
-                        if(nbNonLuGr > 0){
-                            this.setText(value.toString() + " (" + nbNonLu + ") " );
-                            this.setFont(new Font(Font.SERIF,Font.BOLD,12));
-                            nbNonLuGr = 0;
-                        }
-                        else {
-                            this.setFont(new Font(Font.SERIF,Font.PLAIN,12));
-                        }                        
+                        nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsCree(), gr);
                     }
+                    if(tree.equals(ticketsRecusTree)){
+                        nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsRecu(), gr);
+                    }
+                    if(tree.equals(ticketsAllTree)){
+                        nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsTous(), gr);
+                    }
+                    if(nbNonLuGr > 0){
+                        this.setText(value.toString() + " (" + nbNonLu + ") " );
+                        this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                        nbNonLuGr = 0;
+                    }
+                    else {
+                        this.setFont(new Font(Font.SERIF,Font.PLAIN,12));
+                    }                  
                        
                 }
             }
