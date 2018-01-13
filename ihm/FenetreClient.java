@@ -185,7 +185,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                                 this.setText(value.toString() + " (" + nbNonLu + ") " );
                                 //this.setFont(new Font(Font.SERIF,Font.BOLD,12));
                                 nbNonLu = 0;
-                            }                    
+                            }                 
                         }
                     }
                     //si c'est un groupe :
@@ -534,15 +534,14 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 titreDiscuLabel.setText(ticketCreeSelect.getNom());
                 ticketSelect = ticketCreeSelect;
                 //Afficher la discussion correspondante
-                setLignes(ticketCreeSelect);
-                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+                setLignes(ticketCreeSelect);                
             }
         }
 
     }//GEN-LAST:event_ticketsCreesTreeValueChanged
 
     private void ticketsAllTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_ticketsAllTreeValueChanged
-        if (evt.isAddedPath()) {
+        if (evt.isAddedPath()) {            
             TreePath path = evt.getPath();
             Object treeNode = path.getLastPathComponent();
             Object userObject = ((DefaultMutableTreeNode) treeNode).getUserObject();
@@ -585,7 +584,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionTable2.setModel(tableModele);
         //discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
     }
-        private void clearTable(){
+    private void clearTable(){
         int nb = tableModele.getRowCount();
         for(int i = 0; i < nb; i++){
             tableModele.removeRow(0);            
@@ -664,7 +663,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             //On parcourt d'abord les groupes de tickets recu
             if(groupes != null){
                 for(Groupe gr : groupes){
-                    groupeNode = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
+                    groupeNode = new DefaultMutableTreeNode(gr);
                     List<Ticket> tickets = ticketsTous.get(gr);                
                     //Création des noeuds des tickets cree pour chaque groupe
                     if(tickets != null){

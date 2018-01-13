@@ -227,9 +227,15 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(50, 9, 24, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
 
+        ajoutUtilCombo.setEditable(true);
         ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboUtilModele = new DefaultComboBoxModel();
         setComboUtilModel();
+        ajoutUtilCombo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ajoutUtilComboKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 7;
@@ -378,6 +384,11 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         }
         serveur.creerGroupe(nomGrField.getText(), listUtil);
     }//GEN-LAST:event_creerButtonActionPerformed
+
+    private void ajoutUtilComboKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ajoutUtilComboKeyTyped
+        String text = (String) ajoutUtilCombo.getSelectedItem();        
+        searchCombo(text, ajoutUtilCombo);
+    }//GEN-LAST:event_ajoutUtilComboKeyTyped
     public void searchJList(String text, JList liste, JLabel label) {
         
         // Get number of items in the list
