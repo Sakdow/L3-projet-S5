@@ -583,7 +583,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         int size = liste.getModel().getSize();
         // Get all item objects
         for (int i = 0; i < size; i++) {
-            String item = (String) liste.getModel().getElementAt(i);
+            String item = liste.getModel().getElementAt(i).toString();
             if(item.contains(text)) {
             int index = i;
             liste.setSelectedIndex(index);
