@@ -42,5 +42,9 @@ public class Groupe implements Serializable, Comparable<Groupe> {
 	public int compareTo(Groupe o) {
 		return this.idGroupe.compareTo(o.idGroupe);
 	}
+        
+        public String toString() {
+		return idGroupe;
+	}
 
 }
