@@ -98,6 +98,14 @@ public class Serveur {
 			baseDeDonnees.requeteInsertWithoutReturn(requete);
 			return null;
 		}
+		
+		
+		pattern = Pattern.compile("^(UPDATE|DELETE) *");
+		matcher = pattern.matcher(requete);
+		if (matcher.find()) {
+			baseDeDonnees.requeteUpdate(requete);
+			return null;
+		}
 		return baseDeDonnees.requete(requete);
 	}
 
@@ -911,15 +919,21 @@ public class Serveur {
 				requeteBaseDeDonnees("DELETE FROM lire WHERE idM = " + res.getInt(1));
 			}
 
-			res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + texteToTexteSQL(g.getIdGroupe())
+			res = requeteBaseDeDonnees("SELECT idT,createur FROM participer WHERE nomG = '" + texteToTexteSQL(g.getIdGroupe())
 					+ "' AND ( idU = '" + idU + "' AND idU != createur GROUP BY idT");
 
 			for (; res.next();) {
-				requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + res.getInt(1) + " AND idU = '"
+				int idTicket = res.getInt("idT");
+				requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + idTicket + " AND idU = '"
 						+ texteToTexteSQL(idU) + "'");
+				for( String idU :getParticipantsTickets(idTicket) ){
+					buildTicket(idTicket, createur, nomG, idUtilisateur)
+				}
 			}
 			requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG ='" + texteToTexteSQL(g.getIdGroupe())
 					+ "' AND idU = '" + texteToTexteSQL(idU) + "'");
+			
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -962,6 +976,9 @@ public class Serveur {
 			e.printStackTrace();
 			throw e;
 		}
-
+	}
+	
+	public void deconnecterServeur(){
+		
 	}
 }
