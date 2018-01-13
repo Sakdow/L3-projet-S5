@@ -91,6 +91,12 @@ public class Client extends Observable {
 			setChanged();
 			notifyObservers();
 		}
+                if(ticketsCree.containsKey(groupe)){
+                    ticketsCree.remove(groupe);
+                }
+                if(ticketsRecu.containsKey(groupe)){
+                    ticketsCree.remove(groupe);
+                }
 	}
 
 	@Override
