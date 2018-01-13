@@ -588,7 +588,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
             int index = i;
             liste.setSelectedIndex(index);
             label.setText(text + " trouvé à l'index " + index);
-            //Une fois trouvé, on arrête la boucle
+            //Une fois trouvé, la boucle s'arrete
             i = size +1;
             } else {
                 liste.clearSelection();
