@@ -21,9 +21,11 @@ public class ThreadEcoute extends Thread {
 				if (messageRecu instanceof MessageTicket) {
 
 					MessageTicket messageTicket = (MessageTicket) messageRecu;
-					System.out.println("Nouveau ticket : " + messageTicket.getTicket().getIdTicket() + " "
-							+ messageTicket.getTicket().getNom());
-					client.ajouterTicket(messageTicket.getTicket());
+                                        if(messageTicket.isAjouter()){
+                                            client.ajouterTicket(messageTicket.getTicket());
+                                        } else {
+                                            client.supprimerTicket(messageTicket.getTicket());
+                                        }
 				} else if (messageRecu instanceof MessageGroupe) {
 					MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
 					if (messageGroupe.isAjouter()) {
@@ -34,9 +36,6 @@ public class ThreadEcoute extends Thread {
 				} else {
 
 					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
-					System.out.println("Je recoit : " + nouveauMessConv.getMessageConv().getEtatGroupe() + " "
-							+ nouveauMessConv.getMessageConv().getIdMessage() + " "
-							+ nouveauMessConv.getMessageConv().getTexte());
 					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
 							nouveauMessConv.getMessageConv());
 				}

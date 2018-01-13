@@ -42,7 +42,7 @@ public class Client extends Observable {
                 if(gr != null){
                     for(Ticket tk : ticketsCree.get(gr)){
                         if(tk.getIdTicket() == -1){
-                            reseaux.envoyerMessage(new MessageTicket(tk));
+                            reseaux.envoyerMessage(new MessageTicket(tk, true));
                             setChanged();
                             notifyObservers();
                         } else {
@@ -168,11 +168,37 @@ public class Client extends Observable {
 		setChanged();
 		notifyObservers();
 	}
+        
+        private void supprimerTicketMap (Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe){
+            if (tickets.containsKey(groupe)) {
+			List<Ticket> listeTicket = tickets.get(groupe);
+			for (Iterator<Ticket> ite = listeTicket.iterator() ; ite.hasNext() ; ) {
+				Ticket t = ite.next();
+				if (t.equals(ticket)) {
+					ite.remove();
+					break;
+				}
+			}
+            }
+        }
+        
+        public void supprimerTicket(Ticket ticket) {
+		Utilisateur createur = ticket.getCreateur();
+		Groupe groupe = ticket.getGroupe();
+		if (createur.equals(utilisateurClient)) {
+			supprimerTicketMap(ticketsCree, ticket, groupe);
+		} else {
+			supprimerTicketMap(ticketsRecu, ticket, groupe);
+		}
+                
+		setChanged();
+		notifyObservers();
+        }
 
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {
 		Ticket nouveauTicket = new Ticket(-1, nomTicket, utilisateurClient, groupe, message);
 		this.ajouterTicket(nouveauTicket);
-		MessageTicket messageTicket = new MessageTicket(nouveauTicket);
+		MessageTicket messageTicket = new MessageTicket(nouveauTicket, true);
 		reseaux.envoyerMessage(messageTicket);
 	}
 

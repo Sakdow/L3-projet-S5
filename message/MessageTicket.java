@@ -10,12 +10,16 @@ public class MessageTicket extends Message {
 
 	public MessageTicket(Ticket ticket, boolean ajouter) {
 		super();
-		this.ticket = ticket;
+                this.ticket = ticket;
                 this.ajouter = ajouter;
+                
 	}
-
+        
 	public Ticket getTicket() {
 		return this.ticket;
 	}
 
+        public boolean isAjouter(){
+            return ajouter;
+        }
 }
