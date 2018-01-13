@@ -37,7 +37,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         utilLabel = new javax.swing.JLabel();
         creerUtilButton = new javax.swing.JButton();
         supprModUtilButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        decoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu serveur");
@@ -115,13 +115,18 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(27, 61, 82, 0);
         getContentPane().add(supprModUtilButton, gridBagConstraints);
 
-        jButton3.setText("Déconnexion");
+        decoButton.setText("Déconnexion");
+        decoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decoButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(30, 11, 0, 25);
-        getContentPane().add(jButton3, gridBagConstraints);
+        getContentPane().add(decoButton, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -145,6 +150,13 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         FenetreServeurGestUtil fenetre = new FenetreServeurGestUtil(serveur);
         fenetre.setVisible(true);
     }//GEN-LAST:event_supprModUtilButtonActionPerformed
+
+    private void decoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoButtonActionPerformed
+        serveur.deconnecterServeur();
+        FenetreServeurConnexion fen = new FenetreServeurConnexion();
+        fen.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_decoButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -184,8 +196,8 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton creerGroupeButton;
     private javax.swing.JButton creerUtilButton;
+    private javax.swing.JButton decoButton;
     private javax.swing.JLabel groupeLabel;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton supprModGroupeButton;
     private javax.swing.JButton supprModUtilButton;
     private javax.swing.JLabel utilLabel;
