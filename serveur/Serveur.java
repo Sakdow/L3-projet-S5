@@ -161,8 +161,8 @@ public class Serveur {
 			res = requeteBaseDeDonnees("SELECT idM, texte, dateM, idU FROM message WHERE idT = " + idTicket);
 			for (; res.next();) {
 				MessageConversation m = new MessageConversation(res.getInt("idM"),
-						getUtilisateurFromId(res.getString("idU")), res.getString("texte"), new Date(res.getTimestamp("dateM").getTime()),
-						EtatMessage.NON_RECU_PAR_TOUS, false);
+						getUtilisateurFromId(res.getString("idU")), res.getString("texte"),
+						new Date(res.getTimestamp("dateM").getTime()), EtatMessage.NON_RECU_PAR_TOUS, false);
 				definirEtatMessageConversation(m, idTicket, idUtilisateur);
 				t.ajouterMessage(m);
 			}
@@ -948,21 +948,18 @@ public class Serveur {
 		try {
 			ResultSet res = requeteBaseDeDonnees("SELECT idT FROM participer WHERE nomG = '" + nomG + "' GROUP BY idT");
 			for (; res.next();) {
-				int idTicket = res.getInt(1);
-				Set<String> participantsTicket = getParticipantsTickets(idTicket);
-				for (String utilisateur : participantsTicket) {
-					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
-						AssocUtilisateurSocket assoc = ite.next();
-						if (assoc.getUtilisateur().getIdUtilisateur().equals(utilisateur)) {
-							ObjectOutputStream out = assoc.getOut();
-							out.writeObject("");
-						}
-					}
-				}
-				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + idTicket);
+				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
+			}
+
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				ObjectOutputStream out = assoc.getOut();
+				out.writeObject(new MessageGroupe(new Groupe(nomG), false));
 			}
 			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG = '" + nomG + "'");
-		} catch (SQLException e) {
+		} catch (SQLException |
+
+				IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
