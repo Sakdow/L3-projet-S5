@@ -97,6 +97,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModeleUtil = new DefaultListModel();
         setListeModelUtil();
         listeUtilList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -123,6 +124,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listeModeleGr = new DefaultListModel();
         jScrollPane1.setViewportView(listeGrUtilList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
