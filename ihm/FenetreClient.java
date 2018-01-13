@@ -76,11 +76,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         thread.start();
         initComponents();        
     }
-    //DEBUG
-    public FenetreClient(){
-        initComponents();
-    }
-
+    
     @Override
     public void update(Observable o, Object arg) {
         if(ticketsCreesTree != null)
@@ -117,46 +113,47 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             boolean hasFocus,
             int row,
             int column) {
-        if(value.getClass() != MessageConversation.class){
-            this.setText((String)value);
-        }
-        
-        //Gestion des couleurs des messages
-        String etat = (String)table.getValueAt(row, 3);
-        if(etat != null){
-            switch(etat){
-                case "LU_PAR_TOUS":
-                    setBackground(Color.green);                                        
-                    break;
-                case "NON_LU_PAR_TOUS":
-                    setBackground(Color.orange);
-                    break;
-                case "NON_RECU_PAR_TOUS":
-                    setBackground(Color.red);
-                    break;
-                case "NON_RECU_PAR_LE_SERVEUR":
-                    setBackground(Color.GRAY);
-                    break;    
-                default:
-                    setBackground(Color.white);
-            }            
-        }
-        //Masquer la colonne d'état et de l'objet Message
-        table.getColumnModel().getColumn(3).setMinWidth(0);
-        table.getColumnModel().getColumn(3).setMaxWidth(0);
-        table.getColumnModel().getColumn(4).setMinWidth(0);
-        table.getColumnModel().getColumn(4).setMaxWidth(0);
-        
-        this.setWrapStyleWord(true);            
-        this.setLineWrap(true);
-        this.setColumns(3);
-        int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
-        int textLength = this.getText().length();
-        int lines = textLength / (this.getColumns()) +1;//+1, cause we need at least 1 row.  
-          
-        int height = fontHeight * lines;     
-        table.setRowHeight(row, height);
-        this.setEditable(false);
+        if(table.getRowCount() != 0 && table.getColumnCount() != 0){
+            if(value.getClass() != MessageConversation.class){
+                this.setText((String)value);
+            }
+            //Gestion des couleurs des messages
+            String etat = (String)table.getValueAt(row, 3);
+            if(etat != null){
+                switch(etat){
+                    case "LU_PAR_TOUS":
+                        setBackground(Color.green);                                        
+                        break;
+                    case "NON_LU_PAR_TOUS":
+                        setBackground(Color.orange);
+                        break;
+                    case "NON_RECU_PAR_TOUS":
+                        setBackground(Color.red);
+                        break;
+                    case "NON_RECU_PAR_LE_SERVEUR":
+                        setBackground(Color.GRAY);
+                        break;    
+                    default:
+                        setBackground(Color.white);
+                }            
+            }
+            //Masquer la colonne d'état et de l'objet Message
+            table.getColumnModel().getColumn(3).setMinWidth(0);
+            table.getColumnModel().getColumn(3).setMaxWidth(0);
+            table.getColumnModel().getColumn(4).setMinWidth(0);
+            table.getColumnModel().getColumn(4).setMaxWidth(0);
+
+            this.setWrapStyleWord(true);            
+            this.setLineWrap(true);
+            this.setColumns(10);
+            int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
+            int textLength = this.getText().length();
+            int lines = textLength / (this.getColumns()) +1;//+1, cause we need at least 1 row.  
+
+            int height = fontHeight * lines;     
+            //table.setRowHeight(row, height);
+            this.setEditable(false);
+        }        
         return this;
     }
 
@@ -395,6 +392,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        discussionTable2.setRowHeight(50);
         //Gestion clic de ligne
         discussionTable2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -421,7 +419,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     "Exit Confirmation", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (confirm == 0) {
+                    thread.stopper(thread);
+                    client.getReseaux().deconnexionServeur(client.getUtilisateurClient().getIdUtilisateur());
                     System.exit(0);
+                }
+                else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 }
             }
         };
@@ -489,7 +492,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             client.getReseaux().deconnexionServeur(client.getUtilisateurClient().getIdUtilisateur());
             FenetreClientConnexion fen = new FenetreClientConnexion();
             fen.setVisible(true);
-            this.dispose();  
+            this.dispose();            
         }   
         
     }//GEN-LAST:event_decoButtonActionPerformed
@@ -578,7 +581,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             tableModele.addRow(ligne);
         }      
         discussionTable2.setModel(tableModele);
-        //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+        //discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
     }
         private void clearTable(){
         int nb = tableModele.getRowCount();
@@ -690,8 +693,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionTable2.setModel(tableModele);
         //tableModele.fireTableDataChanged();
         //discussionTable2.repaint();
-        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
-        
+        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
          
     }
     

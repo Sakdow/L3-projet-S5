@@ -9,6 +9,9 @@ import client.Client;
 import client.Reseaux;
 import client.ThreadEcoute;
 import configuration.Configuration;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -27,6 +30,13 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
      */
     public FenetreClientConnexion() {
         initComponents();
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {               
+                    System.exit(0);            
+            }
+        };
+        this.addWindowListener(exitListener);        
     }
 
     /**
