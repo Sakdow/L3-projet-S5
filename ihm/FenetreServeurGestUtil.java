@@ -479,9 +479,18 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             int response = JOptionPane.showConfirmDialog(null, "Voulez-vous sauvegarder les modifications ?", "Confirm",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
-                //On dit au serveur de modifier
+                String nom = modifNomField.getText();
+                String prenom = modifPrenomField.getText();
                 String mdp = new String(modifMdpField.getPassword());
-                serveur.modificationUtilisateur(utilSelect.getIdUtilisateur(), modifNomField.getText(), modifPrenomField.getText(), mdp , listeGr);
+                String mdpC = new String(modifMdpConfirmField.getPassword());
+                //Verifications
+                if(!nom.isEmpty() && !prenom.isEmpty() && mdp.equals(mdpC)){
+                    //On dit au serveur de modifier                
+                    serveur.modificationUtilisateur(utilSelect.getIdUtilisateur(), nom, prenom, mdp , listeGr);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Erreurs dans les champs. Veuillez recommencer.");
+                }                  
             }            
         }
         //On affiche les groupes du nouvel user selectionne
@@ -523,16 +532,14 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             String mdp = new String(modifMdpField.getPassword());
             String mdpC = new String(modifMdpConfirmField.getPassword());
             //Verifications
-            if(!nom.isEmpty() && !prenom.isEmpty() && !mdp.isEmpty() && mdp.equals(mdpC)){
+            if(!nom.isEmpty() && !prenom.isEmpty() && mdp.equals(mdpC)){
                //On dit au serveur de modifier
                serveur.modificationUtilisateur(utilSelect.getIdUtilisateur(), nom, prenom, mdp , listeGr);
                this.dispose();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Erreurs dans les champs");
-            }
-            
-            
+            }          
         }
     }//GEN-LAST:event_accepterButtonActionPerformed
 

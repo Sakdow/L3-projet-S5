@@ -351,6 +351,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         saisieDiscuArea.setToolTipText("écire un message...");
         saisieDiscuArea.setMinimumSize(new java.awt.Dimension(15, 22));
         saisieDiscuArea.setPreferredSize(new java.awt.Dimension(300, 94));
+        saisieDiscuArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                saisieDiscuAreaKeyPressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(saisieDiscuArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -579,6 +584,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
         }
     }//GEN-LAST:event_ticketsAllTreeValueChanged
+
+    private void saisieDiscuAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saisieDiscuAreaKeyPressed
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            envoyerButton.doClick();
+        }
+    }//GEN-LAST:event_saisieDiscuAreaKeyPressed
     private void setLignes(Ticket ticketSelect){
         //On vide la table des discussions
         clearTable();        
@@ -594,7 +605,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     estLu = "(Lu)";
                 }
                 Timestamp timeStampDate = new Timestamp(mess.getDate().getTime());            
-                String laDate = timeStampDate.toLocalDateTime().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy hh:mm", Locale.FRENCH));
+                String laDate = timeStampDate.toLocalDateTime().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy kk:mm", Locale.FRENCH));
                 ligne[2] = laDate + " " + estLu;
                 ligne[3] = mess.getEtatGroupe().toString();
                 ligne[4] = mess;
