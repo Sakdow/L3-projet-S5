@@ -113,11 +113,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(34, 49, 0, 0);
         getContentPane().add(paramGrLabel, gridBagConstraints);
 
-        listeUtilList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         listeModeleUtil = new DefaultListModel();
         setListeModelUtil();
         listeUtilList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -140,11 +135,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(6, 30, 0, 0);
         getContentPane().add(listeGrList, gridBagConstraints);
 
-        listeGrUtilList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         listeModeleGr = new DefaultListModel();
         jScrollPane1.setViewportView(listeGrUtilList);
 

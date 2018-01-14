@@ -187,11 +187,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                             }                               
                             if(nbNonLu > 0){
                                 this.setText(value.toString() + " (" + nbNonLu + ") " );
-                                this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                                this.setFont(new Font("Tahoma",Font.BOLD,12));
                                 nbNonLu = 0;
                             }
                             else {
-                                this.setFont(new Font(Font.SERIF,Font.PLAIN,12));
+                                this.setFont(new Font("Tahoma",Font.PLAIN,12));
                             }
                         }
                     }   
@@ -212,11 +212,11 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     }
                     if(nbNonLuGr > 0){
                         this.setText(value.toString() + " (" + nbNonLu + ") " );
-                        this.setFont(new Font(Font.SERIF,Font.BOLD,12));
+                        this.setFont(new Font("Tahoma",Font.BOLD,12));
                         nbNonLuGr = 0;
                     }
                     else {                        
-                        this.setFont(new Font(Font.SERIF,Font.PLAIN,12));
+                        this.setFont(new Font("Tahoma",Font.PLAIN,12));
                     }                  
                        
                 }
@@ -294,6 +294,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 4);
         getContentPane().add(decoButton, gridBagConstraints);
 
+        ticketsAllTree.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
         ticketsAllTree.setCellRenderer(new MyTreeCellRender());
         ticketsAllTree.setRootVisible(false);
@@ -376,6 +377,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 0);
         getContentPane().add(envoyerButton, gridBagConstraints);
 
+        titreDiscuLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         titreDiscuLabel.setText("Discussion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -401,13 +403,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
         discussionTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
@@ -582,14 +577,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     }//GEN-LAST:event_ticketsAllTreeValueChanged
     private void setLignes(Ticket ticketSelect){
         //On vide la table des discussions
-        //clearTable();
-        tableModele = new DefaultTableModel();
-        tableModele.addColumn("Nom utilisateur");
-        tableModele.addColumn("Message");
-        tableModele.addColumn("Date");
-        tableModele.addColumn("Etat");
-        tableModele.addColumn("MessageObject");
-        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
+        clearTable();        
         NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
         for(MessageConversation mess : ensembleMessage){
             Object[] ligne = new Object[5];

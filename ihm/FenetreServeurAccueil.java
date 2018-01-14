@@ -5,6 +5,9 @@
  */
 package ihm;
 
+import java.util.Set;
+import javax.swing.DefaultListModel;
+import modele.Utilisateur;
 import serveur.Serveur;
 
 /**
@@ -13,6 +16,7 @@ import serveur.Serveur;
  */
 public class FenetreServeurAccueil extends javax.swing.JFrame {
     private Serveur serveur;
+    private DefaultListModel listeModele;
     /**
      * Creates new form FenetreServeurAccueil
      */
@@ -38,9 +42,14 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         creerUtilButton = new javax.swing.JButton();
         supprModUtilButton = new javax.swing.JButton();
         decoButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listeConnectList = new javax.swing.JList<>();
+        utilConnectLabel = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Menu serveur");
+        setTitle("Accueil serveur");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         creerGroupeButton.setText("Créer un groupe");
@@ -51,10 +60,11 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 19;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(46, 80, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(23, 31, 0, 0);
         getContentPane().add(creerGroupeButton, gridBagConstraints);
 
         supprModGroupeButton.setText("Supprimer / Modifier");
@@ -65,26 +75,29 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(27, 70, 82, 0);
+        gridBagConstraints.insets = new java.awt.Insets(27, 30, 0, 0);
         getContentPane().add(supprModGroupeButton, gridBagConstraints);
 
+        groupeLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         groupeLabel.setText("Gestion des groupes");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(37, 80, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(27, 40, 0, 0);
         getContentPane().add(groupeLabel, gridBagConstraints);
 
+        utilLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         utilLabel.setText("Gestion des utilisateurs");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(37, 71, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(27, 56, 0, 0);
         getContentPane().add(utilLabel, gridBagConstraints);
 
         creerUtilButton.setText("Créer un utilisateur");
@@ -95,10 +108,11 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(46, 61, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(23, 56, 0, 0);
         getContentPane().add(creerUtilButton, gridBagConstraints);
 
         supprModUtilButton.setText("Supprimer / Modifier");
@@ -109,10 +123,9 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(27, 61, 82, 0);
+        gridBagConstraints.insets = new java.awt.Insets(27, 56, 0, 0);
         getContentPane().add(supprModUtilButton, gridBagConstraints);
 
         decoButton.setText("Déconnexion");
@@ -122,11 +135,64 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(30, 11, 0, 25);
+        gridBagConstraints.insets = new java.awt.Insets(10, 127, 0, 0);
         getContentPane().add(decoButton, gridBagConstraints);
+
+        listeConnectList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        setListConnModel();
+        jScrollPane1.setViewportView(listeConnectList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 117;
+        gridBagConstraints.ipady = 167;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(13, 87, 0, 13);
+        getContentPane().add(jScrollPane1, gridBagConstraints);
+
+        utilConnectLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        utilConnectLabel.setText("Utilisateurs en ligne");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(27, 97, 0, 0);
+        getContentPane().add(utilConnectLabel, gridBagConstraints);
+
+        refreshButton.setText("Rafraichir");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(20, 117, 26, 0);
+        getContentPane().add(refreshButton, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("Bienvenue sur le serveur");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 36, 0, 0);
+        getContentPane().add(jLabel1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -158,48 +224,31 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_decoButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurAccueil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurAccueil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurAccueil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FenetreServeurAccueil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        listeModele.removeAllElements();
+        setListConnModel();
+    }//GEN-LAST:event_refreshButtonActionPerformed
+    private void setListConnModel(){
+        listeModele = new DefaultListModel();
+        Set<Utilisateur> utilCo = serveur.utilisateursConnectes();
+        for(Utilisateur ut : utilCo){
+            listeModele.addElement(ut);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FenetreServeurAccueil().setVisible(true);
-            }
-        });*/
+        listeConnectList.setModel(listeModele);
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton creerGroupeButton;
     private javax.swing.JButton creerUtilButton;
     private javax.swing.JButton decoButton;
     private javax.swing.JLabel groupeLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> listeConnectList;
+    private javax.swing.JButton refreshButton;
     private javax.swing.JButton supprModGroupeButton;
     private javax.swing.JButton supprModUtilButton;
+    private javax.swing.JLabel utilConnectLabel;
     private javax.swing.JLabel utilLabel;
     // End of variables declaration//GEN-END:variables
 }

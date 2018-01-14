@@ -224,11 +224,6 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(30, 250, 0, 0);
         getContentPane().add(jLabel3, gridBagConstraints);
 
-        listeGroupesList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         listeModele = new DefaultListModel();
         listeGroupesList.setModel(listeModele);
         jScrollPane1.setViewportView(listeGroupesList);
