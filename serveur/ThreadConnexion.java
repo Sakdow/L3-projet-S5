@@ -8,18 +8,18 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Observable;
 import java.util.Set;
 
 import message.MessageDemConnexion;
 import message.MessageGroupe;
 import message.MessageReponseConnexion;
 import message.MessageTicket;
-import modele.Groupe;
 import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
 
-class ThreadConnexion implements Runnable {
+class ThreadConnexion extends Observable implements Runnable {
 
 	Serveur serveur;
 
@@ -57,6 +57,10 @@ class ThreadConnexion implements Runnable {
 				} else {
 					System.out.println("Connexion de " + idUtilisateur + " accept�e");
 					utilisateursConnectes.add(new AssocUtilisateurSocket(utilisateur, s, out, in));
+					
+					setChanged();
+					notifyObservers();
+					
 					out.writeObject(new MessageReponseConnexion(true, utilisateur));
 					out.flush();
 					ThreadEcouteTraitementClient e = new ThreadEcouteTraitementClient(serveur,

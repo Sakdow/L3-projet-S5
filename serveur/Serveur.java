@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -27,7 +29,7 @@ import modele.MessageConversation;
 import modele.Ticket;
 import modele.Utilisateur;
 
-public class Serveur {
+public class Serveur extends Observable implements Observer {
 
 	private BaseDeDonnees baseDeDonnees;
 	private int port = 12000;
@@ -50,6 +52,7 @@ public class Serveur {
 			this.port = port;
 
 		initBDD(adresseBDD, PortBDD, nomBDD, adminBDD, mdpBDD);
+
 	}
 
 	private void initBDD() {
@@ -68,7 +71,7 @@ public class Serveur {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public int getPort() {
 		return port;
 	}
@@ -77,7 +80,9 @@ public class Serveur {
 		try {
 			if (isConnexionServeurAcceptee(idUtilisateur, mdp)) {
 				System.out.println("Connexion accept�e - Allumage serveur");
-				Thread t = new Thread(new ThreadConnexion(this));
+				ThreadConnexion tc = new ThreadConnexion(this);
+				tc.addObserver(this);
+				Thread t = new Thread(tc);
 				listeThreads.add(t);
 				t.start();
 				return true;
@@ -183,7 +188,6 @@ public class Serveur {
 						res.getString("texte"), new Date(res.getTimestamp("dateM").getTime()),
 						EtatMessage.NON_RECU_PAR_TOUS, estLu);
 				definirEtatMessageConversation(m, idTicket, idUtilisateur);
-				System.out.println(estLu);
 				t.ajouterMessage(m);
 			}
 
@@ -234,7 +238,6 @@ public class Serveur {
 
 	boolean isMessageLuParUtilisateur(int idM, String idUtilisateur) {
 		try {
-			System.out.println(idM + ":" + idUtilisateur);
 			ResultSet res = requeteBaseDeDonnees(
 					"SELECT * FROM lire WHERE idM = " + idM + " AND idU = '" + texteToTexteSQL(idUtilisateur) + "'");
 			return res.first();
@@ -387,6 +390,8 @@ public class Serveur {
 			e.printStackTrace();
 		}
 		utilisateursConnectes.remove(assoc);
+		setChanged();
+		notifyObservers();
 	}
 
 	void nouveauTicket(Ticket ticket) {
@@ -688,16 +693,11 @@ public class Serveur {
 				g.ajouterUtilisateurs(u);
 			}
 
-			for (Utilisateur u : utilisateurs) {
-				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
-					AssocUtilisateurSocket assoc = ite.next();
-					if (assoc.getUtilisateur().equals(u)) {
-						ObjectOutputStream out = assoc.getOut();
-						out.writeObject(new MessageGroupe(g, true));
-						out.flush();
-						break;
-					}
-				}
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				ObjectOutputStream out = assoc.getOut();
+				out.writeObject(new MessageGroupe(g, true));
+				out.flush();
 			}
 
 		} catch (SQLException | IOException e) {
@@ -960,6 +960,9 @@ public class Serveur {
 			if (!mdp.equals(""))
 				requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '"
 						+ mdp + "'	 WHERE idU = '" + idU + "'");
+			else
+				requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom
+						+ "' WHERE idU = '" + idU + "'");
 
 			ResultSet res = requeteBaseDeDonnees("SELECT idT,createur, nomG FROM participer WHERE idU = '"
 					+ texteToTexteSQL(idU) + "' GROUP BY idT");
@@ -1114,12 +1117,12 @@ public class Serveur {
 
 			for (; res.next();) {
 				int idTicket = res.getInt(1);
-				
+
 				ResultSet r = requeteBaseDeDonnees(
 						"SELECT createur FROM participer WHERE idT = " + idTicket + " GROUP BY idT");
 				r.first();
 				String idCreateur = r.getString(1);
-				
+
 				for (String idU : getParticipantsTickets(idTicket)) {
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
@@ -1133,7 +1136,7 @@ public class Serveur {
 								}
 							}
 							ObjectOutputStream out = assoc.getOut();
-							out.writeObject(new MessageTicket(t, true));
+							out.writeObject(new MessageTicket(t, false));
 							out.flush();
 							break;
 						}
@@ -1176,5 +1179,11 @@ public class Serveur {
 		for (Thread t : listeThreads) {
 			t.interrupt();
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		setChanged();
+		notifyObservers();
 	}
 }

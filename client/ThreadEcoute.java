@@ -16,43 +16,43 @@ public class ThreadEcoute extends Thread {
 
 	public void run() {
 		while (!this.isInterrupted()) {
-                    try {
-			Message messageRecu = client.getReseaux().ecoute();
-			if (messageRecu != null) {
-				if (messageRecu instanceof MessageTicket) {
+			try {
+				Message messageRecu = client.getReseaux().ecoute();
+				if (messageRecu != null) {
+					if (messageRecu instanceof MessageTicket) {
 
-					MessageTicket messageTicket = (MessageTicket) messageRecu;
-                                        if(messageTicket.isAjouter()){
-                                            client.ajouterTicket(messageTicket.getTicket());
-                                        } else {
-                                            client.supprimerTicket(messageTicket.getTicket());
-                                        }
-				} else if (messageRecu instanceof MessageGroupe) {
-					MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
-					if (messageGroupe.isAjouter()) {
-						client.ajouterGroupe(messageGroupe.getGroupe());
+						MessageTicket messageTicket = (MessageTicket) messageRecu;
+						if (messageTicket.isAjouter()) {
+							client.ajouterTicket(messageTicket.getTicket());
+						} else {
+							client.supprimerTicket(messageTicket.getTicket());
+						}
+					} else if (messageRecu instanceof MessageGroupe) {
+						MessageGroupe messageGroupe = (MessageGroupe) messageRecu;
+						if (messageGroupe.isAjouter()) {
+							client.ajouterGroupe(messageGroupe.getGroupe());
+						} else {
+							client.supprimerGroupe(messageGroupe.getGroupe());
+						}
 					} else {
-						client.supprimerGroupe(messageGroupe.getGroupe());
+
+						MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
+						client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
+								nouveauMessConv.getMessageConv());
 					}
 				} else {
-
-					MessageMessageConversation nouveauMessConv = (MessageMessageConversation) messageRecu;
-					client.ajouterMessageConv(nouveauMessConv.getIdTicket(), nouveauMessConv.getIdGroupe(),
-							nouveauMessConv.getMessageConv());
-				}
-			} else {
-				if (!this.isInterrupted()) {
-					Message messageConnexion = client.getReseaux()
-							.connexionServeur(client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
-					while (!this.isInterrupted() && messageConnexion == null) {
-						messageConnexion = client.getReseaux().connexionServeur(
+					if (!this.isInterrupted()) {
+						Message messageConnexion = client.getReseaux().connexionServeur(
 								client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+						while (!this.isInterrupted() && messageConnexion == null) {
+							messageConnexion = client.getReseaux().connexionServeur(
+									client.getUtilisateurClient().getIdUtilisateur(), client.getMotDePasse());
+						}
+						client.renvoieMessageNonRecuParServeur();
 					}
-					client.renvoieMessageNonRecuParServeur();
 				}
+			} catch (Exception ex) {
 			}
-                    } catch ( Exception ex ){
-                    }
 		}
 	}
 
