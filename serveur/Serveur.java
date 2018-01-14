@@ -850,17 +850,18 @@ public class Serveur extends Observable implements Observer {
 			// Si l'utilisateur ne fait plus parti des participants
 			for (String u : ancienUtilisateursGroupe) {
 				if (!containsUtilisateurById(utilisateurs, u)) {
-					ResultSet res = requeteBaseDeDonnees(
-							"SELECT idT FROM participer WHERE idU = '" + texteToTexteSQL(u) + "' AND idU != createur");
-
-					for (; res.next();) {
-						int idTicket = res.getInt(1);
-						requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + idTicket + " AND idU = '"
-								+ texteToTexteSQL(u) + "'");
-					}
-
-					requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG = '" + texteToTexteSQL(nouveauNomGroupe)
-							+ "' AND idU = '" + texteToTexteSQL(u) + "'");
+					supprimerUtilisateurGroupe(u, nouveauG);
+//					ResultSet res = requeteBaseDeDonnees(
+//							"SELECT idT FROM participer WHERE idU = '" + texteToTexteSQL(u) + "' AND idU != createur");
+//
+//					for (; res.next();) {
+//						int idTicket = res.getInt(1);
+//						requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + idTicket + " AND idU = '"
+//								+ texteToTexteSQL(u) + "'");
+//					}
+//
+//					requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG = '" + texteToTexteSQL(nouveauNomGroupe)
+//							+ "' AND idU = '" + texteToTexteSQL(u) + "'");
 				}
 			}
 
