@@ -465,11 +465,16 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     private void supprUtilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprUtilButtonActionPerformed
         //Le serveur supprime
         if(utilSelect != null){
-            serveur.supprimerUtilisateur(utilSelect.getIdUtilisateur());        
-            //listeModeleUtil.removeElement(utilSelect);
-            //listeUtilList.setModel(listeModeleUtil);
-            listeModeleGr.removeAllElements();
-            setListeModelUtil();
+            int response = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ?", "Confirm",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                serveur.supprimerUtilisateur(utilSelect.getIdUtilisateur());        
+                //listeModeleUtil.removeElement(utilSelect);
+                //listeUtilList.setModel(listeModeleUtil);
+                listeModeleUtil.removeAllElements();
+                setListeModelUtil();
+            }
+            
         }
         
     }//GEN-LAST:event_supprUtilButtonActionPerformed
@@ -490,13 +495,15 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         utilModifie = false;
         listeGr.removeAll(listeGr);
         int indSelect = listeUtilList.getSelectedIndex();
-        System.out.println(indSelect);
-        utilSelect = (Utilisateur) listeModeleUtil.get(indSelect);
-        //On affiche la liste du nouveau groupe selectionné
-        setListeModelGr();
-        //On remplit les champs 
-        modifNomField.setText(utilSelect.getNom());
-        modifPrenomField.setText(utilSelect.getPrenom());
+        if(indSelect != -1){
+            utilSelect = (Utilisateur) listeModeleUtil.get(indSelect);
+            //On affiche la liste du nouveau groupe selectionné
+            setListeModelGr();
+            //On remplit les champs 
+            modifNomField.setText(utilSelect.getNom());
+            modifPrenomField.setText(utilSelect.getPrenom());
+        }
+        
     }//GEN-LAST:event_listeUtilListValueChanged
 
     private void retirerGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerGrButtonActionPerformed
@@ -605,7 +612,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         if(indUtil != -1){
             utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
             List<Groupe> groupes = serveur.groupesUtilisateur(utilSelect.getIdUtilisateur());
-            System.out.println(groupes);
             //Ajout de chaque groupe dans la JList
             for(Groupe gr : groupes){
                 listeModeleGr.addElement(gr);
