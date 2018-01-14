@@ -169,10 +169,13 @@ public class Serveur {
 			t = new Ticket(idTicket, titre, getUtilisateurFromId(createur), new Groupe(nomG), null);
 			res = requeteBaseDeDonnees("SELECT idM, texte, dateM, idU FROM message WHERE idT = " + idTicket);
 			for (; res.next();) {
-				MessageConversation m = new MessageConversation(res.getInt("idM"),
-						getUtilisateurFromId(res.getString("idU")), res.getString("texte"),
-						new Date(res.getTimestamp("dateM").getTime()), EtatMessage.NON_RECU_PAR_TOUS, false);
+				int idM = res.getInt("idM");
+				boolean estLu = isMessageLuParUtilisateur(idM, idUtilisateur);
+				MessageConversation m = new MessageConversation(idM, getUtilisateurFromId(res.getString("idU")),
+						res.getString("texte"), new Date(res.getTimestamp("dateM").getTime()),
+						EtatMessage.NON_RECU_PAR_TOUS, estLu);
 				definirEtatMessageConversation(m, idTicket, idUtilisateur);
+				System.out.println(estLu);
 				t.ajouterMessage(m);
 			}
 
@@ -213,6 +216,20 @@ public class Serveur {
 			ResultSet res = requeteBaseDeDonnees("SELECT * FROM lire WHERE idM = " + m.getIdMessage() + " AND idU = '"
 					+ texteToTexteSQL(idUtilisateur) + "'");
 			return res.next();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	boolean isMessageLuParUtilisateur(int idM, String idUtilisateur) {
+		try {
+			System.out.println(idM + ":" + idUtilisateur);
+			ResultSet res = requeteBaseDeDonnees(
+					"SELECT * FROM lire WHERE idM = " + idM + " AND idU = '" + texteToTexteSQL(idUtilisateur) + "'");
+			return res.first();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -543,24 +560,38 @@ public class Serveur {
 	void messageConversationLu(MessageMiseAJourEtat message) {
 		int idM = message.getIdMessage();
 		String idUtilisateur = message.getIdUtilisateur();
+
 		try {
+			MessageConversation messageLu = messageConversationFromId(idM);
 			requeteBaseDeDonnees(
 					"INSERT INTO lire (idM, idU) VALUES (" + idM + ", '" + texteToTexteSQL(idUtilisateur) + "')");
+
+			ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idM);
+			res.first();
+
+			int idTicket = res.getInt(1);
+
+			res = requeteBaseDeDonnees("SELECT nomG FROM participer WHERE idT = " + idTicket);
+			res.first();
+			String nomGroupe = res.getString(1);
+
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				if (assoc.getUtilisateur().getIdUtilisateur().equals(idUtilisateur)) {
+					messageLu.setLuParUtilisateur(true);
+					definirEtatMessageConversation(messageLu, idTicket, idUtilisateur);
+					ObjectOutputStream out = assoc.getOut();
+					out.writeObject(new MessageMessageConversation(idTicket, nomGroupe, messageLu));
+					out.flush();
+					break;
+				}
+			}
+
 			if (isMessageLuParTous(idM)) {
-				MessageConversation messageLu = messageConversationFromId(idM);
-
-				ResultSet res = requeteBaseDeDonnees("SELECT idT FROM message WHERE idM = " + idM);
-				res.first();
-
-				int idTicket = res.getInt(1);
 
 				Set<String> participants = getParticipantsTickets(idTicket);
 
 				messageLu.setEtatGroupe(EtatMessage.LU_PAR_TOUS);
-
-				res = requeteBaseDeDonnees("SELECT nomG FROM participer WHERE idT = " + idTicket);
-				res.first();
-				String nomGroupe = res.getString(1);
 
 				for (String idU : participants) {
 					Utilisateur u = getUtilisateurFromId(idU);
@@ -734,8 +765,33 @@ public class Serveur {
 			for (String nomG : nomGroupes) {
 				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + texteToTexteSQL(idU) + "', '"
 						+ texteToTexteSQL(nomG) + "')");
+				ResultSet res = requeteBaseDeDonnees("SELECT idT,createur FROM participer WHERE nomG = '"
+						+ texteToTexteSQL(nomG) + "' GROUP BY idT");
+				for (; res.next();) {
+					int idTicket = res.getInt("idT");
+					String createur = res.getString("createur");
+					requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur) VALUES ('"
+							+ texteToTexteSQL(idU) + "', " + idTicket + ", '" + texteToTexteSQL(nomG) + "', '"
+							+ texteToTexteSQL(createur) + "')");
+
+					Set<String> utilisateurs = getParticipantsTickets(idTicket);
+
+					for (String u : utilisateurs) {
+						for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+							AssocUtilisateurSocket assoc = ite.next();
+							if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+								Ticket t = buildTicket(idTicket, createur, nomG, u);
+								ObjectOutputStream out = assoc.getOut();
+								out.writeObject(new MessageTicket(t, true));
+								out.flush();
+								break;
+							}
+						}
+					}
+
+				}
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -743,11 +799,23 @@ public class Serveur {
 
 	public void modicationGroupe(String nomGroupe, String nouveauNomGroupe, Collection<Utilisateur> utilisateurs) {
 		Set<String> anciensUtilisateursGroupe = new HashSet<>();
+
 		try {
+
+			boolean modificationNomGroupe = !nomGroupe.equals(nouveauNomGroupe);
+
+			anciensUtilisateursGroupe.addAll(getUtilisateursGroupe(nomGroupe));
+			boolean modificationUtilisateurs = false;
+			for (Utilisateur u : utilisateurs) {
+				String idUtilisateur = u.getIdUtilisateur();
+				if (!anciensUtilisateursGroupe.contains(idUtilisateur)) {
+					modificationUtilisateurs = true;
+					break;
+				}
+			}
 
 			// Suppression du groupe chez tous les utilisateurs
 			Groupe g = getGroupeFromNomGroupe(nomGroupe);
-			anciensUtilisateursGroupe.addAll(getUtilisateursGroupe(nomGroupe));
 			for (String u : anciensUtilisateursGroupe) {
 				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 					AssocUtilisateurSocket assoc = ite.next();
@@ -762,18 +830,20 @@ public class Serveur {
 			}
 
 			// Modification du groupe dans la bdd
-			requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + texteToTexteSQL(nouveauNomGroupe) + "')");
+			if (modificationNomGroupe) {
+				requeteBaseDeDonnees("INSERT INTO groupe (nomG) VALUES ('" + texteToTexteSQL(nouveauNomGroupe) + "')");
 
-			ResultSet res = requeteBaseDeDonnees(
-					"SELECT idU,idT,createur FROM participer WHERE nomG = '" + texteToTexteSQL(nomGroupe) + "'");
-			for (; res.next();) {
-				String idU = res.getString("idU");
-				int idT = res.getInt("idT");
-				String idCreateur = res.getString("createur");
-				if (idU.equals(idCreateur) || containsUtilisateurById(utilisateurs, idU)) {
-					requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur ) VALUES ('"
-							+ texteToTexteSQL(idU) + "', " + idT + ", '" + texteToTexteSQL(nouveauNomGroupe) + "', '"
-							+ texteToTexteSQL(idCreateur) + "')");
+				ResultSet res = requeteBaseDeDonnees(
+						"SELECT idU,idT,createur FROM participer WHERE nomG = '" + texteToTexteSQL(nomGroupe) + "'");
+				for (; res.next();) {
+					String idU = res.getString("idU");
+					int idT = res.getInt("idT");
+					String idCreateur = res.getString("createur");
+					if (idU.equals(idCreateur) || containsUtilisateurById(utilisateurs, idU)) {
+						requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur ) VALUES ('"
+								+ texteToTexteSQL(idU) + "', " + idT + ", '" + texteToTexteSQL(nouveauNomGroupe)
+								+ "', '" + texteToTexteSQL(idCreateur) + "')");
+					}
 				}
 			}
 
@@ -906,12 +976,12 @@ public class Serveur {
 	private void supprimerUtilisateurGroupe(String idU, Groupe g) {
 		try {
 			ResultSet res = requeteBaseDeDonnees(
-					"SELECT recevoir.idM FROM recevoir JOIN (SELECT idM FROM message AS B JOIN (SELECT idT FROM participer WHERE nomG = '"
+					"SELECT A.idM FROM recevoir AS A JOIN (SELECT idM FROM message AS A JOIN (SELECT * FROM participer WHERE nomG = '"
 							+ texteToTexteSQL(g.getIdGroupe())
-							+ "') AS A ON B.idT = A.idT) AS A ON recevoir.idM = A.idM WHERE idU = '"
-							+ texteToTexteSQL(idU) + "' GROUP BY recevoir.idM");
+							+ "') AS B ON A.idT = B.idT Group BY idM ) AS B ON A.idM = B.idM WHERE idU = '"
+							+ texteToTexteSQL(idU) + "'");
 			for (; res.next();) {
-				requeteBaseDeDonnees("DELETE FROM recevoir WHERE idM = " + res.getInt(1));
+				requeteBaseDeDonnees("DELETE FROM recevoir WHERE idM = " + res.getInt(1) + " AND idU = '" + idU + "'");
 			}
 
 			res = requeteBaseDeDonnees(
@@ -920,7 +990,7 @@ public class Serveur {
 							+ "') AS A ON B.idT = A.idT) AS A ON lire.idM = A.idM WHERE idU = '" + texteToTexteSQL(idU)
 							+ "' GROUP BY lire.idM");
 			for (; res.next();) {
-				requeteBaseDeDonnees("DELETE FROM lire WHERE idM = " + res.getInt(1));
+				requeteBaseDeDonnees("DELETE FROM lire WHERE idM = " + res.getInt(1) + " AND idU = '" + idU + "'");
 			}
 
 			res = requeteBaseDeDonnees(
@@ -935,7 +1005,7 @@ public class Serveur {
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
 						if (assoc.getUtilisateur().getIdUtilisateur().equals(idUtilisateur)) {
-							Ticket t = buildTicket(idTicket, res.getString("createur"), g.getIdGroupe(), idU);
+							Ticket t = buildTicket(idTicket, res.getString("createur"), g.getIdGroupe(), idUtilisateur);
 							ObjectOutputStream out = assoc.getOut();
 							out.writeObject(new MessageTicket(t));
 							out.flush();
@@ -962,15 +1032,18 @@ public class Serveur {
 				supprimerUtilisateurGroupe(idUtilisateur, new Groupe(res.getString(1)));
 			}
 
-			res = requeteBaseDeDonnees("SELECT idT, nomG FROM appartenir WHERE idU = '" + texteToTexteSQL(idUtilisateur)
+			res = requeteBaseDeDonnees("SELECT idT, nomG FROM participer WHERE idU = '" + texteToTexteSQL(idUtilisateur)
 					+ "' AND idU = createur");
-			for( ; res.next() ; ){
+			System.out.println("dsfqdsfs");
+			for (; res.next();) {
+				System.out.println("ff<dfk<");
 				int idTicket = res.getInt(1);
 				for (String idU : getParticipantsTickets(idTicket)) {
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
 						if (assoc.getUtilisateur().getIdUtilisateur().equals(idU)) {
-							Ticket t = buildTicket(idTicket, idUtilisateur , res.getString("nomG"), idU);
+							System.out.println("ndfqhs,flhsqi f : " + idU);
+							Ticket t = buildTicket(idTicket, idUtilisateur, res.getString("nomG"), idU);
 							ObjectOutputStream out = assoc.getOut();
 							out.writeObject(new MessageTicket(t, false));
 							out.flush();
