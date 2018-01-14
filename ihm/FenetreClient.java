@@ -220,8 +220,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     }                  
                        
                 }
-            }
-                      
+            }                
             
         return this;
         }
@@ -296,7 +295,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         getContentPane().add(decoButton, gridBagConstraints);
 
         ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
-        //ticketsAllTree.setCellRenderer(new MyTreeCellRender());
+        ticketsAllTree.setCellRenderer(new MyTreeCellRender());
         ticketsAllTree.setRootVisible(false);
         ticketsAllTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -308,7 +307,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Tous", jScrollPane5);
 
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
-        //ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
+        ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
         ticketsCreesTree.setRootVisible(false);
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -320,7 +319,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Créés", jScrollPane1);
 
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
-        //ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
+        ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
         ticketsRecusTree.setRootVisible(false);
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -583,7 +582,14 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     }//GEN-LAST:event_ticketsAllTreeValueChanged
     private void setLignes(Ticket ticketSelect){
         //On vide la table des discussions
-        clearTable();
+        //clearTable();
+        tableModele = new DefaultTableModel();
+        tableModele.addColumn("Nom utilisateur");
+        tableModele.addColumn("Message");
+        tableModele.addColumn("Date");
+        tableModele.addColumn("Etat");
+        tableModele.addColumn("MessageObject");
+        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer()); 
         NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
         for(MessageConversation mess : ensembleMessage){
             Object[] ligne = new Object[5];
@@ -637,8 +643,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         root.add(groupeNode);
                     }                    
                 }
-            }
-            System.out.println("Nbr d'enfants de recus :" + root.getChildCount());
+            }            
             return root;
         }
         //si le client n'est pas initialisé
@@ -669,8 +674,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                     }                    
                 }
             }
-            //DEBUG
-            System.out.println("Nbr d'enfants de crees :" + root.getChildCount());
             return root;
         }
         //si le client n'est pas initialisé
@@ -700,9 +703,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         root.add(groupeNode);
                     }                    
                 }
-            }
-            //DEBUG
-            System.out.println("Nbr d'enfants de tous :" + root.getChildCount());
+            }           
             return root;
        }
        //si le client n'est pas initialisé        
@@ -721,7 +722,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionTable2.setModel(tableModele);
         //tableModele.fireTableDataChanged();
         //discussionTable2.repaint();
-        //discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
+        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
          
     }
     
