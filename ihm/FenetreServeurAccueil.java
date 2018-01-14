@@ -5,6 +5,8 @@
  */
 package ihm;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -15,7 +17,7 @@ import serveur.Serveur;
  *
  * @author Lucas
  */
-public class FenetreServeurAccueil extends javax.swing.JFrame {
+public class FenetreServeurAccueil extends javax.swing.JFrame implements Observer{
     private Serveur serveur;
     private DefaultListModel listeModele;
     /**
@@ -23,6 +25,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
      */
     public FenetreServeurAccueil(Serveur serveur) {
         this.serveur = serveur;
+        this.serveur.addObserver(this);
         initComponents();
         ImageIcon img = new ImageIcon("icon.jpg");
         this.setIconImage(img.getImage());
@@ -255,4 +258,9 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
     private javax.swing.JLabel utilConnectLabel;
     private javax.swing.JLabel utilLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(Observable o, Object arg) {
+        setListConnModel();
+    }
 }
