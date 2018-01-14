@@ -28,6 +28,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import java.util.TreeMap;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -75,6 +76,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         initComponents();
         this.client.addObserver(this);
         thread.start();
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
                 
     }
     

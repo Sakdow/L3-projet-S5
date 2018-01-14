@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import serveur.Serveur;
 
@@ -24,6 +25,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
      */
     public FenetreServeurConnexion() {
         initComponents();
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
     }
 
     /**

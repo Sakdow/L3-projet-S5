@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,6 +50,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
      */
     public FenetreServeurGestGroupe(Serveur serveur) {
         this.serveur = serveur;
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
         listeUtil = new ArrayList();
         groupeSelect = null;
         grModifie = false;

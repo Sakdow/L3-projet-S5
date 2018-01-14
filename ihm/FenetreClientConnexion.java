@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import message.MessageReponseConnexion;
 
@@ -30,6 +31,9 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
      */
     public FenetreClientConnexion() {
         initComponents();
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
+        
         WindowListener exitListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {               

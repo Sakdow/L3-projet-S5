@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modele.EtatMessage;
 import modele.Groupe;
@@ -32,8 +33,9 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         this.client = client;
         this.listeGroupes = client.getListeGroupe();
         initComponents();
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());        
         
-        //listeGroupes = client.getListeGroupe();
         
     }       
     /**

@@ -7,6 +7,7 @@ package ihm;
 
 import java.util.Set;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import modele.Utilisateur;
 import serveur.Serveur;
 
@@ -23,6 +24,8 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
     public FenetreServeurAccueil(Serveur serveur) {
         this.serveur = serveur;
         initComponents();
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
     }
 
     /**

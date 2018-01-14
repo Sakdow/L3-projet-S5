@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +37,8 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
      */
     public FenetreServeurCreerUtil(Serveur serveur) {
         this.serveur = serveur;
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
         listeGr = new ArrayList<>();
         initComponents();
         WindowListener exitListener = new WindowAdapter() {

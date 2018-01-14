@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +42,8 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
      */
     public FenetreServeurGestUtil(Serveur serveur) {
         this.serveur = serveur;
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
         utilSelect = null;
         listeGr = new ArrayList<>();
         initComponents();

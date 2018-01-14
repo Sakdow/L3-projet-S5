@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +42,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
      */
     public FenetreServeurCreerGr(Serveur serveur) {
         this.serveur = serveur;
+        ImageIcon img = new ImageIcon("icon.jpg");
+        this.setIconImage(img.getImage());
         listeUtil = new ArrayList<>();
         initComponents();
         WindowListener exitListener = new WindowAdapter() {
