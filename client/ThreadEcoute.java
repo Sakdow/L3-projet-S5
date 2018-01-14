@@ -16,6 +16,7 @@ public class ThreadEcoute extends Thread {
 
 	public void run() {
 		while (!this.isInterrupted()) {
+                    try {
 			Message messageRecu = client.getReseaux().ecoute();
 			if (messageRecu != null) {
 				if (messageRecu instanceof MessageTicket) {
@@ -50,6 +51,8 @@ public class ThreadEcoute extends Thread {
 					client.renvoieMessageNonRecuParServeur();
 				}
 			}
+                    } catch ( Exception ex ){
+                    }
 		}
 	}
 
