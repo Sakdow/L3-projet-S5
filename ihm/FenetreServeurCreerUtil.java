@@ -242,7 +242,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(35, 220, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(35, 220, 0, 4);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
         searchSupprGrField.setToolTipText("Recherche");
@@ -272,7 +272,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(7, 6, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 6, 0, 4);
         getContentPane().add(supprGrButton, gridBagConstraints);
 
         creerButton.setText("Créer");
@@ -282,10 +282,11 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 52;
+        gridBagConstraints.gridx = 48;
         gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(40, 21, 7, 0);
+        gridBagConstraints.insets = new java.awt.Insets(30, 13, 17, 0);
         getContentPane().add(creerButton, gridBagConstraints);
 
         annulerButton.setText("Annuler");
@@ -295,11 +296,10 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 48;
+        gridBagConstraints.gridx = 52;
         gridBagConstraints.gridy = 20;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(40, 9, 7, 0);
+        gridBagConstraints.insets = new java.awt.Insets(30, 8, 17, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
 
         ajoutGrCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));

@@ -114,10 +114,10 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(30, 21, 11, 9);
+        gridBagConstraints.insets = new java.awt.Insets(30, 82, 11, 0);
         getContentPane().add(creerButton, gridBagConstraints);
 
         annulerButton.setText("Annuler");
@@ -127,10 +127,10 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(30, 80, 11, 0);
+        gridBagConstraints.insets = new java.awt.Insets(30, 18, 11, 10);
         getContentPane().add(annulerButton, gridBagConstraints);
 
         messageArea.setColumns(20);

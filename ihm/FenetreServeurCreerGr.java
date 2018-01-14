@@ -177,7 +177,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridwidth = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(30, 131, 0, 0);
         getContentPane().add(listeUtilGrLabel, gridBagConstraints);
@@ -214,12 +214,12 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 12;
+        gridBagConstraints.gridwidth = 10;
         gridBagConstraints.gridheight = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 0);
         getContentPane().add(supprimerUtilButton, gridBagConstraints);
 
         creerButton.setText("Créer");
@@ -229,11 +229,11 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 12;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 22;
-        gridBagConstraints.gridwidth = 8;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(50, 0, 24, 0);
+        gridBagConstraints.insets = new java.awt.Insets(63, 4, 11, 0);
         getContentPane().add(creerButton, gridBagConstraints);
 
         annulerButton.setText("Annuler");
@@ -243,11 +243,11 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 22;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(50, 9, 24, 0);
+        gridBagConstraints.insets = new java.awt.Insets(63, 18, 11, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
 
         ajoutUtilCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -316,7 +316,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 16;
+        gridBagConstraints.gridwidth = 15;
         gridBagConstraints.gridheight = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 176;
