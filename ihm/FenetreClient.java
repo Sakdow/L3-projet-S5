@@ -174,7 +174,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         expanded, leaf, row,
                         hasFocus);
                 //On cherche le nombre de message non lu dans le ticket
-                int nbNonLu = 0;              
+                int nbNonLu = 0;
+                Dimension preferredSize = new Dimension(150, 20);
+                this.setPreferredSize(preferredSize);
                 if(((DefaultMutableTreeNode) value).getUserObject().getClass().equals(Ticket.class)){
                     Ticket tic = (Ticket) ((DefaultMutableTreeNode) value).getUserObject();
                     if(tic.getIdTicket() != -1){

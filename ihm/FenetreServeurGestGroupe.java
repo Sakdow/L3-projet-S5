@@ -109,8 +109,10 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de groupes");
+        setPreferredSize(new java.awt.Dimension(800, 632));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        paramGrLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         paramGrLabel.setText("Liste des groupes");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -242,6 +244,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 229, 13, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Liste des utilisateurs du groupe");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 12;

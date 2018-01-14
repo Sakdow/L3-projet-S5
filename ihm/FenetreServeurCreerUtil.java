@@ -94,37 +94,38 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         setTitle("Création d'utilisateur");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Paramètres de l'utilisateur");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 11;
+        gridBagConstraints.gridwidth = 8;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(31, 53, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(31, 2, 0, 0);
         getContentPane().add(jLabel1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 12;
+        gridBagConstraints.gridwidth = 9;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 104;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(35, 9, 0, 0);
         getContentPane().add(nomField, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 12;
+        gridBagConstraints.gridwidth = 9;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 104;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 9, 0, 0);
         getContentPane().add(prenomField, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 12;
+        gridBagConstraints.gridwidth = 9;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 104;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -136,7 +137,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(35, 40, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(32, 10, 0, 0);
         getContentPane().add(nomLabel, gridBagConstraints);
 
         prenomLabel.setText("Prenom :");
@@ -145,7 +146,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 10, 0, 0);
         getContentPane().add(prenomLabel, gridBagConstraints);
 
         idLabel.setText("Identifiant :");
@@ -154,16 +155,16 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 10, 0, 0);
         getContentPane().add(idLabel, gridBagConstraints);
 
         mdpLabel.setText("Mot de passe :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 7, 0, 0);
         getContentPane().add(mdpLabel, gridBagConstraints);
 
         confirmMdpLabel.setText("Confirmation :");
@@ -171,17 +172,18 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(17, 10, 0, 0);
         getContentPane().add(confirmMdpLabel, gridBagConstraints);
 
         jLabel2.setText("Ajouter un groupe à l'utilisateur :");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridwidth = 37;
+        gridBagConstraints.gridwidth = 20;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(30, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(29, 4, 0, 0);
         getContentPane().add(jLabel2, gridBagConstraints);
 
         searchAjoutGrField.setToolTipText("Recherche");
@@ -193,11 +195,11 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
-        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 124;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(20, 17, 0, 0);
         getContentPane().add(searchAjoutGrField, gridBagConstraints);
 
         ajoutGrUtilButton.setText("Ajouter");
@@ -207,19 +209,20 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 16;
+        gridBagConstraints.gridx = 13;
         gridBagConstraints.gridy = 14;
-        gridBagConstraints.gridwidth = 38;
+        gridBagConstraints.gridwidth = 34;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 3, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
         getContentPane().add(ajoutGrUtilButton, gridBagConstraints);
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Liste des groupes");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 55;
+        gridBagConstraints.gridx = 47;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(30, 250, 0, 0);
         getContentPane().add(jLabel3, gridBagConstraints);
@@ -229,13 +232,13 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         jScrollPane1.setViewportView(listeGroupesList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 55;
+        gridBagConstraints.gridx = 47;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 15;
+        gridBagConstraints.gridwidth = 7;
         gridBagConstraints.gridheight = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 202;
-        gridBagConstraints.ipady = 167;
+        gridBagConstraints.ipadx = 200;
+        gridBagConstraints.ipady = 164;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -249,7 +252,7 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 55;
+        gridBagConstraints.gridx = 47;
         gridBagConstraints.gridy = 17;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 94;
@@ -264,9 +267,9 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 59;
+        gridBagConstraints.gridx = 52;
         gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(7, 6, 0, 0);
@@ -279,9 +282,8 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 63;
+        gridBagConstraints.gridx = 52;
         gridBagConstraints.gridy = 20;
-        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(40, 21, 7, 0);
         getContentPane().add(creerButton, gridBagConstraints);
@@ -293,9 +295,9 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 56;
+        gridBagConstraints.gridx = 48;
         gridBagConstraints.gridy = 20;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(40, 9, 7, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
@@ -306,34 +308,33 @@ public class FenetreServeurCreerUtil extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = 55;
+        gridBagConstraints.gridwidth = 33;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.ipadx = 164;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(17, 30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(17, 17, 0, 0);
         getContentPane().add(ajoutGrCombo, gridBagConstraints);
 
         searchSupprGrLabel.setText("Recherche");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 55;
+        gridBagConstraints.gridx = 47;
         gridBagConstraints.gridy = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 220, 0, 0);
         getContentPane().add(searchSupprGrLabel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 22;
+        gridBagConstraints.gridwidth = 10;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 105;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 9, 0, 0);
         getContentPane().add(mdpField, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 22;
-        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.gridwidth = 10;
         gridBagConstraints.ipadx = 105;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 9, 0, 0);

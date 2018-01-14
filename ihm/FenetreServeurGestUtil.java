@@ -104,6 +104,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         setTitle("Gestion d'utilisateurs");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        paramGrLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         paramGrLabel.setText("Liste des utilisateurs");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -233,6 +234,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 250, 16, 0);
         getContentPane().add(annulerButton, gridBagConstraints);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Liste des groupes de l'utilisateur");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 18;
