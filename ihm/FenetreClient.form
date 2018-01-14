@@ -20,7 +20,7 @@
     </Container>
   </NonVisualComponents>
   <Properties>
-    <Property name="title" type="java.lang.String" value="Gestion de tickets"/>
+    <Property name="title" type="java.lang.String" value="Client"/>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[500, 400]"/>
     </Property>

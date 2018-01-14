@@ -264,7 +264,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionArea.setText("Peut etre generer un text area pour chaque message");
         jScrollPane4.setViewportView(discussionArea);
 
-        setTitle("Gestion de tickets");
+        setTitle("Client");
         setMinimumSize(new java.awt.Dimension(500, 400));
         setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
