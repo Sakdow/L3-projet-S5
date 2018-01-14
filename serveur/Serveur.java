@@ -349,7 +349,7 @@ public class Serveur {
 		List<Groupe> groupes = new ArrayList<>();
 		ResultSet res;
 		try {
-			res = requeteBaseDeDonnees("SELECT nomG FROM appartenir WHERE idU = '" + idUtilisateur +"'");
+			res = requeteBaseDeDonnees("SELECT nomG FROM appartenir WHERE idU = '" + idUtilisateur + "'");
 			for (; res.next();) {
 				groupes.add(new Groupe(res.getString(1)));
 			}
@@ -805,7 +805,7 @@ public class Serveur {
 		}
 	}
 
-	public void modicationGroupe(String nomGroupe, String nouveauNomGroupe, Collection<Utilisateur> utilisateurs) {
+	public void modificationGroupe(String nomGroupe, String nouveauNomGroupe, Collection<Utilisateur> utilisateurs) {
 
 		boolean modificationNomGroupe = !nomGroupe.equals(nouveauNomGroupe);
 
@@ -957,8 +957,9 @@ public class Serveur {
 
 	public void modificationUtilisateur(String idU, String nom, String prenom, String mdp, Collection<String> groupes) {
 		try {
-			requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '" + mdp
-					+ "'	 WHERE idU = '" + idU + "'");
+			if (!mdp.equals(""))
+				requeteBaseDeDonnees("UPDATE utilisateur SET nom = '" + nom + "', prenom = '" + prenom + "', mdp = '"
+						+ mdp + "'	 WHERE idU = '" + idU + "'");
 
 			ResultSet res = requeteBaseDeDonnees("SELECT idT,createur, nomG FROM participer WHERE idU = '"
 					+ texteToTexteSQL(idU) + "' GROUP BY idT");
@@ -978,10 +979,23 @@ public class Serveur {
 			}
 
 			for (Groupe g : groupesUt) {
-				if (!groupes.contains(g)) {
+				if (!groupes.contains(g.getIdGroupe())) {
 					supprimerUtilisateurGroupe(idU, g);
 				}
 			}
+
+			for (String g : groupes) {
+				if (!groupesUt.contains(new Groupe(g))) {
+					Collection<String> idUtilisateursGroupe = getUtilisateursGroupe(g);
+					Set<Utilisateur> utilisateursGroupe = new HashSet<>();
+					idUtilisateursGroupe.add(idU);
+					for (String u : idUtilisateursGroupe)
+						utilisateursGroupe.add(getUtilisateurFromId(u));
+
+					modificationGroupe(g, g, utilisateursGroupe);
+				}
+			}
+
 			for (; res.next();) {
 				int idTicket = res.getInt("idT");
 				Set<String> participantsTicket = getParticipantsTickets(idTicket);
@@ -991,7 +1005,8 @@ public class Serveur {
 						if (assoc.getUtilisateur().getIdUtilisateur().equals(utilisateur)) {
 							Ticket t = buildTicket(idTicket, res.getString("createur"), res.getString("nomG"),
 									utilisateur);
-							NavigableSet<MessageConversation> messagesTicket = t.getFilDiscussion().getEnsembleMessage();
+							NavigableSet<MessageConversation> messagesTicket = t.getFilDiscussion()
+									.getEnsembleMessage();
 							for (MessageConversation m : messagesTicket) {
 								if (!isMessageRecuParUtilisateur(m, utilisateur)) {
 									messageRecu(m, utilisateur);

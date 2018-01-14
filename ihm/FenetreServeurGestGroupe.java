@@ -517,7 +517,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     private void lancerModification(){
         String nouvNom = modifNomField.getText();
         if(!nouvNom.equals("")){
-            serveur.modicationGroupe(groupeSelect, nouvNom, listeUtil);
+            serveur.modificationGroupe(groupeSelect, nouvNom, listeUtil);
         }       
     }
     private void ajoutUtilGrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajoutUtilGrButtonActionPerformed
