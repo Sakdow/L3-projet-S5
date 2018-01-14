@@ -92,7 +92,15 @@ public class Serveur {
 	Set<AssocUtilisateurSocket> getUtilisateursConnectes() {
 		return utilisateursConnectes;
 	}
-
+	
+	public Set<Utilisateur> utilisateursConnectes(){
+		Set<Utilisateur> utilisateursCo = new HashSet<>();
+		for( AssocUtilisateurSocket assoc : utilisateursConnectes )
+			utilisateursCo.add(assoc.getUtilisateur());
+		
+		return utilisateursCo;
+	}
+	
 	private ResultSet requeteBaseDeDonnees(String requete) throws SQLException {
 		Pattern pattern = Pattern.compile("^INSERT INTO *");
 		Matcher matcher = pattern.matcher(requete);
@@ -805,29 +813,7 @@ public class Serveur {
 			boolean modificationNomGroupe = !nomGroupe.equals(nouveauNomGroupe);
 
 			anciensUtilisateursGroupe.addAll(getUtilisateursGroupe(nomGroupe));
-			boolean modificationUtilisateurs = false;
-			for (Utilisateur u : utilisateurs) {
-				String idUtilisateur = u.getIdUtilisateur();
-				if (!anciensUtilisateursGroupe.contains(idUtilisateur)) {
-					modificationUtilisateurs = true;
-					break;
-				}
-			}
-
-			// Suppression du groupe chez tous les utilisateurs
 			Groupe g = getGroupeFromNomGroupe(nomGroupe);
-			for (String u : anciensUtilisateursGroupe) {
-				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
-					AssocUtilisateurSocket assoc = ite.next();
-					if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
-						ObjectOutputStream out = assoc.getOut();
-						out.writeObject(new MessageGroupe(g, false));
-						out.flush();
-						break;
-					}
-				}
-
-			}
 
 			// Modification du groupe dans la bdd
 			if (modificationNomGroupe) {
@@ -849,29 +835,80 @@ public class Serveur {
 
 			Groupe nouveauG = new Groupe(nouveauNomGroupe);
 
-			for (Utilisateur u : utilisateurs) {
-				String idU = u.getIdUtilisateur();
-				requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + texteToTexteSQL(idU) + "', '"
-						+ texteToTexteSQL(nouveauNomGroupe) + "')");
+			// Suppression du groupe tous les utilisateurs
+			if (modificationNomGroupe){
 				for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 					AssocUtilisateurSocket assoc = ite.next();
-					if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
-						ObjectOutputStream out = assoc.getOut();
-						out.writeObject(new MessageGroupe(nouveauG, true));
-						out.flush();
-						List<Ticket> ticketsNouveauGroupe = ticketsGroupeUtilisateur(nouveauNomGroupe, idU);
-						for (Ticket t : ticketsNouveauGroupe) {
-							out.writeObject(new MessageTicket(t));
-							out.flush();
+					ObjectOutputStream out = assoc.getOut();
+					out.writeObject(new MessageGroupe(g, false));
+					out.flush();
+					out.writeObject(new MessageGroupe(nouveauG, true));
+					out.flush();
+				}
+				requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG ='" + texteToTexteSQL(nomGroupe) + "'");
+			}
+
+			ResultSet res = requeteBaseDeDonnees("SELECT idT,createur FROM participer WHERE nomG = '"
+					+ texteToTexteSQL(nomGroupe) + "' GROUP BY idT");
+
+			for (Utilisateur u : utilisateurs) {
+				String idU = u.getIdUtilisateur();
+				if (!anciensUtilisateursGroupe.contains(idU)) {
+					requeteBaseDeDonnees("INSERT INTO appartenir (idU, nomG) VALUES ('" + texteToTexteSQL(idU) + "', '"
+							+ texteToTexteSQL(nouveauNomGroupe) + "')");
+
+					for (res.first(); !res.isAfterLast(); res.next()) {
+						int idT = res.getInt("idT");
+						String idCreateur = res.getString("createur");
+						requeteBaseDeDonnees("INSERT INTO participer (idU, idT, nomG, createur) VALUES ('"
+								+ texteToTexteSQL(idU) + "', " + idT + ", '" + texteToTexteSQL(nouveauNomGroupe)
+								+ "', '" + texteToTexteSQL(idCreateur) + "')");
+					}
+
+				}
+			}
+
+			for (String u : anciensUtilisateursGroupe) {
+				if (!containsUtilisateurById(utilisateurs, u)) {
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().getIdUtilisateur().equals(u)) {
+							res = requeteBaseDeDonnees(
+									"SELECT idT FROM participer WHERE nomG ='" + texteToTexteSQL(nouveauNomGroupe)
+											+ "' WHERE idU ='" + texteToTexteSQL(u) + "' AND idU != createur");
+							ObjectOutputStream out = assoc.getOut();
+							for (; res.next();) {
+								out.writeObject(new MessageTicket(new Ticket(res.getInt(1), "", null, g, null)));
+								out.flush();
+							}
+
+							requeteBaseDeDonnees("DELETE FROM participer WHERE idU != createur AND idU = '"
+									+ texteToTexteSQL(u) + "' AND nomG = '" + texteToTexteSQL(nouveauNomGroupe));
 						}
 						break;
 					}
 				}
 			}
 
-			requeteBaseDeDonnees("DELETE FROM groupe WHERE nomG ='" + texteToTexteSQL(nomGroupe) + "'");
+			for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+				AssocUtilisateurSocket assoc = ite.next();
+				ObjectOutputStream out = assoc.getOut();
+				Utilisateur uti = assoc.getUtilisateur();
+				if (utilisateurs.contains(uti)) {
+					String idUti = uti.getIdUtilisateur();
+					res = requeteBaseDeDonnees("SELECT createur, idT FROM participer WHERE nomG = '"
+							+ texteToTexteSQL(nouveauNomGroupe) + "' AND idU = '" + texteToTexteSQL(idUti) + "'");
 
-		} catch (SQLException | IOException e) {
+					for (; res.next();) {
+						Ticket t = buildTicket(res.getInt("idT"), res.getString("createur"), nouveauNomGroupe, idUti);
+						out.writeObject(new MessageTicket(t));
+					}
+				}
+			}
+
+		} catch (SQLException |
+
+				IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
