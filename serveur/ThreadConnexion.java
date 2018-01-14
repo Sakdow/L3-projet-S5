@@ -37,6 +37,7 @@ class ThreadConnexion implements Runnable {
 				ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 
 				Object objetRecu = in.readObject();
+
 				MessageDemConnexion messageRecu = (MessageDemConnexion) objetRecu;
 
 				boolean connexionAccepted = serveur.isConnectionClientAccepted(messageRecu);
@@ -45,17 +46,16 @@ class ThreadConnexion implements Runnable {
 				Utilisateur utilisateur = serveur.getUtilisateurFromId(idUtilisateur);
 				System.out.println("Connexion de " + idUtilisateur);
 				Set<AssocUtilisateurSocket> utilisateursConnectes = serveur.getUtilisateursConnectes();
-				boolean dejaConnecte = utilisateursConnectes
-						.contains(new AssocUtilisateurSocket(utilisateur, null, null, null));
 
-				if (!connexionAccepted || dejaConnecte) {
+				if (!connexionAccepted || (utilisateur != null
+						&& utilisateursConnectes.contains(new AssocUtilisateurSocket(utilisateur, null, null, null)))) {
 					out.writeObject(new MessageReponseConnexion(false, null));
 					out.flush();
 					out.close();
 					in.close();
 					s.close();
 				} else {
-					System.out.println("Connexion de " + idUtilisateur +" accept�e");
+					System.out.println("Connexion de " + idUtilisateur + " accept�e");
 					utilisateursConnectes.add(new AssocUtilisateurSocket(utilisateur, s, out, in));
 					out.writeObject(new MessageReponseConnexion(true, utilisateur));
 					out.flush();
@@ -76,7 +76,7 @@ class ThreadConnexion implements Runnable {
 
 					Set<String> groupesUtilisateur = serveur.getGroupes();
 					for (String groupe : groupesUtilisateur) {
-						out.writeObject(new MessageGroupe(serveur.getGroupeFromNomGroupe(groupe),true));
+						out.writeObject(new MessageGroupe(serveur.getGroupeFromNomGroupe(groupe), true));
 						out.flush();
 					}
 

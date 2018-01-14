@@ -1088,15 +1088,13 @@ public class Serveur {
 
 			res = requeteBaseDeDonnees("SELECT idT, nomG FROM participer WHERE idU = '" + texteToTexteSQL(idUtilisateur)
 					+ "' AND idU = createur");
-			System.out.println("dsfqdsfs");
+
 			for (; res.next();) {
-				System.out.println("ff<dfk<");
 				int idTicket = res.getInt(1);
 				for (String idU : getParticipantsTickets(idTicket)) {
 					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
 						AssocUtilisateurSocket assoc = ite.next();
 						if (assoc.getUtilisateur().getIdUtilisateur().equals(idU)) {
-							System.out.println("ndfqhs,flhsqi f : " + idU);
 							Ticket t = buildTicket(idTicket, idUtilisateur, res.getString("nomG"), idU);
 							ObjectOutputStream out = assoc.getOut();
 							out.writeObject(new MessageTicket(t, false));
@@ -1109,7 +1107,40 @@ public class Serveur {
 				requeteBaseDeDonnees("DELETE FROM ticket WHERE idT = " + res.getInt(1));
 			}
 
+			res = requeteBaseDeDonnees(
+					"SELECT idT FROM message WHERE idU = '" + texteToTexteSQL(idUtilisateur) + "' GROUP BY idT");
+
 			requeteBaseDeDonnees("DELETE FROM utilisateur WHERE idU = '" + texteToTexteSQL(idUtilisateur) + "'");
+
+			for (; res.next();) {
+				int idTicket = res.getInt(1);
+				
+				ResultSet r = requeteBaseDeDonnees(
+						"SELECT createur FROM participer WHERE idT = " + idTicket + " GROUP BY idT");
+				r.first();
+				String idCreateur = r.getString(1);
+				
+				for (String idU : getParticipantsTickets(idTicket)) {
+					for (Iterator<AssocUtilisateurSocket> ite = utilisateursConnectes.iterator(); ite.hasNext();) {
+						AssocUtilisateurSocket assoc = ite.next();
+						if (assoc.getUtilisateur().getIdUtilisateur().equals(idU)) {
+							Ticket t = buildTicket(idTicket, idCreateur, nomGroupeFromIdTicket(idTicket), idU);
+							NavigableSet<MessageConversation> messagesTicket = t.getFilDiscussion()
+									.getEnsembleMessage();
+							for (MessageConversation m : messagesTicket) {
+								if (!isMessageRecuParUtilisateur(m, idU)) {
+									messageRecu(m, idU);
+								}
+							}
+							ObjectOutputStream out = assoc.getOut();
+							out.writeObject(new MessageTicket(t, true));
+							out.flush();
+							break;
+						}
+					}
+
+				}
+			}
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
