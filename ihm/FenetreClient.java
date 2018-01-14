@@ -72,9 +72,10 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     public FenetreClient(Client client, ThreadEcoute thread) {
         this.client = client;
         this.thread = thread;
+        initComponents();
         this.client.addObserver(this);
         thread.start();
-        initComponents();        
+                
     }
     
     @Override
@@ -205,13 +206,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsCree(), gr);
                     }
                     if(tree.equals(ticketsRecusTree)){
-                        nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsRecu(), gr);
+                        nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsRecu(), gr);                        
                     }
                     if(tree.equals(ticketsAllTree)){
                         nbNonLuGr = client.getNombreMessageGroupeNonLu(client.getTicketsTous(), gr);
                     }
                     if(nbNonLuGr > 0){
-                        this.setText(value.toString() + " (" + nbNonLu + ") " );
+                        this.setText(value.toString() + " (" + nbNonLuGr + ") " );
                         this.setFont(new Font("Tahoma",Font.BOLD,12));
                         nbNonLuGr = 0;
                     }
@@ -261,6 +262,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionArea.setText("Peut etre generer un text area pour chaque message");
         jScrollPane4.setViewportView(discussionArea);
 
+        setTitle("Gestion de tickets");
         setMinimumSize(new java.awt.Dimension(500, 400));
         setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -286,9 +288,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 8;
+        gridBagConstraints.gridwidth = 6;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 4);
@@ -333,13 +335,13 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 145;
-        gridBagConstraints.ipady = 243;
+        gridBagConstraints.ipady = 211;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 20, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(36, 20, 0, 0);
         getContentPane().add(ongletsDiscu, gridBagConstraints);
 
         saisieDiscuArea.setColumns(20);
@@ -352,15 +354,14 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 317;
-        gridBagConstraints.ipady = 47;
+        gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(9, 10, 1, 0);
+        gridBagConstraints.insets = new java.awt.Insets(9, 10, 4, 0);
         getContentPane().add(jScrollPane3, gridBagConstraints);
 
         envoyerButton.setText("Envoyer");
@@ -370,20 +371,22 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 0);
         getContentPane().add(envoyerButton, gridBagConstraints);
 
-        titreDiscuLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        titreDiscuLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         titreDiscuLabel.setText("Discussion");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 327;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(17, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(37, 20, 0, 0);
         getContentPane().add(titreDiscuLabel, gridBagConstraints);
 
         usernameLabel.setText("Prénom Nom");
@@ -394,8 +397,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             }
         }
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.ipady = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
@@ -453,12 +457,12 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 427;
-        gridBagConstraints.ipady = 213;
+        gridBagConstraints.ipadx = 400;
+        gridBagConstraints.ipady = 243;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(26, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 0);
         getContentPane().add(jScrollPane6, gridBagConstraints);
 
         pack();
@@ -619,7 +623,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Set<Groupe> groupes = ticketsRecu.keySet();
             if(groupes != null && !groupes.isEmpty()){
                 for(Groupe gr : groupes){
-                    groupeNode = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
+                    groupeNode = new DefaultMutableTreeNode(gr);
                     List<Ticket> tickets = ticketsRecu.get(gr);
                     //Création des noeuds des tickets pour chaque groupe
                     if(tickets != null && !tickets.isEmpty()){
@@ -649,7 +653,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
             Set<Groupe> groupes = ticketsCree.keySet();
             if(groupes != null && !groupes.isEmpty()){
                 for(Groupe gr : groupes){
-                    groupeNode = new DefaultMutableTreeNode(new Ticket(-1, gr.getIdGroupe(), null, null, null));
+                    groupeNode = new DefaultMutableTreeNode(gr);
                     List<Ticket> tickets = ticketsCree.get(gr);
                     //Création des noeuds des tickets pour chaque groupe
                     if(tickets != null && !tickets.isEmpty()){
