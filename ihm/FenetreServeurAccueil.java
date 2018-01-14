@@ -53,6 +53,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Accueil serveur");
+        setMinimumSize(new java.awt.Dimension(850, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         creerGroupeButton.setText("Créer un groupe");

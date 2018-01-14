@@ -112,7 +112,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de groupes");
-        setPreferredSize(new java.awt.Dimension(800, 632));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         paramGrLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -521,17 +522,20 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         clearList();
         grModifie = false;
         indexGrSelect = listeGroupeList.getSelectedIndex();
-        listeUtil.removeAll(listeUtil);
-        groupeSelect = listeGroupeList.getSelectedValue();        
-        //On affiche la liste du nouveau groupe selectionné        
-        setListeModelUtil();
-        modifNomField.setText(groupeSelect);
-        if(groupeSelect.equals("Administrateur")){
-            modifNomField.setEditable(false);
+        if(indexGrSelect != -1){
+           listeUtil.removeAll(listeUtil);
+            groupeSelect = listeGroupeList.getSelectedValue();        
+            //On affiche la liste du nouveau groupe selectionné        
+            setListeModelUtil();
+            modifNomField.setText(groupeSelect);
+            if(groupeSelect.equals("Administrateur")){
+                modifNomField.setEditable(false);
+            }
+            else {
+                modifNomField.setEditable(true);
+            } 
         }
-        else {
-            modifNomField.setEditable(true);
-        }
+        
     }//GEN-LAST:event_listeGroupeListValueChanged
     private void lancerModification(){
         String nouvNom = modifNomField.getText();

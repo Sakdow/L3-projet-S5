@@ -268,7 +268,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         jScrollPane4.setViewportView(discussionArea);
 
         setTitle("Client");
-        setMinimumSize(new java.awt.Dimension(500, 400));
+        setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 

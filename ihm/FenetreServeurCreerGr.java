@@ -97,6 +97,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création de groupe");
+        setMinimumSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         nomGrLabel.setText("Nom du groupe :");

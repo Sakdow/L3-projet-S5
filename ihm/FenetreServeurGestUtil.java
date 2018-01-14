@@ -105,6 +105,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion d'utilisateurs");
+        setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(800, 528));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -470,8 +471,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
                 //listeUtilList.setModel(listeModeleUtil);
                 listeModeleUtil.removeAllElements();
                 setListeModelUtil();
-            }
-            
+            }            
         }
         
     }//GEN-LAST:event_supprUtilButtonActionPerformed

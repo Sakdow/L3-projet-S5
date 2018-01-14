@@ -60,6 +60,7 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Création de ficket");
+        setMinimumSize(new java.awt.Dimension(700, 500));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         groupeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Groupe 1", "Groupe 2" }));
