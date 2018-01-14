@@ -80,17 +80,14 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         if(ticketsCreesTree != null){
-           ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
-           ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
+           ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));           
         }            
         if(ticketsRecusTree != null){
             ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
-            ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
         }            
          if(ticketsAllTree != null){
-            ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));
-            ticketsAllTree.setCellRenderer(new MyTreeCellRender());
-         }
+            ticketsAllTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelAll()));            
+        }
             
         if(ongletsDiscu != null){
             int onglet =    ongletsDiscu.getSelectedIndex();  
@@ -218,7 +215,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                         this.setFont(new Font(Font.SERIF,Font.BOLD,12));
                         nbNonLuGr = 0;
                     }
-                    else {
+                    else {                        
                         this.setFont(new Font(Font.SERIF,Font.PLAIN,12));
                     }                  
                        
@@ -311,7 +308,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Tous", jScrollPane5);
 
         ticketsCreesTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelCrees()));
-        ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
+        //ticketsCreesTree.setCellRenderer(new MyTreeCellRender());
         ticketsCreesTree.setRootVisible(false);
         ticketsCreesTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -323,7 +320,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         ongletsDiscu.addTab("Créés", jScrollPane1);
 
         ticketsRecusTree.setModel(new javax.swing.tree.DefaultTreeModel(getArbreModelRecus()));
-        ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
+        //ticketsRecusTree.setCellRenderer(new MyTreeCellRender());
         ticketsRecusTree.setRootVisible(false);
         ticketsRecusTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -724,7 +721,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         discussionTable2.setModel(tableModele);
         //tableModele.fireTableDataChanged();
         //discussionTable2.repaint();
-        discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
+        //discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
          
     }
     
