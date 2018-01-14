@@ -97,7 +97,7 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 170, 64, 0);
+        gridBagConstraints.insets = new java.awt.Insets(25, 160, 59, 0);
         getContentPane().add(connexionButton, gridBagConstraints);
 
         passwordField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
