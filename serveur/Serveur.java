@@ -910,24 +910,6 @@ public class Serveur {
 
 	}
 
-	private List<Ticket> ticketsGroupe(String idGroupe) {
-		List<Ticket> listeTickets = new ArrayList<>();
-
-		try {
-			ResultSet res = requeteBaseDeDonnees(
-					"SELECT idT FROM participer WHERE nomG = '" + texteToTexteSQL(idGroupe) + "' GROUP BY idT");
-
-			for (; res.next();) {
-				Ticket t = new Ticket(res.getInt("idT"), "", null, getGroupeFromNomGroupe(idGroupe), null);
-				listeTickets.add(t);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return listeTickets;
-	}
-
 	private List<Ticket> ticketsGroupeUtilisateur(String idGroupe, String idU) {
 		List<Ticket> listeTickets = new ArrayList<>();
 

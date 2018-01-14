@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -73,9 +74,9 @@ class ThreadConnexion implements Runnable {
 						out.flush();
 					}
 
-					List<Groupe> groupesUtilisateur = serveur.groupesUtilisateur(idUtilisateur);
-					for (Groupe groupe : groupesUtilisateur) {
-						out.writeObject(new MessageGroupe(groupe,true));
+					Set<String> groupesUtilisateur = serveur.getGroupes();
+					for (String groupe : groupesUtilisateur) {
+						out.writeObject(new MessageGroupe(serveur.getGroupeFromNomGroupe(groupe),true));
 						out.flush();
 					}
 
@@ -85,7 +86,7 @@ class ThreadConnexion implements Runnable {
 				}
 			}
 
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 
