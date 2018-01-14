@@ -108,6 +108,7 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
         getContentPane().add(jLabel1, gridBagConstraints);
 
         creerButton.setText("Créer");
+        this.getRootPane().setDefaultButton(creerButton);
         creerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 creerButtonActionPerformed(evt);

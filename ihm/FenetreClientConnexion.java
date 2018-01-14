@@ -66,20 +66,23 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 8;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 150, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(50, 150, 0, 0);
         getContentPane().add(titreLabel, gridBagConstraints);
+
+        usernameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.ipadx = 184;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 110, 0, 100);
+        gridBagConstraints.insets = new java.awt.Insets(11, 110, 0, 100);
         getContentPane().add(usernameTextField, gridBagConstraints);
 
         connexionButton.setText("Connexion");
+        this.getRootPane().setDefaultButton(connexionButton);
         connexionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connexionButtonActionPerformed(evt);
@@ -87,36 +90,37 @@ public class FenetreClientConnexion extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 170, 9, 0);
+        gridBagConstraints.insets = new java.awt.Insets(20, 170, 64, 0);
         getContentPane().add(connexionButton, gridBagConstraints);
+
+        passwordField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.ipadx = 184;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(6, 110, 0, 100);
+        gridBagConstraints.insets = new java.awt.Insets(11, 110, 0, 100);
         getContentPane().add(passwordField, gridBagConstraints);
 
         passwordLabel.setText("Mot de passe");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 160, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(5, 170, 0, 0);
         getContentPane().add(passwordLabel, gridBagConstraints);
 
         usernameLabel1.setText("Login");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(11, 180, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(31, 190, 0, 0);
         getContentPane().add(usernameLabel1, gridBagConstraints);
 
         pack();

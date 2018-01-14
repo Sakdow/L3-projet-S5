@@ -223,6 +223,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
         getContentPane().add(supprimerUtilButton, gridBagConstraints);
 
         creerButton.setText("Créer");
+        this.getRootPane().setDefaultButton(creerButton);
         creerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 creerButtonActionPerformed(evt);

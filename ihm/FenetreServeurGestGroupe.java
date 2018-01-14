@@ -219,6 +219,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         getContentPane().add(modifNomField, gridBagConstraints);
 
         accepterButton.setText("Accepter");
+        this.getRootPane().setDefaultButton(accepterButton);
         accepterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 accepterButtonActionPerformed(evt);
@@ -559,6 +560,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         if (response == JOptionPane.YES_OPTION) {
             //verif de doublons et modification
             lancerModification();
+            this.dispose();
         }
         //sinon on n'envoie rien au serveur
     }//GEN-LAST:event_accepterButtonActionPerformed

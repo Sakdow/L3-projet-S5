@@ -5,16 +5,12 @@
  */
 package ihm;
 
-import client.Client;
-import client.Reseaux;
-import client.ThreadEcoute;
 import configuration.Configuration;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import message.MessageReponseConnexion;
 import serveur.Serveur;
 
 /**
@@ -62,6 +58,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 150, 0, 0);
         getContentPane().add(titreLabel, gridBagConstraints);
+
+        usernameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -72,6 +70,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         getContentPane().add(usernameTextField, gridBagConstraints);
 
         connexionButton.setText("Connexion");
+        this.getRootPane().setDefaultButton(connexionButton);
         connexionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connexionButtonActionPerformed(evt);
@@ -84,6 +83,8 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 170, 17, 0);
         getContentPane().add(connexionButton, gridBagConstraints);
+
+        passwordField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;

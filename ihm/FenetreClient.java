@@ -367,6 +367,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         getContentPane().add(jScrollPane3, gridBagConstraints);
 
         envoyerButton.setText("Envoyer");
+        this.getRootPane().setDefaultButton(envoyerButton);
         envoyerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 envoyerButtonActionPerformed(evt);

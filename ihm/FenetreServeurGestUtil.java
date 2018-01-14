@@ -210,6 +210,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         getContentPane().add(modifNomField, gridBagConstraints);
 
         accepterButton.setText("Accepter");
+        this.getRootPane().setDefaultButton(accepterButton);
         accepterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 accepterButtonActionPerformed(evt);
@@ -525,6 +526,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             if(!nom.isEmpty() && !prenom.isEmpty() && !mdp.isEmpty() && mdp.equals(mdpC)){
                //On dit au serveur de modifier
                serveur.modificationUtilisateur(utilSelect.getIdUtilisateur(), nom, prenom, mdp , listeGr);
+               this.dispose();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Erreurs dans les champs");
