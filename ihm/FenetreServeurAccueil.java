@@ -51,7 +51,6 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
         jScrollPane1 = new javax.swing.JScrollPane();
         listeConnectList = new javax.swing.JList<>();
         utilConnectLabel = new javax.swing.JLabel();
-        refreshButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -142,12 +141,12 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 127, 0, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(10, 137, 0, 5);
         getContentPane().add(decoButton, gridBagConstraints);
 
         listeConnectList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -157,7 +156,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 117;
@@ -165,7 +164,7 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(13, 87, 0, 13);
+        gridBagConstraints.insets = new java.awt.Insets(13, 87, 69, 0);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
         utilConnectLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -173,23 +172,9 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(27, 97, 0, 0);
         getContentPane().add(utilConnectLabel, gridBagConstraints);
-
-        refreshButton.setText("Rafraichir");
-        refreshButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 117, 26, 0);
-        getContentPane().add(refreshButton, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Bienvenue sur le serveur");
@@ -230,11 +215,6 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
         fen.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_decoButtonActionPerformed
-
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        listeModele.removeAllElements();
-        setListConnModel();
-    }//GEN-LAST:event_refreshButtonActionPerformed
     private void setListConnModel(){
         listeModele = new DefaultListModel();
         Set<Utilisateur> utilCo = serveur.utilisateursConnectes();
@@ -252,7 +232,6 @@ public class FenetreServeurAccueil extends javax.swing.JFrame implements Observe
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> listeConnectList;
-    private javax.swing.JButton refreshButton;
     private javax.swing.JButton supprModGroupeButton;
     private javax.swing.JButton supprModUtilButton;
     private javax.swing.JLabel utilConnectLabel;
