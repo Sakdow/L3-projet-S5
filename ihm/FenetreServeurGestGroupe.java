@@ -515,18 +515,6 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
     }//GEN-LAST:event_listeGroupeListValueChanged
     private void lancerModification(){
         String nouvNom = modifNomField.getText();
-        //Verification des doublons pour le nom
-        /*boolean trouve = false;
-        int i = 0;
-        while(!trouve || i < listeModeleGr.size()){
-            if(nouvNom.equals(listeModeleGr.get(i)) && i != listeGroupeList.getSelectedIndex()){
-                trouve = true;
-                i = listeModeleGr.size() + 1;
-                JOptionPane.showMessageDialog(null, "Ce nom existe déjà");
-            }
-            i++;                        
-        }*/    
-        //Si aucun doublon
         if(!nouvNom.equals("")){
             serveur.modicationGroupe(groupeSelect, nouvNom, listeUtil);
         }       
@@ -584,6 +572,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         
         // Get number of items in the list
         int size = liste.getModel().getSize();
+        text = text.toUpperCase();
         // Get all item objects
         for (int i = 0; i < size; i++) {
             String item = liste.getModel().getElementAt(i).toString();
@@ -604,7 +593,7 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
         
         // Get number of items in the list
         int size = box.getModel().getSize();
-        
+        text = text.toUpperCase();
         // Get all item objects
         for (int i = 0; i < size; i++) {
             String item = box.getModel().getElementAt(i).toString();

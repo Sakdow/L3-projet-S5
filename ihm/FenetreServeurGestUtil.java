@@ -565,6 +565,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         
         // Get number of items in the list
         int size = liste.getModel().getSize();
+        text = text.toUpperCase();
         // Get all item objects
         for (int i = 0; i < size; i++) {
             String item = (String) liste.getModel().getElementAt(i);
@@ -585,7 +586,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         
         // Get number of items in the list
         int size = box.getModel().getSize();
-        
+        text = text.toUpperCase();
         // Get all item objects
         for (int i = 0; i < size; i++) {
             String item = (String) box.getModel().getElementAt(i);

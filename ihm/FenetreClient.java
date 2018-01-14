@@ -502,12 +502,9 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     private void creerTicketButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerTicketButtonActionPerformed
         //Affichage d'une fenetre de creation de ticket
         if(client != null){
-            System.out.println("DECO");
             FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket(client);
             fenNewTicket.setVisible(true);
-        }
-        //DEBUG
-        //FenetreClientNouvTicket fenNewTicket = new FenetreClientNouvTicket();
+        }        
     }//GEN-LAST:event_creerTicketButtonActionPerformed
 
     private void decoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoButtonActionPerformed
@@ -585,33 +582,36 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         //On vide la table des discussions
         clearTable();        
         NavigableSet<MessageConversation> ensembleMessage = ticketSelect.getFilDiscussion().getEnsembleMessage();
-        for(MessageConversation mess : ensembleMessage){
-            Object[] ligne = new Object[5];
-            ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
-            ligne[1] = mess.getTexte();
-            boolean lu = mess.isLuParUtilisateur();
-            String estLu = "(Non lu)";
-            if(lu){
-                estLu = "(Lu)";
-            }
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
-            //String date = sdf.format(mess.getDate());
-            Timestamp timeStampDate = new Timestamp(mess.getDate().getTime());            
-            String laDate = timeStampDate.toLocalDateTime().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy hh:mm", Locale.FRENCH));
-            ligne[2] = laDate + " " + estLu;
-            ligne[3] = mess.getEtatGroupe().toString();
-            ligne[4] = mess;
-            tableModele.addRow(ligne);
-        }      
-        discussionTable2.setModel(tableModele);
-        //discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+        if(ensembleMessage != null && !ensembleMessage.isEmpty()){
+            for(MessageConversation mess : ensembleMessage){
+                Object[] ligne = new Object[5];
+                ligne[0] = mess.getCreateur().getPrenom() + " " + mess.getCreateur().getNom();
+                ligne[1] = mess.getTexte();
+                boolean lu = mess.isLuParUtilisateur();
+                String estLu = "(Non lu)";
+                if(lu){
+                    estLu = "(Lu)";
+                }
+                Timestamp timeStampDate = new Timestamp(mess.getDate().getTime());            
+                String laDate = timeStampDate.toLocalDateTime().format(DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy hh:mm", Locale.FRENCH));
+                ligne[2] = laDate + " " + estLu;
+                ligne[3] = mess.getEtatGroupe().toString();
+                ligne[4] = mess;
+                tableModele.addRow(ligne);
+            }      
+            discussionTable2.setModel(tableModele);
+            tableModele.fireTableDataChanged();
+        }       
     }
     private void clearTable(){
         int nb = tableModele.getRowCount();
-        for(int i = 0; i < nb; i++){
-            tableModele.removeRow(0);            
-        }       
-        discussionTable2.setModel(tableModele);        
+        if(nb > -1){
+            for(int i = 0; i < nb; i++){
+                tableModele.removeRow(0);            
+            }       
+            discussionTable2.setModel(tableModele);
+        }
+                
     }
     
     private DefaultMutableTreeNode getArbreModelRecus(){
