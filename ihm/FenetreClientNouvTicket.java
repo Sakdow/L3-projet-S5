@@ -27,8 +27,8 @@ public class FenetreClientNouvTicket extends javax.swing.JFrame {
 	/**
 	 * Creates new form FenetreClientNouvTicket
 	 */
-	private Client client;
-	private List<Groupe> listeGroupes;
+	private final Client client;
+	private final List<Groupe> listeGroupes;
 	private DefaultComboBoxModel comboModele;
 
 	public FenetreClientNouvTicket(Client client) {

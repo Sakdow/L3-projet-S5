@@ -561,8 +561,8 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 		// On recupère les utilisateurs du groupe qu'on veut fusionner
 		List<Utilisateur> utils = gr.getListeUtilisateur();
 		// On get la liste correspondant au groupe dans lequel on est
-
-		for (Utilisateur ut : utils) {
+                if(utils != null){
+                    for (Utilisateur ut : utils) {
 			// Vérification doublons
 			if (!listeModeleUtil.contains(ut)) {
 				listeModeleUtil.addElement(ut);
@@ -570,8 +570,10 @@ public class FenetreServeurGestGroupe extends javax.swing.JFrame {
 				listeUtil.add((Utilisateur) ut);
 				grModifie = true;
 			}
-		}
-		listeUtilGrList.setModel(listeModeleUtil);
+                    }
+                    listeUtilGrList.setModel(listeModeleUtil);
+                }
+		
 	}// GEN-LAST:event_ajoutGrUtilButtonActionPerformed
 
 	private void accepterButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_accepterButtonActionPerformed

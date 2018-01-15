@@ -37,7 +37,7 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
 	private DefaultComboBoxModel comboUtilModele;
 	private DefaultComboBoxModel comboGrModele;
 	private List<Utilisateur> listeUtil;
-	private Serveur serveur;
+	private final Serveur serveur;
 
 	/**
 	 * Creates new form FenetreServeurCreerGr

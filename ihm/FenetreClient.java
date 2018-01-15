@@ -57,8 +57,8 @@ public class FenetreClient extends javax.swing.JFrame implements Observer {
 	/**
 	 * Creates new form FenetreClient
 	 */
-	private Client client;
-	private ThreadEcoute thread;
+	private final Client client;
+	private final ThreadEcoute thread;
 	private Ticket ticketRecuSelect;
 	private Ticket ticketCreeSelect;
 	private Ticket ticketSelect;

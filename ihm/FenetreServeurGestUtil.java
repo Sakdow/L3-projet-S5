@@ -518,7 +518,7 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
         int index = listeGrUtilList.getSelectedIndex();
         //util selectionné
         int indUtil = listeUtilList.getSelectedIndex();
-        Utilisateur utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
+        utilSelect = (Utilisateur) listeModeleUtil.get(indUtil);
         listeModeleGr.remove(index);
         listeGrUtilList.setModel(listeModeleGr);        
         //On supprime le groupe de la liste
@@ -556,22 +556,20 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     }//GEN-LAST:event_ajoutGrUtilButtonActionPerformed
 
     private void modifNomFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifNomFieldKeyTyped
-        if(!modifNomField.getText().equals(utilSelect)){
+        if(!modifNomField.getText().equals(utilSelect.getNom())){
             utilModifie = true;
         }
     }//GEN-LAST:event_modifNomFieldKeyTyped
 
     private void modifPrenomFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifPrenomFieldKeyTyped
-        if(!modifPrenomField.getText().equals(utilSelect)){
+        if(!modifPrenomField.getText().equals(utilSelect.getPrenom())){
             utilModifie = true;
         }
     }//GEN-LAST:event_modifPrenomFieldKeyTyped
 
     private void modifMdpFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modifMdpFieldKeyTyped
-        String mdp = new String(modifMdpField.getPassword());
-        if(mdp.equals(utilSelect)){
-            utilModifie = true;
-        }
+        utilModifie = true;
+        
     }//GEN-LAST:event_modifMdpFieldKeyTyped
     public void searchJList(String text, JList liste, JLabel label) {
         
