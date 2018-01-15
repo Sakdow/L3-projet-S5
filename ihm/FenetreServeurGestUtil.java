@@ -10,8 +10,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+
 import modele.Groupe;
 import modele.Utilisateur;
 import serveur.Serveur;
@@ -37,10 +38,11 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
     private boolean utilModifie;
     private List<String> listeGr;
     private Serveur serveur;
-    /**
-     * Creates new form FenetreServeurGestGroupe
-     */
-    public FenetreServeurGestUtil(Serveur serveur) {
+    
+	/**
+	 * Creates new form FenetreServeurGestGroupe
+	 */
+	public FenetreServeurGestUtil(Serveur serveur) {
         this.serveur = serveur;
         ImageIcon img = new ImageIcon("icon.jpg");
         this.setIconImage(img.getImage());
