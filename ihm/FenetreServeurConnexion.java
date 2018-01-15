@@ -138,7 +138,7 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
 			adminBDD = prop.getProperty("adminBDD", "root");
 			mdpBDD = prop.getProperty("mdpBDD", "");
 		} catch (IOException ex) {
-			Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(FenetreServeurConnexion.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		Serveur serveur = new Serveur(port, adresseBDD, portBDD, nomBDD, adminBDD, mdpBDD);
 		boolean lance = serveur.lancer(id, mdp);
