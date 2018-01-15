@@ -65,7 +65,7 @@ public class Serveur extends Observable implements Observer {
 
 	private void initBDD(String adresseBDD, int PortBDD, String nomBDD, String adminBDD, String mdpBDD) {
 		try {
-			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://" + adresseBDD + ": + " + PortBDD + "/" + nomBDD, adminBDD,
+			baseDeDonnees = new BaseDeDonnees("jdbc:mysql://" + adresseBDD + ":" + PortBDD + "/" + nomBDD, adminBDD,
 					mdpBDD);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
