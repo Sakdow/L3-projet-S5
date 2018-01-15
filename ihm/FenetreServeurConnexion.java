@@ -120,14 +120,24 @@ public class FenetreServeurConnexion extends javax.swing.JFrame {
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
         String id = usernameTextField.getText();
         String mdp = new String(passwordField.getPassword());
+        String adresseBDD = new String();
+        String nomBDD = new String();
+        String adminBDD = new String();
+        String mdpBDD = new String();
+        int portBDD = 3306;
         int port = 8090;
         try {
             Properties prop = Configuration.load("config.txt");
             port = Integer.parseInt(prop.getProperty("port", "8090"));
+            portBDD = Integer.parseInt(prop.getProperty("portBDD", "3306"));
+            adresseBDD = prop.getProperty("adresseBDD","localhost");
+            nomBDD = prop.getProperty("nomBDD","");
+            adminBDD = prop.getProperty("adminBDD","root");
+            mdpBDD = prop.getProperty("mdpBDD","");
         } catch (IOException ex) {
             Logger.getLogger(FenetreClientConnexion.class.getName()).log(Level.SEVERE, null, ex);
         }     
-        Serveur serveur = new Serveur(port);
+        Serveur serveur = new Serveur(port, adresseBDD, portBDD, nomBDD, adminBDD, mdpBDD);
         boolean lance = serveur.lancer(id, mdp);
         if(lance){
             FenetreServeurAccueil fenetre = new FenetreServeurAccueil(serveur);
