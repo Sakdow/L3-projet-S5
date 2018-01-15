@@ -542,7 +542,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
                 ticketSelect = ticketRecuSelect;
                 //Afficher la discussion correspondante
                 setLignes(ticketRecuSelect);
-                //discussionTable.setDefaultRenderer(Object.class, new LineWrapCellRenderer());
+                
             }
 
         }
@@ -721,7 +721,7 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
     
     private void setTableModel(){
         //Création de colonnes
-        //tableModele.addColumn("Image");
+        
         tableModele.addColumn("Nom utilisateur");
         tableModele.addColumn("Message");
         tableModele.addColumn("Date");
@@ -729,8 +729,6 @@ public class FenetreClient extends javax.swing.JFrame implements Observer{
         tableModele.addColumn("MessageObject");
         
         discussionTable2.setModel(tableModele);
-        //tableModele.fireTableDataChanged();
-        //discussionTable2.repaint();
         discussionTable2.setDefaultRenderer(Object.class, new LineWrapCellRenderer());        
          
     }

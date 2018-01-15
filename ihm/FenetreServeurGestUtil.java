@@ -467,8 +467,6 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 serveur.supprimerUtilisateur(utilSelect.getIdUtilisateur());        
-                //listeModeleUtil.removeElement(utilSelect);
-                //listeUtilList.setModel(listeModeleUtil);
                 listeModeleUtil.removeAllElements();
                 setListeModelUtil();
             }            
@@ -605,11 +603,8 @@ public class FenetreServeurGestUtil extends javax.swing.JFrame {
             if(item.contains(text)) {
             int index = i;
             box.setSelectedIndex(index);
-            //label.setText(text + " trouvé à l'index " + index);
             //Une fois trouvé, on arrête la boucle
             i = size +1;
-            } else {
-                //label.setText(text + " non trouvé");
             }
         }        
     }

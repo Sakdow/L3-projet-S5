@@ -444,11 +444,8 @@ public class FenetreServeurCreerGr extends javax.swing.JFrame {
             if(item.contains(text)) {
             int index = i;
             box.setSelectedIndex(index);
-            //label.setText(text + " trouvé à l'index " + index);
             //Une fois trouvé, on arrête la boucle
             i = size +1;
-            } else {
-                //label.setText(text + " non trouvé");
             }
         }        
     }
