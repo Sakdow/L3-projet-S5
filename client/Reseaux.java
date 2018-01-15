@@ -9,10 +9,7 @@ import java.net.UnknownHostException;
 import message.Message;
 import message.MessageDeconnexion;
 import message.MessageDemConnexion;
-import message.MessageGroupe;
-import message.MessageMessageConversation;
 import message.MessageReponseConnexion;
-import message.MessageTicket;
 
 public class Reseaux {
 	private Socket socket;
@@ -81,9 +78,9 @@ public class Reseaux {
 		try {
 
 			Object objetRecu = in.readObject();
-                        
+
 			Message messRecu = (Message) objetRecu;
-                        
+
 			return messRecu;
 		} catch (UnknownHostException e) {
 

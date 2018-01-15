@@ -44,7 +44,6 @@ class ThreadConnexion extends Observable implements Runnable {
 
 				String idUtilisateur = messageRecu.getIdUtilisateur();
 				Utilisateur utilisateur = serveur.getUtilisateurFromId(idUtilisateur);
-				System.out.println("Connexion de " + idUtilisateur);
 				Set<AssocUtilisateurSocket> utilisateursConnectes = serveur.getUtilisateursConnectes();
 
 				if (!connexionAccepted || (utilisateur != null
@@ -55,7 +54,6 @@ class ThreadConnexion extends Observable implements Runnable {
 					in.close();
 					s.close();
 				} else {
-					System.out.println("Connexion de " + idUtilisateur + " accept�e");
 					utilisateursConnectes.add(new AssocUtilisateurSocket(utilisateur, s, out, in));
 					
 					setChanged();

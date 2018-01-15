@@ -6,27 +6,27 @@ public class MessageTicket extends Message {
 
 	private static final long serialVersionUID = 1L;
 	private Ticket ticket;
-        private boolean ajouter;
+	private boolean ajouter;
 
-        public MessageTicket(Ticket ticket) {
+	public MessageTicket(Ticket ticket) {
 		super();
-                this.ticket = ticket;
-                this.ajouter = true;
-                
+		this.ticket = ticket;
+		this.ajouter = true;
+
 	}
-        
+
 	public MessageTicket(Ticket ticket, boolean ajouter) {
 		super();
-                this.ticket = ticket;
-                this.ajouter = ajouter;
-                
+		this.ticket = ticket;
+		this.ajouter = ajouter;
+
 	}
-        
+
 	public Ticket getTicket() {
 		return this.ticket;
 	}
 
-        public boolean isAjouter(){
-            return ajouter;
-        }
+	public boolean isAjouter() {
+		return ajouter;
+	}
 }

@@ -71,7 +71,7 @@ public class Serveur extends Observable implements Observer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getPort() {
 		return port;
 	}
@@ -79,7 +79,6 @@ public class Serveur extends Observable implements Observer {
 	public boolean lancer(String idUtilisateur, String mdp) {
 		try {
 			if (isConnexionServeurAcceptee(idUtilisateur, mdp)) {
-				System.out.println("Connexion accept�e - Allumage serveur");
 				ThreadConnexion tc = new ThreadConnexion(this);
 				tc.addObserver(this);
 				Thread t = new Thread(tc);
@@ -88,7 +87,6 @@ public class Serveur extends Observable implements Observer {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -165,7 +163,6 @@ public class Serveur extends Observable implements Observer {
 				tousLesTickets.add(t);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -192,7 +189,6 @@ public class Serveur extends Observable implements Observer {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -218,7 +214,6 @@ public class Serveur extends Observable implements Observer {
 				m.setEtatGroupe(EtatMessage.NON_RECU_PAR_TOUS);
 			m.setLuParUtilisateur(isMessageLuParUtilisateur(m, idUtilisateur));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -229,7 +224,6 @@ public class Serveur extends Observable implements Observer {
 					+ texteToTexteSQL(idUtilisateur) + "'");
 			return res.next();
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -242,7 +236,6 @@ public class Serveur extends Observable implements Observer {
 					"SELECT * FROM lire WHERE idM = " + idM + " AND idU = '" + texteToTexteSQL(idUtilisateur) + "'");
 			return res.first();
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -255,7 +248,6 @@ public class Serveur extends Observable implements Observer {
 					+ " AND idU = '" + texteToTexteSQL(idUtilisateur) + "'");
 			return res.next();
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -275,7 +267,6 @@ public class Serveur extends Observable implements Observer {
 			res.next();
 			return res.getInt(1) >= nombreParticipants;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -294,7 +285,6 @@ public class Serveur extends Observable implements Observer {
 			res.next();
 			return res.getInt(1) >= nombreParticipants;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -342,7 +332,6 @@ public class Serveur extends Observable implements Observer {
 				}
 			}
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -373,7 +362,6 @@ public class Serveur extends Observable implements Observer {
 				participants.add(res.getString(1));
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -386,7 +374,6 @@ public class Serveur extends Observable implements Observer {
 			assoc.getIn().close();
 			assoc.getSocket().close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		utilisateursConnectes.remove(assoc);
@@ -434,7 +421,6 @@ public class Serveur extends Observable implements Observer {
 
 			envoyerNouveauTicketConnectes(ticket, participants);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -466,7 +452,6 @@ public class Serveur extends Observable implements Observer {
 						out.flush();
 						break;
 					} catch (IOException | SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -490,7 +475,6 @@ public class Serveur extends Observable implements Observer {
 			for (; res.next();)
 				ensembleUtilisateurs.add(res.getString(1));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -518,7 +502,6 @@ public class Serveur extends Observable implements Observer {
 			envoyerNouveauMessageConnectes(messageConv, idTicket);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -544,7 +527,6 @@ public class Serveur extends Observable implements Observer {
 						out.writeObject(new MessageMessageConversation(idTicket, nomGroupe, messageConversation));
 						out.flush();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -563,7 +545,6 @@ public class Serveur extends Observable implements Observer {
 			if (res != null && res.first())
 				idGroupe = res.getString(1);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -622,7 +603,6 @@ public class Serveur extends Observable implements Observer {
 
 			}
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -641,7 +621,6 @@ public class Serveur extends Observable implements Observer {
 			return new MessageConversation(idMessage, getUtilisateurFromId(idAuteur), texte, date,
 					EtatMessage.NON_RECU_PAR_LE_SERVEUR, false);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -674,7 +653,6 @@ public class Serveur extends Observable implements Observer {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -701,7 +679,6 @@ public class Serveur extends Observable implements Observer {
 			}
 
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -722,7 +699,6 @@ public class Serveur extends Observable implements Observer {
 				return g;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -740,7 +716,6 @@ public class Serveur extends Observable implements Observer {
 				ensembleGroupes.add(res.getString(1));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -757,7 +732,6 @@ public class Serveur extends Observable implements Observer {
 				ensembleUtilisateurs.add(getUtilisateurFromId(res.getString(1)));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -800,7 +774,6 @@ public class Serveur extends Observable implements Observer {
 				}
 			}
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -851,17 +824,20 @@ public class Serveur extends Observable implements Observer {
 			for (String u : ancienUtilisateursGroupe) {
 				if (!containsUtilisateurById(utilisateurs, u)) {
 					supprimerUtilisateurGroupe(u, nouveauG);
-//					ResultSet res = requeteBaseDeDonnees(
-//							"SELECT idT FROM participer WHERE idU = '" + texteToTexteSQL(u) + "' AND idU != createur");
-//
-//					for (; res.next();) {
-//						int idTicket = res.getInt(1);
-//						requeteBaseDeDonnees("DELETE FROM participer WHERE idT = " + idTicket + " AND idU = '"
-//								+ texteToTexteSQL(u) + "'");
-//					}
-//
-//					requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG = '" + texteToTexteSQL(nouveauNomGroupe)
-//							+ "' AND idU = '" + texteToTexteSQL(u) + "'");
+					// ResultSet res = requeteBaseDeDonnees(
+					// "SELECT idT FROM participer WHERE idU = '" +
+					// texteToTexteSQL(u) + "' AND idU != createur");
+					//
+					// for (; res.next();) {
+					// int idTicket = res.getInt(1);
+					// requeteBaseDeDonnees("DELETE FROM participer WHERE idT =
+					// " + idTicket + " AND idU = '"
+					// + texteToTexteSQL(u) + "'");
+					// }
+					//
+					// requeteBaseDeDonnees("DELETE FROM appartenir WHERE nomG =
+					// '" + texteToTexteSQL(nouveauNomGroupe)
+					// + "' AND idU = '" + texteToTexteSQL(u) + "'");
 				}
 			}
 
@@ -905,7 +881,6 @@ public class Serveur extends Observable implements Observer {
 			}
 
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -924,7 +899,6 @@ public class Serveur extends Observable implements Observer {
 				listeTickets.add(t);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listeTickets;
@@ -948,7 +922,6 @@ public class Serveur extends Observable implements Observer {
 			for (; res.next();)
 				utilisateurs.add(res.getString(1));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
@@ -1026,7 +999,6 @@ public class Serveur extends Observable implements Observer {
 			}
 
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -1077,7 +1049,6 @@ public class Serveur extends Observable implements Observer {
 					+ "' AND idU = '" + texteToTexteSQL(idU) + "'");
 
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -1146,7 +1117,6 @@ public class Serveur extends Observable implements Observer {
 				}
 			}
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -1167,7 +1137,6 @@ public class Serveur extends Observable implements Observer {
 		} catch (SQLException |
 
 				IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}

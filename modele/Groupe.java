@@ -29,9 +29,9 @@ public class Groupe implements Serializable, Comparable<Groupe> {
 	public String getIdGroupe() {
 		return idGroupe;
 	}
-	
+
 	public boolean equals(Object obj) {
-		if(obj instanceof Groupe){
+		if (obj instanceof Groupe) {
 			Groupe groupe = (Groupe) obj;
 			return (this.getIdGroupe().equals(groupe.getIdGroupe()));
 		}
@@ -42,8 +42,8 @@ public class Groupe implements Serializable, Comparable<Groupe> {
 	public int compareTo(Groupe o) {
 		return this.idGroupe.compareTo(o.idGroupe);
 	}
-        
-        public String toString() {
+
+	public String toString() {
 		return idGroupe;
 	}
 

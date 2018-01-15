@@ -13,8 +13,8 @@ public class MessageMessageConversation extends Message {
 		this.idTicket = idTicket;
 		this.messageConv = messageConv;
 	}
-	
-	public MessageMessageConversation(int idTicket, String idGroupe,MessageConversation messageConv) {
+
+	public MessageMessageConversation(int idTicket, String idGroupe, MessageConversation messageConv) {
 		super();
 		this.idTicket = idTicket;
 		this.messageConv = messageConv;
@@ -33,7 +33,4 @@ public class MessageMessageConversation extends Message {
 		return messageConv;
 	}
 
-	
-	
 }
-

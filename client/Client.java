@@ -8,9 +8,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import java.util.TreeMap;
+
 import message.MessageMessageConversation;
 import message.MessageReponseConnexion;
-
 import message.MessageTicket;
 import modele.EtatMessage;
 import modele.Groupe;
@@ -24,59 +24,58 @@ public class Client extends Observable {
 	private final List<Groupe> listeGroupe;
 	private final Utilisateur utilisateurClient;
 	private final Reseaux reseaux;
-        private String motDePasse;
+	private String motDePasse;
 
 	public Client(Utilisateur utilisateurClient, Reseaux reseaux, String motDePasse) {
 		super();
 		this.utilisateurClient = utilisateurClient;
 		this.reseaux = reseaux;
-                this.motDePasse = motDePasse;
+		this.motDePasse = motDePasse;
 		this.ticketsCree = new TreeMap<>();
 		this.ticketsRecu = new TreeMap<>();
 		this.listeGroupe = new LinkedList<>();
 	}
-        
-        
-        private void rechercheEtEnvoieMessageNonRecuServeur(Set<Groupe> set){
-            for (Groupe gr : set){
-                if(gr != null){
-                    for(Ticket tk : ticketsCree.get(gr)){
-                        if(tk.getIdTicket() == -1){
-                            reseaux.envoyerMessage(new MessageTicket(tk));
-                            setChanged();
-                            notifyObservers();
-                        } else {
-                            for(MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()){
-                                if(messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)){
-                                    reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
-                                    setChanged();
-                                    notifyObservers();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-        }
-        
-        public void renvoieMessageNonRecuParServeur(){
-            Set<Groupe> setCree = ticketsCree.keySet();
-            Set<Groupe> setRecu = ticketsRecu.keySet();
-            rechercheEtEnvoieMessageNonRecuServeur(setCree);
-            rechercheEtEnvoieMessageNonRecuServeur(setRecu);
-        }
 
-        public static Client lancer (String ip, int port, String idUtilisateur, String motDePasse){
-            Reseaux reseau = new Reseaux(ip, port);
-            MessageReponseConnexion messReponse = reseau.connexionServeur(idUtilisateur, motDePasse);
-            if(messReponse.getAccepte()){
-                return new Client(messReponse.getUtilisateur(), reseau, motDePasse);
-            } else {
-                return null;
-            }
-        }
-        
+	private void rechercheEtEnvoieMessageNonRecuServeur(Set<Groupe> set) {
+		for (Groupe gr : set) {
+			if (gr != null) {
+				for (Ticket tk : ticketsCree.get(gr)) {
+					if (tk.getIdTicket() == -1) {
+						reseaux.envoyerMessage(new MessageTicket(tk));
+						setChanged();
+						notifyObservers();
+					} else {
+						for (MessageConversation messConv : tk.getFilDiscussion().getEnsembleMessage()) {
+							if (messConv.getEtatGroupe().equals(EtatMessage.NON_RECU_PAR_LE_SERVEUR)) {
+								reseaux.envoyerMessage(new MessageMessageConversation(tk.getIdTicket(), messConv));
+								setChanged();
+								notifyObservers();
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public void renvoieMessageNonRecuParServeur() {
+		Set<Groupe> setCree = ticketsCree.keySet();
+		Set<Groupe> setRecu = ticketsRecu.keySet();
+		rechercheEtEnvoieMessageNonRecuServeur(setCree);
+		rechercheEtEnvoieMessageNonRecuServeur(setRecu);
+	}
+
+	public static Client lancer(String ip, int port, String idUtilisateur, String motDePasse) {
+		Reseaux reseau = new Reseaux(ip, port);
+		MessageReponseConnexion messReponse = reseau.connexionServeur(idUtilisateur, motDePasse);
+		if (messReponse.getAccepte()) {
+			return new Client(messReponse.getUtilisateur(), reseau, motDePasse);
+		} else {
+			return null;
+		}
+	}
+
 	public void ajouterGroupe(Groupe groupe) {
 		if (!listeGroupe.contains(groupe)) {
 			listeGroupe.add(groupe);
@@ -87,15 +86,15 @@ public class Client extends Observable {
 
 	public void supprimerGroupe(Groupe groupe) {
 		if (listeGroupe.contains(groupe)) {
-                    listeGroupe.remove(groupe);
-                    if(ticketsCree.containsKey(groupe)){
-                        ticketsCree.remove(groupe);
-                    }
-                    if(ticketsRecu.containsKey(groupe)){
-                        ticketsRecu.remove(groupe);
-                    }
-                    setChanged();
-                    notifyObservers();
+			listeGroupe.remove(groupe);
+			if (ticketsCree.containsKey(groupe)) {
+				ticketsCree.remove(groupe);
+			}
+			if (ticketsRecu.containsKey(groupe)) {
+				ticketsRecu.remove(groupe);
+			}
+			setChanged();
+			notifyObservers();
 		}
 
 	}
@@ -137,7 +136,7 @@ public class Client extends Observable {
 		if (tickets.containsKey(groupe)) {
 			boolean ajout = false;
 			List<Ticket> listeTicket = tickets.get(groupe);
-			for (Iterator<Ticket> ite = listeTicket.iterator() ; ite.hasNext() ; ) {
+			for (Iterator<Ticket> ite = listeTicket.iterator(); ite.hasNext();) {
 				Ticket t = ite.next();
 				if (t.equals(ticket)) {
 					ite.remove();
@@ -164,25 +163,25 @@ public class Client extends Observable {
 		} else {
 			ajouterTicketMap(ticketsRecu, ticket, groupe);
 		}
-                
+
 		setChanged();
 		notifyObservers();
 	}
-        
-        private void supprimerTicketMap (Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe){
-            if (tickets.containsKey(groupe)) {
+
+	private void supprimerTicketMap(Map<Groupe, List<Ticket>> tickets, Ticket ticket, Groupe groupe) {
+		if (tickets.containsKey(groupe)) {
 			List<Ticket> listeTicket = tickets.get(groupe);
-			for (Iterator<Ticket> ite = listeTicket.iterator() ; ite.hasNext() ; ) {
+			for (Iterator<Ticket> ite = listeTicket.iterator(); ite.hasNext();) {
 				Ticket t = ite.next();
 				if (t.equals(ticket)) {
 					ite.remove();
 					break;
 				}
 			}
-            }
-        }
-        
-        public void supprimerTicket(Ticket ticket) {
+		}
+	}
+
+	public void supprimerTicket(Ticket ticket) {
 		Utilisateur createur = ticket.getCreateur();
 		Groupe groupe = ticket.getGroupe();
 		if (createur.equals(utilisateurClient)) {
@@ -190,10 +189,10 @@ public class Client extends Observable {
 		} else {
 			supprimerTicketMap(ticketsRecu, ticket, groupe);
 		}
-                
+
 		setChanged();
 		notifyObservers();
-        }
+	}
 
 	public void creerTicket(Groupe groupe, String nomTicket, MessageConversation message) {
 		Ticket nouveauTicket = new Ticket(-1, nomTicket, utilisateurClient, groupe, message);
@@ -209,41 +208,40 @@ public class Client extends Observable {
 	public Map<Groupe, List<Ticket>> getTicketsRecu() {
 		return ticketsRecu;
 	}
-        
-        public Map<Groupe, List<Ticket>> getTicketsTous(){
-            Map<Groupe, List<Ticket>> ticketsTous = new TreeMap<>();
-            for(Groupe gr : ticketsRecu.keySet()){
-                for(Ticket tk : ticketsRecu.get(gr)){
-                    ajouterTicketMap(ticketsTous,tk,gr);
-                }
-            }
-            for(Groupe gr : ticketsCree.keySet()){
-                for(Ticket tk : ticketsCree.get(gr)){
-                    ajouterTicketMap(ticketsTous,tk,gr);
-                }
-            }
-            return ticketsTous;
-        }
-        
-        public int getNombreMessageGroupeNonLu(Map<Groupe, List<Ticket>> map, Groupe gr){
-            int nombreMessageNonLu;
-            nombreMessageNonLu = 0;
-            for(Ticket t :map.get(gr)){
-                nombreMessageNonLu = nombreMessageNonLu + t.getFilDiscussion().getNombreMessageNonLu();
-            }
-            return nombreMessageNonLu;
-        }
+
+	public Map<Groupe, List<Ticket>> getTicketsTous() {
+		Map<Groupe, List<Ticket>> ticketsTous = new TreeMap<>();
+		for (Groupe gr : ticketsRecu.keySet()) {
+			for (Ticket tk : ticketsRecu.get(gr)) {
+				ajouterTicketMap(ticketsTous, tk, gr);
+			}
+		}
+		for (Groupe gr : ticketsCree.keySet()) {
+			for (Ticket tk : ticketsCree.get(gr)) {
+				ajouterTicketMap(ticketsTous, tk, gr);
+			}
+		}
+		return ticketsTous;
+	}
+
+	public int getNombreMessageGroupeNonLu(Map<Groupe, List<Ticket>> map, Groupe gr) {
+		int nombreMessageNonLu;
+		nombreMessageNonLu = 0;
+		for (Ticket t : map.get(gr)) {
+			nombreMessageNonLu = nombreMessageNonLu + t.getFilDiscussion().getNombreMessageNonLu();
+		}
+		return nombreMessageNonLu;
+	}
 
 	public Utilisateur getUtilisateurClient() {
 		return utilisateurClient;
 	}
-        
 
 	public Reseaux getReseaux() {
 		return reseaux;
 	}
 
-        public String getMotDePasse() {
+	public String getMotDePasse() {
 		return motDePasse;
 	}
 

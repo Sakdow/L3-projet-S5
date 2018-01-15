@@ -26,7 +26,7 @@ public class Utilisateur implements Serializable {
 	public String getIdUtilisateur() {
 		return idUtilisateur;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -39,14 +39,14 @@ public class Utilisateur implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if( obj instanceof Utilisateur ){
+		if (obj instanceof Utilisateur) {
 			Utilisateur u = (Utilisateur) obj;
 			return this.idUtilisateur.equals(u.idUtilisateur);
 		}
 		return false;
 	}
-        
-        public String toString() {
+
+	public String toString() {
 		return idUtilisateur;
 	}
 

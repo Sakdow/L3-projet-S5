@@ -45,14 +45,14 @@ public class MessageConversation implements Serializable, Comparable<MessageConv
 
 	public int compareTo(MessageConversation conversationToCompare) {
 		int res = date.compareTo(conversationToCompare.getDate());
-		if(res != 0){
+		if (res != 0) {
 			return res;
 		}
-		
-		if(this.equals(conversationToCompare)){
+
+		if (this.equals(conversationToCompare)) {
 			return 0;
 		}
-		
+
 		return this.idMessage - conversationToCompare.idMessage;
 	}
 

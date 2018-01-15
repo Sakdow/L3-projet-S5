@@ -17,8 +17,8 @@ public class MessageGroupe extends Message {
 	public Groupe getGroupe() {
 		return groupe;
 	}
-	
-	public boolean isAjouter(){
+
+	public boolean isAjouter() {
 		return ajouter;
 	}
 }
